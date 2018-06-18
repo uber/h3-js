@@ -35,9 +35,7 @@
     "prepublish": "yarn run dist",
     "build-emscripten": "./.build-emscripten.sh",
     "cover": "istanbul cover -x out/*.js -- test/index.js",
-    "prettier": "prettier --write --single-quote --no-bracket-spacing --print-width=100 'lib/**/*.js' 'build/**/*.js' 'test/**/*.js'",
-    "jenkins-install": "yarn install --ignore-engines --frozen-lockfile",
-    "jenkins-test": "yarn test && yarn cover && istanbul report cobertura"
+    "prettier": "prettier --write --single-quote --no-bracket-spacing --print-width=100 'lib/**/*.js' 'build/**/*.js' 'test/**/*.js'"
   },
   "devDependencies": {
     "benchmark": "^2.1.4",
@@ -54,6 +52,6 @@
   "engines": {
     "node": ">=4 <10",
     "npm": ">=3",
-    "yarn": ">=1.7.0"
+    "yarn": ">=1.3.0"
   }
 }
