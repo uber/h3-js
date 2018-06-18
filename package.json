@@ -1,0 +1,59 @@
+{
+  "name": "h3-js",
+  "version": "3.0.0",
+  "description": "Emscripten transpiled libh3 'bindings' for Node/Web JS",
+  "author": "David Ellis <d.f.ellis@ieee.org>",
+  "contributors": [
+    "Nick Rabinowitz <nickr@uber.com>"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/uber/h3-js.git"
+  },
+  "keywords": [
+    "h3",
+    "hexagon",
+    "spatial-indexing",
+    "emscripten",
+    "geolocation"
+  ],
+  "main": "index.js",
+  "es2015": "lib/h3core.js",
+  "scripts": {
+    "lint": "eslint lib* test/*",
+    "test": "yarn lint && yarn run test-es6 && yarn run test-dist && yarn run test-parity",
+    "test-raw": "node test/index.js",
+    "test-es6": "yarn run test-raw | faucet",
+    "test-parity": "node test/test-parity.js | faucet",
+    "test-dist": "yarn run dist-test && node dist/test/index.js | faucet",
+    "benchmarks-es6": "node test/benchmarks.js",
+    "dist": "yarn run dist-clean && mkdir -p dist/out && buble -i lib -o dist/lib && cp out/libh3.1.js dist/out",
+    "dist-clean": "rm -rf dist",
+    "dist-test": "yarn run dist && buble -i test -o dist/test",
+    "benchmarks": "yarn run dist-test && node dist/test/benchmarks.js",
+    "prepublish": "yarn run dist",
+    "build-emscripten": "./.build-emscripten.sh",
+    "cover": "yarn lint && istanbul cover -x out/*.js -- test/index.js",
+    "prettier": "prettier --write --single-quote --no-bracket-spacing --print-width=100 'lib/**/*.js' 'build/**/*.js' 'test/**/*.js'",
+    "jenkins-install": "yarn install --ignore-engines --frozen-lockfile",
+    "jenkins-test": "yarn test && yarn cover && istanbul report cobertura"
+  },
+  "devDependencies": {
+    "benchmark": "^2.1.4",
+    "buble": "^0.19.3",
+    "eslint": "^4.19.1",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-config-uber-es2015": "^3.1.2",
+    "eslint-plugin-prettier": "^2.6.0",
+    "faucet": "0.0.1",
+    "istanbul": "^0.4.3",
+    "prettier": "^1.12.1",
+    "tape": "^4.8.0"
+  },
+  "engines": {
+    "node": ">=4 <10",
+    "npm": ">=3",
+    "yarn": ">=1.7.0"
+  }
+}
