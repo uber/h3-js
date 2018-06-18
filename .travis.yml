@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+  - '6'
+  - '8'
+before_script:
+  - yarn run dist-test
+script:
+  - yarn lint
+  - yarn run test-es6
+  - yarn run test-dist
+  - yarn run test-parity
+  - yarn run prettier && git diff --exit-code
+  - yarn cover
+after_success:
+  - npm install -g coveralls
+  - cat coverage/lcov.info | coveralls

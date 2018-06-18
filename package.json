@@ -22,11 +22,11 @@
   "es2015": "lib/h3core.js",
   "scripts": {
     "lint": "eslint lib* test/*",
-    "test": "yarn lint && yarn run test-es6 && yarn run test-dist && yarn run test-parity",
+    "test": "yarn run dist-test && yarn lint && yarn run test-es6 && yarn run test-dist && yarn run test-parity",
     "test-raw": "node test/index.js",
     "test-es6": "yarn run test-raw | faucet",
     "test-parity": "node test/test-parity.js | faucet",
-    "test-dist": "yarn run dist-test && node dist/test/index.js | faucet",
+    "test-dist": "node dist/test/index.js | faucet",
     "benchmarks-es6": "node test/benchmarks.js",
     "dist": "yarn run dist-clean && mkdir -p dist/out && buble -i lib -o dist/lib && cp out/libh3.1.js dist/out",
     "dist-clean": "rm -rf dist",
@@ -34,7 +34,7 @@
     "benchmarks": "yarn run dist-test && node dist/test/benchmarks.js",
     "prepublish": "yarn run dist",
     "build-emscripten": "./.build-emscripten.sh",
-    "cover": "yarn lint && istanbul cover -x out/*.js -- test/index.js",
+    "cover": "istanbul cover -x out/*.js -- test/index.js",
     "prettier": "prettier --write --single-quote --no-bracket-spacing --print-width=100 'lib/**/*.js' 'build/**/*.js' 'test/**/*.js'",
     "jenkins-install": "yarn install --ignore-engines --frozen-lockfile",
     "jenkins-test": "yarn test && yarn cover && istanbul report cobertura"
