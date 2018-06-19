@@ -16,12 +16,10 @@
 
 /**
  * Sizes exported for use in Emscripten. This file is copied into the
- * h3-1 src/h3lib/lib directory
+ * h3 src/h3lib/lib directory
  */
 
-#include "geoCoord.h"
 #include "h3api.h"
-#include "linkedGeo.h"
 
 int sizeOfH3Index() {
     return sizeof(H3Index);

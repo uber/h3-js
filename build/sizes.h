@@ -16,7 +16,7 @@
 
 /**
  * Sizes exported for use in Emscripten. This file is copied into the
- * h3-1 src/h3lib/lib directory
+ * h3 src/h3lib/lib directory
  */
 
 #ifndef SIZES_H

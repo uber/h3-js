@@ -28,7 +28,7 @@
     "test-parity": "node test/test-parity.js | faucet",
     "test-dist": "node dist/test/index.js | faucet",
     "benchmarks-es6": "node test/benchmarks.js",
-    "dist": "yarn run dist-clean && mkdir -p dist/out && buble -i lib -o dist/lib && cp out/libh3.1.js dist/out",
+    "dist": "yarn run dist-clean && mkdir -p dist/out && buble -i lib -o dist/lib && cp out/libh3.js dist/out",
     "dist-clean": "rm -rf dist",
     "dist-test": "yarn run dist && buble -i test -o dist/test",
     "benchmarks": "yarn run dist-test && node dist/test/benchmarks.js",
