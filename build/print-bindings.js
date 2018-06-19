@@ -13,6 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/*
+ * Prints an array of functions that need to be exported from the
+ * transpiled C library.
+ */
 
 /* eslint-env node */
 /* eslint-disable no-console */

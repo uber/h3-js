@@ -1,2 +1,2 @@
 yarn.lock -diff
-out/libh3.1.js -diff
+out/libh3*.js -diff
