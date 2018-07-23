@@ -4,7 +4,8 @@ All notable changes to this project will be documented in this file. This librar
 
 ## [Unreleased]
 ### Changed
-- Renamed names of h3.1 or h3-1 to h3
+- Renamed names of h3.1 or h3-1 to h3 (#4)
+- Updated the core library to v3.0.8 (#9)
 
 ## [3.0.1] - 2018-06-18
 ### Fixed
