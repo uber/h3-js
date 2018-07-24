@@ -1084,8 +1084,7 @@ test('getH3UnidirectionalEdgeBoundary', assert => {
         [originBoundary[3], originBoundary[4]],
         [originBoundary[1], originBoundary[2]],
         [originBoundary[2], originBoundary[3]],
-        // TODO: This one is backwards - see https://github.com/uber/h3/issues/75
-        [originBoundary[0], originBoundary[5]],
+        [originBoundary[5], originBoundary[0]],
         [originBoundary[4], originBoundary[5]],
         [originBoundary[0], originBoundary[1]]
     ];
@@ -1112,8 +1111,7 @@ test('getH3UnidirectionalEdgeBoundary - 10-vertex pentagon', assert => {
     const expectedEdges = [
         [originBoundary[2], originBoundary[3], originBoundary[4]],
         [originBoundary[4], originBoundary[5], originBoundary[6]],
-        // TODO: This one is backwards AND WRONG - see https://github.com/uber/h3/issues/75
-        [originBoundary[0], originBoundary[8], originBoundary[9]],
+        [originBoundary[8], originBoundary[9], originBoundary[0]],
         [originBoundary[6], originBoundary[7], originBoundary[8]],
         [originBoundary[0], originBoundary[1], originBoundary[2]]
     ];
