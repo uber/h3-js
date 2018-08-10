@@ -4,10 +4,10 @@ All notable changes to this project will be documented in this file. This librar
 
 ## [Unreleased]
 ### Added
-- Added binding for `h3Distance`
+- Added binding for `h3Distance` (#15)
 ### Changed
-- Updated the core library to 3.1.0
-- Moved emscripten build to docker
+- Updated the core library to 3.1.0 (#15)
+- Moved emscripten build to docker (#14)
 
 ## [3.0.2] - 2018-07-26
 ### Changed
