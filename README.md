@@ -103,23 +103,14 @@ When making code changes that may affect performance, please run benchmarks agai
 
 ### Transpiling the C Source
 
-You need to have emscripten's `emcc` in your `$PATH`. I highly recommend [the portable install](http://kripken.github.io/emscripten-site/docs/getting_started/downloads.html) as easiest to update and maintain.
+The core library is transpiled using [emscripten](http://kripken.github.io/emscripten-site). The easiest way to build from source locally is by using Docker. Make sure Docker is installed, then:
 
-Once you finished the installation, run the following command to check the precompiled package versions:
-
-    emsdk list
-
-NOTE: The current `h3-js` is built with `emscripten-1.37.40`. Earlier or later versions MAY NOT WORK (emscripten does not follow semver, so patch updates may include breaking changes).
-
-Note that you'll need to add the emscripten PATH and env variables to your current terminal (unless you add this to your `.bash_profile`):
-
-    source /path/to/emsdk_portable/emsdk_env.sh
-
-Then simply:
-
+    yarn init-docker
     yarn run build-emscripten
 
-The build script automatically uses the `package.json` version as the version of `libh3` to build, so these versions are completely in sync with the upstream C code.
+The build script uses the `H3_VERSION` file to determine the version of the core library to build.
+
+NOTE: The current `h3-js` is built with `emscripten-1.37.40`. Earlier or later versions MAY NOT WORK (emscripten does not follow semver, so patch updates may include breaking changes).
 
 ## Contributing
 
