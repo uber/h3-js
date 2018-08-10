@@ -30,3 +30,4 @@ getDestinationH3IndexFromUnidirectionalEdge
 getH3IndexesFromUnidirectionalEdge
 getH3UnidirectionalEdgesFromHexagon
 getH3UnidirectionalEdgeBoundary
+h3Distance
