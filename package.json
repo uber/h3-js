@@ -33,7 +33,8 @@
     "dist-test": "yarn run dist && buble -i test -o dist/test",
     "benchmarks": "yarn run dist-test && node dist/test/benchmarks.js",
     "prepublish": "yarn run dist",
-    "build-emscripten": "./.build-emscripten.sh",
+    "init-docker": "docker run -dit --name emscripten -v $(pwd):/src trzeci/emscripten:sdk-tag-1.37.40-64bit bash",
+    "build-emscripten": "docker exec -it emscripten bash .build-emscripten.sh",
     "cover": "istanbul cover -x out/*.js -- test/index.js",
     "prettier": "prettier --write --single-quote --no-bracket-spacing --print-width=100 'lib/**/*.js' 'build/**/*.js' 'test/**/*.js'"
   },
