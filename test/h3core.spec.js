@@ -1128,6 +1128,45 @@ test('getH3UnidirectionalEdgeBoundary - 10-vertex pentagon', assert => {
     assert.end();
 });
 
+test('h3Distance', assert => {
+    const origin = h3core.geoToH3(37.5, -122, 9);
+    for (let radius = 0; radius < 4; radius++) {
+        const others = h3core.hexRing(origin, radius);
+        for (let i = 0; i < others.length; i++) {
+            assert.equals(
+                h3core.h3Distance(origin, others[i]),
+                radius,
+                `Got distance ${radius} for (${origin}, ${others[i]})`
+            );
+        }
+    }
+    assert.end();
+});
+
+test('h3Distance - failure', assert => {
+    const origin = h3core.geoToH3(37.5, -122, 9);
+    const origin10 = h3core.geoToH3(37.5, -122, 10);
+    const edge = '1591ea6d6533ffff';
+    const distantHex = h3core.geoToH3(-37.5, 122, 9);
+
+    assert.equals(
+        h3core.h3Distance(origin, origin10),
+        -1,
+        'Returned -1 for distance between different resolutions'
+    );
+    assert.equals(
+        h3core.h3Distance(origin, edge),
+        -1,
+        'Returned -1 for distance between hexagon and edge'
+    );
+    assert.equals(
+        h3core.h3Distance(origin, distantHex),
+        -1,
+        'Returned -1 for distance between distant hexagons'
+    );
+    assert.end();
+});
+
 test('hexArea', assert => {
     let last = 1e14;
     for (let res = 0; res < 16; res++) {
