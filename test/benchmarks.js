@@ -23,20 +23,20 @@ const suite = new Benchmark.Suite();
 
 // fixtures
 
-const h3Address = '89283080ddbffff';
+const h3Index = '89283080ddbffff';
 const polygon = [
     [37.85848750746621, -122.48880236632749],
     [37.860723745370926, -122.47361033446712],
     [37.853811518065555, -122.47172205932065],
     [37.85055848093865, -122.48545496947689]
 ];
-const ring10 = h3core.kRing(h3Address, 10);
+const ring10 = h3core.kRing(h3Index, 10);
 const ring10Compact = h3core.compact(ring10);
 
 // add tests
 
 suite.add('h3IsValid', () => {
-    h3core.h3IsValid(h3Address);
+    h3core.h3IsValid(h3Index);
 });
 
 suite.add('geoToH3', () => {
@@ -44,15 +44,15 @@ suite.add('geoToH3', () => {
 });
 
 suite.add('h3ToGeo', () => {
-    h3core.h3ToGeo(h3Address);
+    h3core.h3ToGeo(h3Index);
 });
 
 suite.add('h3ToGeoBoundary', () => {
-    h3core.h3ToGeoBoundary(h3Address);
+    h3core.h3ToGeoBoundary(h3Index);
 });
 
 suite.add('kRing', () => {
-    h3core.kRing(h3Address, 1);
+    h3core.kRing(h3Index, 1);
 });
 
 suite.add('polyfill', () => {

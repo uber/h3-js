@@ -22,7 +22,8 @@ script:
   - yarn test-es6
   - yarn test-dist
   - yarn test-parity
-  - yarn prettier && git diff --exit-code
+  - yarn check-prettier
+  - yarn check-docs
   - yarn cover
 
 after_success:
