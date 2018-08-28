@@ -19,7 +19,7 @@ The library uses CommonJS modules. It can run natively in Node, but will require
 
 ### Core functions
 
-```
+```js
 const h3 = require("h3-js");
 
 // Convert a lat/lng point to a hexagon index at resolution 7
@@ -37,7 +37,7 @@ const hexBoundary = h3.h3ToGeoBoundary(h3Index);
 
 ### Useful algorithms
 
-```
+```js
 // Get all neighbors within 1 step of the hexagon
 const kRing = h3.kRing(h3Index, 1);
 // -> ['87283472bffffff', '87283472affffff', ...]
@@ -62,7 +62,7 @@ const coordinates = h3.h3SetToMultiPolygon(hexagons, true);
 
 ## API Reference
 
-{{>all-docs}}
+{{>main}}
 
 ## Development
 
