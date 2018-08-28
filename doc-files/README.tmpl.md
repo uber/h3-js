@@ -22,16 +22,16 @@ The library uses CommonJS modules. It can run natively in Node, but will require
 ```
 const h3 = require("h3-js");
 
-// Convert a lat/lng point to a hexagon address at resolution 7
-const h3Address = h3.geoToH3(37.3615593, -122.0553238, 7);
+// Convert a lat/lng point to a hexagon index at resolution 7
+const h3Index = h3.geoToH3(37.3615593, -122.0553238, 7);
 // -> '87283472bffffff'
 
 // Get the center of the hexagon
-const hexCenterCoordinates = h3.h3ToGeo(h3Address);
+const hexCenterCoordinates = h3.h3ToGeo(h3Index);
 // -> [37.35171820183272, -122.05032565263946]
 
 // Get the vertices of the hexagon
-const hexBoundary = h3.h3ToGeoBoundary(h3Address);
+const hexBoundary = h3.h3ToGeoBoundary(h3Index);
 // -> [ [37.341099093235684, -122.04156135164334 ], ...]
 ```
 
@@ -39,7 +39,7 @@ const hexBoundary = h3.h3ToGeoBoundary(h3Address);
 
 ```
 // Get all neighbors within 1 step of the hexagon
-const kRing = h3.kRing(h3Address, 1);
+const kRing = h3.kRing(h3Index, 1);
 // -> ['87283472bffffff', '87283472affffff', ...]
 
 // Get the set of hexagons within a polygon

@@ -30,24 +30,24 @@ function toLowPrecision(maybeNumber) {
 }
 
 test('h3IsValid', assert => {
-    assert.ok(h3core.h3IsValid('85283473fffffff'), 'H3 Address is considered an address');
-    assert.ok(h3core.h3IsValid('850dab63fffffff'), 'H3 Address from Java assert also valid');
-    assert.ok(!h3core.h3IsValid('lolwut'), 'Random string is not considered an address');
-    assert.ok(!h3core.h3IsValid(null), 'Null is not considered an address');
-    assert.ok(!h3core.h3IsValid(), 'Undefined is not considered an address');
-    assert.ok(!h3core.h3IsValid({}), 'Object is not considered an address');
+    assert.ok(h3core.h3IsValid('85283473fffffff'), 'H3 index is considered an index');
+    assert.ok(h3core.h3IsValid('850dab63fffffff'), 'H3 index from Java assert also valid');
+    assert.ok(!h3core.h3IsValid('lolwut'), 'Random string is not considered an index');
+    assert.ok(!h3core.h3IsValid(null), 'Null is not considered an index');
+    assert.ok(!h3core.h3IsValid(), 'Undefined is not considered an index');
+    assert.ok(!h3core.h3IsValid({}), 'Object is not considered an index');
     for (let res = 0; res < 16; res++) {
         assert.ok(
             h3core.h3IsValid(h3core.geoToH3(37, -122, res)),
-            'H3 Address is considered an address'
+            'H3 index is considered an index'
         );
     }
     assert.end();
 });
 
 test('geoToH3', assert => {
-    const h3Address = h3core.geoToH3(37.3615593, -122.0553238, 5);
-    assert.equal(h3Address, '85283473fffffff', 'Got the expected H3 address back');
+    const h3Index = h3core.geoToH3(37.3615593, -122.0553238, 5);
+    assert.equal(h3Index, '85283473fffffff', 'Got the expected H3 index back');
     const ffffffffAddress = h3core.geoToH3(30.943387, -164.991559, 5);
     assert.equal(ffffffffAddress, '8547732ffffffff', 'Properly handle 8 Fs');
     const centralAddress = h3core.geoToH3(46.04189431883772, 71.52790329909925, 15);
@@ -58,15 +58,15 @@ test('geoToH3', assert => {
 test('h3GetResolution', assert => {
     assert.equal(h3core.h3GetResolution(), -1, 'Got an invalid resolution back with no query');
     for (let res = 0; res < 16; res++) {
-        const h3Address = h3core.geoToH3(37.3615593, -122.0553238, res);
-        assert.equal(h3core.h3GetResolution(h3Address), res, 'Got the expected resolution back');
+        const h3Index = h3core.geoToH3(37.3615593, -122.0553238, res);
+        assert.equal(h3core.h3GetResolution(h3Index), res, 'Got the expected resolution back');
     }
     assert.end();
 });
 
 test('sillyGeoToH3', assert => {
-    const h3Address = h3core.geoToH3(37.3615593 + 180.0, -122.0553238 + 360.0, 5);
-    assert.equal(h3Address, '85283473fffffff', 'world-wrapping lat, lng corrected');
+    const h3Index = h3core.geoToH3(37.3615593 + 180.0, -122.0553238 + 360.0, 5);
+    assert.equal(h3Index, '85283473fffffff', 'world-wrapping lat, lng corrected');
     assert.end();
 });
 
@@ -544,8 +544,8 @@ test('polyfill - With Two Holes', assert => {
 });
 
 test('h3SetToMultiPolygon - Empty', assert => {
-    const h3Addresses = [];
-    const multiPolygon = h3core.h3SetToMultiPolygon(h3Addresses);
+    const h3Indexes = [];
+    const multiPolygon = h3core.h3SetToMultiPolygon(h3Indexes);
 
     assert.deepEqual(multiPolygon, [], 'no hexagons yields an empty array');
 
@@ -553,9 +553,9 @@ test('h3SetToMultiPolygon - Empty', assert => {
 });
 
 test('h3SetToMultiPolygon - Single', assert => {
-    const h3Addresses = ['89283082837ffff'];
-    const multiPolygon = h3core.h3SetToMultiPolygon(h3Addresses);
-    const vertices = h3core.h3ToGeoBoundary(h3Addresses[0]);
+    const h3Indexes = ['89283082837ffff'];
+    const multiPolygon = h3core.h3SetToMultiPolygon(h3Indexes);
+    const vertices = h3core.h3ToGeoBoundary(h3Indexes[0]);
     // This is tricky, because output in an order starting from any vertex
     // would also be correct, but that's difficult to assert and there's
     // value in being specific here
@@ -569,9 +569,9 @@ test('h3SetToMultiPolygon - Single', assert => {
 });
 
 test('h3SetToMultiPolygon - Single GeoJson', assert => {
-    const h3Addresses = ['89283082837ffff'];
-    const multiPolygon = h3core.h3SetToMultiPolygon(h3Addresses, true);
-    const vertices = h3core.h3ToGeoBoundary(h3Addresses[0], true);
+    const h3Indexes = ['89283082837ffff'];
+    const multiPolygon = h3core.h3SetToMultiPolygon(h3Indexes, true);
+    const vertices = h3core.h3ToGeoBoundary(h3Indexes[0], true);
     // As above, could require an order update later on
     const expected = [
         [
@@ -594,10 +594,10 @@ test('h3SetToMultiPolygon - Single GeoJson', assert => {
 
 test('h3SetToMultiPolygon - Contiguous 2', assert => {
     // the second hexagon shares v0 and v1 with the first
-    const h3Addresses = ['89283082837ffff', '89283082833ffff'];
-    const multiPolygon = h3core.h3SetToMultiPolygon(h3Addresses);
-    const vertices0 = h3core.h3ToGeoBoundary(h3Addresses[0]);
-    const vertices1 = h3core.h3ToGeoBoundary(h3Addresses[1]);
+    const h3Indexes = ['89283082837ffff', '89283082833ffff'];
+    const multiPolygon = h3core.h3SetToMultiPolygon(h3Indexes);
+    const vertices0 = h3core.h3ToGeoBoundary(h3Indexes[0]);
+    const vertices1 = h3core.h3ToGeoBoundary(h3Indexes[1]);
     // As above: This assert is brittle but worthwhile; it's possible we'll
     // need to update to a new start vertex if the algo internals are updated
     const expected = [
@@ -624,8 +624,8 @@ test('h3SetToMultiPolygon - Contiguous 2', assert => {
 
 test('h3SetToMultiPolygon - Non-contiguous 2', assert => {
     // the second hexagon does not touch the first
-    const h3Addresses = ['89283082837ffff', '8928308280fffff'];
-    const multiPolygon = h3core.h3SetToMultiPolygon(h3Addresses);
+    const h3Indexes = ['89283082837ffff', '8928308280fffff'];
+    const multiPolygon = h3core.h3SetToMultiPolygon(h3Indexes);
     // TODO: Update to appropriate expectations when the algorithm correctly
     // returns two polygons
     assert.equal(multiPolygon.length, 1, 'polygon count matches expected');
@@ -638,7 +638,7 @@ test('h3SetToMultiPolygon - Non-contiguous 2', assert => {
 
 test('h3SetToMultiPolygon - Hole', assert => {
     // Six hexagons in a ring around a hole
-    const h3Addresses = [
+    const h3Indexes = [
         '892830828c7ffff',
         '892830828d7ffff',
         '8928308289bffff',
@@ -646,7 +646,7 @@ test('h3SetToMultiPolygon - Hole', assert => {
         '8928308288fffff',
         '89283082883ffff'
     ];
-    const multiPolygon = h3core.h3SetToMultiPolygon(h3Addresses);
+    const multiPolygon = h3core.h3SetToMultiPolygon(h3Indexes);
 
     assert.equal(multiPolygon.length, 1, 'polygon count matches expected');
     assert.equal(multiPolygon[0].length, 2, 'loop count matches expected');
@@ -658,15 +658,15 @@ test('h3SetToMultiPolygon - Hole', assert => {
 
 test('h3SetToMultiPolygon - kRing', assert => {
     // 2-ring in order returned by algo
-    let h3Addresses = h3core.kRing('8930062838bffff', 2);
-    let multiPolygon = h3core.h3SetToMultiPolygon(h3Addresses);
+    let h3Indexes = h3core.kRing('8930062838bffff', 2);
+    let multiPolygon = h3core.h3SetToMultiPolygon(h3Indexes);
 
     assert.equal(multiPolygon.length, 1, 'polygon count matches expected');
     assert.equal(multiPolygon[0].length, 1, 'loop count matches expected');
     assert.equal(multiPolygon[0][0].length, 6 * (2 * 2 + 1), 'coord count matches expected');
 
     // Same k-ring in random order
-    h3Addresses = [
+    h3Indexes = [
         '89300628393ffff',
         '89300628383ffff',
         '89300628397ffff',
@@ -688,14 +688,14 @@ test('h3SetToMultiPolygon - kRing', assert => {
         '893006283c7ffff'
     ];
 
-    multiPolygon = h3core.h3SetToMultiPolygon(h3Addresses);
+    multiPolygon = h3core.h3SetToMultiPolygon(h3Indexes);
 
     assert.equal(multiPolygon.length, 1, 'polygon count matches expected');
     assert.equal(multiPolygon[0].length, 1, 'loop count matches expected');
     assert.equal(multiPolygon[0][0].length, 6 * (2 * 2 + 1), 'coord count matches expected');
 
-    h3Addresses = h3core.kRing('8930062838bffff', 6).sort();
-    multiPolygon = h3core.h3SetToMultiPolygon(h3Addresses);
+    h3Indexes = h3core.kRing('8930062838bffff', 6).sort();
+    multiPolygon = h3core.h3SetToMultiPolygon(h3Indexes);
 
     assert.equal(multiPolygon[0].length, 1, 'loop count matches expected');
 
@@ -780,25 +780,25 @@ test('h3IsPentagon', assert => {
 });
 
 test('h3IsResClassIII', assert => {
-    // Test all even addresses
+    // Test all even indexes
     for (let i = 0; i < 15; i += 2) {
-        const h3Address = h3core.geoToH3(37.3615593, -122.0553238, i);
-        assert.equals(h3core.h3IsResClassIII(h3Address), false, `False for res ${i}`);
+        const h3Index = h3core.geoToH3(37.3615593, -122.0553238, i);
+        assert.equals(h3core.h3IsResClassIII(h3Index), false, `False for res ${i}`);
     }
 
-    // Test all odd addresses
+    // Test all odd indexes
     for (let i = 1; i < 15; i += 2) {
-        const h3Address = h3core.geoToH3(37.3615593, -122.0553238, i);
-        assert.equals(h3core.h3IsResClassIII(h3Address), true, `True for res ${i}`);
+        const h3Index = h3core.geoToH3(37.3615593, -122.0553238, i);
+        assert.equals(h3core.h3IsResClassIII(h3Index), true, `True for res ${i}`);
     }
 
     assert.end();
 });
 
 test('h3GetBaseCell', assert => {
-    const h3Address = '8928308280fffff';
+    const h3Index = '8928308280fffff';
 
-    assert.equal(h3core.h3GetBaseCell(h3Address), 20, 'Got expected base cell');
+    assert.equal(h3core.h3GetBaseCell(h3Index), 20, 'Got expected base cell');
 
     assert.end();
 });
@@ -822,11 +822,11 @@ test('h3ToParent', assert => {
 });
 
 test('h3ToParent - Invalid', assert => {
-    const h3Address = '8928308280fffff';
+    const h3Index = '8928308280fffff';
 
-    assert.equals(h3core.h3ToParent(h3Address, 10), null, 'Finer resolution returns null');
-    assert.equals(h3core.h3ToParent(h3Address, -1), null, 'Invalid resolution returns null');
-    assert.equals(h3core.h3ToParent('foo', 10), null, 'Invalid address returns null');
+    assert.equals(h3core.h3ToParent(h3Index, 10), null, 'Finer resolution returns null');
+    assert.equals(h3core.h3ToParent(h3Index, -1), null, 'Invalid resolution returns null');
+    assert.equals(h3core.h3ToParent('foo', 10), null, 'Invalid index returns null');
 
     assert.end();
 });
@@ -834,20 +834,12 @@ test('h3ToParent - Invalid', assert => {
 test('h3ToChildren', assert => {
     const lat = 37.81331899988944;
     const lng = -122.409290778685;
-    const h3Address = h3core.geoToH3(lat, lng, 7);
+    const h3Index = h3core.geoToH3(lat, lng, 7);
 
-    assert.equal(h3core.h3ToChildren(h3Address, 8).length, 7, 'Immediate child count correct');
-    assert.equal(h3core.h3ToChildren(h3Address, 9).length, 49, 'Grandchild count correct');
-    assert.deepEqual(
-        h3core.h3ToChildren(h3Address, 7),
-        [h3Address],
-        'Same resolution returns self'
-    );
-    assert.deepEqual(
-        h3core.h3ToChildren(h3Address, 6),
-        [],
-        'Coarser resolution returns empty array'
-    );
+    assert.equal(h3core.h3ToChildren(h3Index, 8).length, 7, 'Immediate child count correct');
+    assert.equal(h3core.h3ToChildren(h3Index, 9).length, 49, 'Grandchild count correct');
+    assert.deepEqual(h3core.h3ToChildren(h3Index, 7), [h3Index], 'Same resolution returns self');
+    assert.deepEqual(h3core.h3ToChildren(h3Index, 6), [], 'Coarser resolution returns empty array');
 
     assert.end();
 });
@@ -880,27 +872,27 @@ test('h3IndexesAreNeighbors', assert => {
     assert.equal(
         h3core.h3IndexesAreNeighbors(origin, 'foo'),
         false,
-        'A hexagon is not a neighbor to an invalid address'
+        'A hexagon is not a neighbor to an invalid index'
     );
     assert.equal(
         h3core.h3IndexesAreNeighbors(origin, 42),
         false,
-        'A hexagon is not a neighbor to an invalid address'
+        'A hexagon is not a neighbor to an invalid index'
     );
     assert.equal(
         h3core.h3IndexesAreNeighbors(origin, null),
         false,
-        'A hexagon is not a neighbor to an invalid address'
+        'A hexagon is not a neighbor to an invalid index'
     );
     assert.equal(
         h3core.h3IndexesAreNeighbors('foo', 'foo'),
         false,
-        'Two invalid addresses are not neighbors'
+        'Two invalid indexes are not neighbors'
     );
     assert.equal(
         h3core.h3IndexesAreNeighbors(null, null),
         false,
-        'Two invalid addresses are not neighbors'
+        'Two invalid indexes are not neighbors'
     );
 
     assert.end();
@@ -1002,7 +994,7 @@ test('h3UnidirectionalEdgeIsValid', assert => {
     assert.equal(
         h3core.h3UnidirectionalEdgeIsValid('1591ea6d6533ffff'),
         true,
-        'Edge address is valid'
+        'Edge index is valid'
     );
     assert.equal(
         h3core.h3UnidirectionalEdgeIsValid(h3core.getH3UnidirectionalEdge(origin, destination)),
