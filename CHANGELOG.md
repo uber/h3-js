@@ -5,11 +5,17 @@ All notable changes to this project will be documented in this file. This librar
 ## [Unreleased]
 - *None*
 
+### Fixed
+- Updated the core library to v3.1.1, including fixes for `polyfill` and `h3SetToMultiPolygon` (#19)
+- Removed Emscripten Node error handling from built library, fixing stacktraces (#18)
+### Added
+- Added generated API documentation to README (#17)
+
 ## [3.1.0] - 2018-08-13
 ### Added
 - Added binding for `h3Distance` (#15)
 ### Changed
-- Updated the core library to 3.1.0 (#15)
+- Updated the core library to v3.1.0 (#15)
 - Moved emscripten build to docker (#14)
 
 ## [3.0.2] - 2018-07-26
