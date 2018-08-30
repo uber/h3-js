@@ -29,6 +29,40 @@ function toLowPrecision(maybeNumber) {
     throw new Error(`Unhandled type: ${maybeNumber}`);
 }
 
+// Assert a vertex loop regardless of starting vertex
+function assertLoop(assert, loop, expected, isGeoJSON) {
+    // Drop the repeated vertex if GeoJSON
+    if (isGeoJSON) {
+        loop = loop.slice(0, -1);
+    }
+    // Find the start index
+    const index = loop.findIndex(
+        vertex => toLowPrecision(vertex).join(',') === toLowPrecision(expected[0]).join(',')
+    );
+    assert.ok(index >= 0, 'Found start index in loop');
+    // Wrap the loop to the right start index
+    loop = loop.slice(index).concat(loop.slice(0, index));
+    // Close GeoJSON loops
+    if (isGeoJSON) {
+        loop.push(loop[0]);
+    }
+    assert.deepEqual(loop, expected, 'Got expected loop (independent of starting vertex)');
+}
+
+function assertPolygon(assert, input, expected, isGeoJSON) {
+    assert.equal(input.length, expected.length, 'Polygon has expected number of loops');
+    for (let i = 0; i < input.length; i++) {
+        assertLoop(assert, input[i], expected[i], isGeoJSON);
+    }
+}
+
+function assertMultiPolygon(assert, input, expected, isGeoJSON) {
+    assert.equal(input.length, expected.length, 'MultiPolygon has expected number of polygons');
+    for (let i = 0; i < input.length; i++) {
+        assertPolygon(assert, input[i], expected[i], isGeoJSON);
+    }
+}
+
 test('h3IsValid', assert => {
     assert.ok(h3core.h3IsValid('85283473fffffff'), 'H3 index is considered an index');
     assert.ok(h3core.h3IsValid('850dab63fffffff'), 'H3 index from Java assert also valid');
@@ -55,18 +89,18 @@ test('geoToH3', assert => {
     assert.end();
 });
 
+test('sillyGeoToH3', assert => {
+    const h3Index = h3core.geoToH3(37.3615593, -122.0553238 + 360.0, 5);
+    assert.equal(h3Index, '85283473fffffff', 'world-wrapping lng accepted');
+    assert.end();
+});
+
 test('h3GetResolution', assert => {
     assert.equal(h3core.h3GetResolution(), -1, 'Got an invalid resolution back with no query');
     for (let res = 0; res < 16; res++) {
         const h3Index = h3core.geoToH3(37.3615593, -122.0553238, res);
         assert.equal(h3core.h3GetResolution(h3Index), res, 'Got the expected resolution back');
     }
-    assert.end();
-});
-
-test('sillyGeoToH3', assert => {
-    const h3Index = h3core.geoToH3(37.3615593 + 180.0, -122.0553238 + 360.0, 5);
-    assert.equal(h3Index, '85283473fffffff', 'world-wrapping lat, lng corrected');
     assert.end();
 });
 
@@ -556,14 +590,9 @@ test('h3SetToMultiPolygon - Single', assert => {
     const h3Indexes = ['89283082837ffff'];
     const multiPolygon = h3core.h3SetToMultiPolygon(h3Indexes);
     const vertices = h3core.h3ToGeoBoundary(h3Indexes[0]);
-    // This is tricky, because output in an order starting from any vertex
-    // would also be correct, but that's difficult to assert and there's
-    // value in being specific here
-    const expected = [
-        [[vertices[2], vertices[3], vertices[4], vertices[5], vertices[0], vertices[1]]]
-    ];
+    const expected = [[vertices]];
 
-    assert.deepEqual(multiPolygon, expected, 'outline matches expected');
+    assertMultiPolygon(assert, multiPolygon, expected);
 
     assert.end();
 });
@@ -572,22 +601,9 @@ test('h3SetToMultiPolygon - Single GeoJson', assert => {
     const h3Indexes = ['89283082837ffff'];
     const multiPolygon = h3core.h3SetToMultiPolygon(h3Indexes, true);
     const vertices = h3core.h3ToGeoBoundary(h3Indexes[0], true);
-    // As above, could require an order update later on
-    const expected = [
-        [
-            [
-                vertices[2],
-                vertices[3],
-                vertices[4],
-                vertices[5],
-                vertices[0],
-                vertices[1],
-                vertices[2]
-            ]
-        ]
-    ];
+    const expected = [[vertices]];
 
-    assert.deepEqual(multiPolygon, expected, 'outline matches expected');
+    assertMultiPolygon(assert, multiPolygon, expected, true);
 
     assert.end();
 });
@@ -598,8 +614,6 @@ test('h3SetToMultiPolygon - Contiguous 2', assert => {
     const multiPolygon = h3core.h3SetToMultiPolygon(h3Indexes);
     const vertices0 = h3core.h3ToGeoBoundary(h3Indexes[0]);
     const vertices1 = h3core.h3ToGeoBoundary(h3Indexes[1]);
-    // As above: This assert is brittle but worthwhile; it's possible we'll
-    // need to update to a new start vertex if the algo internals are updated
     const expected = [
         [
             [
@@ -617,7 +631,7 @@ test('h3SetToMultiPolygon - Contiguous 2', assert => {
         ]
     ];
 
-    assert.deepEqual(multiPolygon, expected, 'outline matches expected');
+    assertMultiPolygon(assert, multiPolygon, expected);
 
     assert.end();
 });
@@ -626,12 +640,11 @@ test('h3SetToMultiPolygon - Non-contiguous 2', assert => {
     // the second hexagon does not touch the first
     const h3Indexes = ['89283082837ffff', '8928308280fffff'];
     const multiPolygon = h3core.h3SetToMultiPolygon(h3Indexes);
-    // TODO: Update to appropriate expectations when the algorithm correctly
-    // returns two polygons
-    assert.equal(multiPolygon.length, 1, 'polygon count matches expected');
-    assert.equal(multiPolygon[0].length, 2, 'loop count matches expected');
-    assert.equal(multiPolygon[0][0].length, 6, 'coord count 1 matches expected');
-    assert.equal(multiPolygon[0][1].length, 6, 'coord count 2 matches expected');
+    const vertices0 = h3core.h3ToGeoBoundary(h3Indexes[0]);
+    const vertices1 = h3core.h3ToGeoBoundary(h3Indexes[1]);
+    const expected = [[vertices0], [vertices1]];
+
+    assertMultiPolygon(assert, multiPolygon, expected);
 
     assert.end();
 });
@@ -698,6 +711,24 @@ test('h3SetToMultiPolygon - kRing', assert => {
     multiPolygon = h3core.h3SetToMultiPolygon(h3Indexes);
 
     assert.equal(multiPolygon[0].length, 1, 'loop count matches expected');
+
+    assert.end();
+});
+
+test('h3SetToMultiPolygon - Nested Donuts', assert => {
+    const origin = '892830828c7ffff';
+    const h3Indexes = h3core.hexRing(origin, 1).concat(h3core.hexRing(origin, 3));
+    const multiPolygon = h3core.h3SetToMultiPolygon(h3Indexes);
+
+    // This assertion is brittle, as the order of polygons is undefined, and it would
+    // be equally correct if the smaller ring was first
+    assert.equal(multiPolygon.length, 2, 'polygon count matches expected');
+    assert.equal(multiPolygon[0].length, 2, 'loop count matches expected');
+    assert.equal(multiPolygon[0][0].length, 6 * 7, 'outer coord count matches expected');
+    assert.equal(multiPolygon[0][1].length, 6 * 5, 'inner coord count matches expected');
+    assert.equal(multiPolygon[1].length, 2, 'loop count matches expected');
+    assert.equal(multiPolygon[1][0].length, 6 * 3, 'outer coord count matches expected');
+    assert.equal(multiPolygon[1][1].length, 6, 'inner coord count matches expected');
 
     assert.end();
 });
