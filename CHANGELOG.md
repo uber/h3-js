@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This librar
 ## [Unreleased]
 - *None*
 
+## [3.1.1] - 2018-08-30
 ### Fixed
 - Updated the core library to v3.1.1, including fixes for `polyfill` and `h3SetToMultiPolygon` (#19)
 - Removed Emscripten Node error handling from built library, fixing stacktraces (#18)
