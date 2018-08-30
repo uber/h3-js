@@ -3,11 +3,13 @@
 All notable changes to this project will be documented in this file. This library adheres to a versioning policy described in [the README](./README.md#versioning). The public API of this library consists of the functions exported in [h3core.js](./lib/h3core.js).
 
 ## [Unreleased]
+- *None*
+
 ### Fixed
-- Updated the core library to v3.1.1, including fixes for `polyfill` and `h3SetToMultiPolygon` (#20)
+- Updated the core library to v3.1.1, including fixes for `polyfill` and `h3SetToMultiPolygon` (#19)
 - Removed Emscripten Node error handling from built library, fixing stacktraces (#18)
 ### Added
-- Added generated API documentation to README (#19)
+- Added generated API documentation to README (#17)
 
 ## [3.1.0] - 2018-08-13
 ### Added
