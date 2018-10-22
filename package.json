@@ -38,7 +38,7 @@
     "prepublish": "yarn dist",
     "init-docker": "docker run -dit --name emscripten -v $(pwd):/src trzeci/emscripten:sdk-tag-1.37.40-64bit bash",
     "build-emscripten": "docker exec -it emscripten bash .build-emscripten.sh",
-    "build-docs": "jsdoc2md --global-index-format grouped --partial doc-files/scope.hbs --separators --template doc-files/README.tmpl.md lib/h3core.js > README.md",
+    "build-docs": "jsdoc2md --global-index-format grouped --partial doc-files/scope.hbs --helper ./doc-files/insert-version.js --separators --template doc-files/README.tmpl.md lib/h3core.js > README.md",
     "prettier": "prettier --write --single-quote --no-bracket-spacing --print-width=100 'lib/**/*.js' 'build/**/*.js' 'test/**/*.js'"
   },
   "devDependencies": {
