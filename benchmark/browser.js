@@ -15,7 +15,6 @@
  */
 
 /* eslint-env browser */
-/* eslint-disable no-console */
 
 const Benchmark = require('benchmark');
 const makeBenchmarks = require('./benchmarks');
