@@ -28,5 +28,6 @@ int sizeOfGeoBoundary();
 int sizeOfGeofence();
 int sizeOfGeoPolygon();
 int sizeOfLinkedGeoPolygon();
+int sizeOfCoordIJ();
 
 #endif

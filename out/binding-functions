@@ -31,3 +31,5 @@ getH3IndexesFromUnidirectionalEdge
 getH3UnidirectionalEdgesFromHexagon
 getH3UnidirectionalEdgeBoundary
 h3Distance
+experimentalH3ToLocalIj
+experimentalLocalIjToH3
