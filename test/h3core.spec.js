@@ -1248,7 +1248,17 @@ test('experimentalH3ToLocalIj - errors', assert => {
         'Got expected error'
     );
     assert.throws(
+        () => h3core.experimentalH3ToLocalIj('8828308281fffff', '8841492553fffff'),
+        /too far/,
+        'Got expected error for opposite sides of the world'
+    );
+    assert.throws(
         () => h3core.experimentalH3ToLocalIj('81283ffffffffff', '811cbffffffffff'),
+        /pentagon distortion/,
+        'Got expected error'
+    );
+    assert.throws(
+        () => h3core.experimentalH3ToLocalIj('811d3ffffffffff', '8122bffffffffff'),
         /pentagon distortion/,
         'Got expected error'
     );
