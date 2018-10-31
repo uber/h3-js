@@ -28,6 +28,7 @@
     "test-parity": "node test/test-parity.js | faucet",
     "test-dist": "node dist/test/index.js | faucet",
     "cover": "istanbul cover -x out/*.js -- test/index.js",
+    "view-cover": "istanbul cover -x out/*.js --report=html -- test/index.js && open coverage/index.html",
     "check-prettier": "yarn prettier && git diff --exit-code",
     "check-docs": "yarn build-docs && git diff --exit-code",
     "dist": "yarn dist-clean && mkdir -p dist/out && buble -i lib -o dist/lib && cp out/libh3.js dist/out",

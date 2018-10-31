@@ -44,3 +44,7 @@ int sizeOfGeoPolygon() {
 int sizeOfLinkedGeoPolygon() {
     return sizeof(LinkedGeoPolygon);
 }
+
+int sizeOfCoordIJ() {
+    return sizeof(CoordIJ);
+}

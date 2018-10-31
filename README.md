@@ -1,6 +1,6 @@
 # h3-js
 
-[![H3 Version](https://img.shields.io/badge/h3_api-v3.1.1-blue.svg)](https://github.com/uber/h3/releases/tag/v3.1.1) [![Build Status](https://travis-ci.org/uber/h3-js.svg?branch=master)](https://travis-ci.org/uber/h3-js) [![Coverage Status](https://coveralls.io/repos/github/uber/h3-js/badge.svg?branch=master)](https://coveralls.io/github/uber/h3-js?branch=master)
+[![H3 Version](https://img.shields.io/badge/h3_api-v3.2.0-blue.svg)](https://github.com/uber/h3/releases/tag/v3.2.0) [![Build Status](https://travis-ci.org/uber/h3-js.svg?branch=master)](https://travis-ci.org/uber/h3-js) [![Coverage Status](https://coveralls.io/repos/github/uber/h3-js/badge.svg?branch=master)](https://coveralls.io/github/uber/h3-js?branch=master)
 
 The `h3-js` library provides a pure-JavaScript version of the [H3 Core Library](https://github.com/uber/h3), a hexagon-based geographic grid system. It can be used either in Node >= 4 or in the browser. The core library is transpiled from C using [emscripten](http://kripken.github.io/emscripten-site), offering full parity with the C API and highly efficient operations.
 
@@ -93,6 +93,8 @@ const coordinates = h3.h3SetToMultiPolygon(hexagons, true);
     * [.getH3UnidirectionalEdgesFromHexagon(h3Index)](#module_h3.getH3UnidirectionalEdgesFromHexagon) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.getH3UnidirectionalEdgeBoundary(edgeIndex, formatAsGeoJson)](#module_h3.getH3UnidirectionalEdgeBoundary) ⇒ <code>Array.&lt;Array&gt;</code>
     * [.h3Distance(origin, destination)](#module_h3.h3Distance) ⇒ <code>Number</code>
+    * [.experimentalH3ToLocalIj(origin, destination)](#module_h3.experimentalH3ToLocalIj) ⇒ <code>Object</code>
+    * [.experimentalLocalIjToH3(origin, coords)](#module_h3.experimentalLocalIjToH3) ⇒ <code>H3Index</code>
     * [.hexArea(res, unit)](#module_h3.hexArea) ⇒ <code>Number</code>
     * [.edgeLength(res, unit)](#module_h3.edgeLength) ⇒ <code>Number</code>
     * [.numHexagons(res)](#module_h3.numHexagons) ⇒ <code>Number</code>
@@ -509,6 +511,62 @@ on opposite sides of a pentagon.
 | --- | --- | --- |
 | origin | <code>H3Index</code> | Origin hexagon index |
 | destination | <code>H3Index</code> | Destination hexagon index |
+
+
+* * *
+
+<a name="module_h3.experimentalH3ToLocalIj"></a>
+
+### h3.experimentalH3ToLocalIj(origin, destination) ⇒ <code>Object</code>
+Produces IJ coordinates for an H3 index anchored by an origin.
+
+- The coordinate space used by this function may have deleted
+regions or warping due to pentagonal distortion.
+- Coordinates are only comparable if they come from the same
+origin index.
+- Failure may occur if the index is too far away from the origin
+or if the index is on the other side of a pentagon.
+- This function is experimental, and its output is not guaranteed
+to be compatible across different versions of H3.
+
+**Returns**: <code>Object</code> - Coordinates as an `{i, j}` pair  
+**Throws**:
+
+- <code>Error</code> If the IJ coordinates cannot be calculated
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| origin | <code>H3Index</code> | Origin H3 index |
+| destination | <code>H3Index</code> | H3 index for which to find relative coordinates |
+
+
+* * *
+
+<a name="module_h3.experimentalLocalIjToH3"></a>
+
+### h3.experimentalLocalIjToH3(origin, coords) ⇒ <code>H3Index</code>
+Produces an H3 index for IJ coordinates anchored by an origin.
+
+- The coordinate space used by this function may have deleted
+regions or warping due to pentagonal distortion.
+- Coordinates are only comparable if they come from the same
+origin index.
+- Failure may occur if the index is too far away from the origin
+or if the index is on the other side of a pentagon.
+- This function is experimental, and its output is not guaranteed
+to be compatible across different versions of H3.
+
+**Returns**: <code>H3Index</code> - H3 index at the relative coordinates  
+**Throws**:
+
+- <code>Error</code> If the H3 index cannot be calculated
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| origin | <code>H3Index</code> | Origin H3 index |
+| coords | <code>Object</code> | Coordinates as an `{i, j}` pair |
 
 
 * * *
