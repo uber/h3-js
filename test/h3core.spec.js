@@ -1190,6 +1190,92 @@ test('h3Distance - failure', assert => {
     assert.end();
 });
 
+test('experimentalH3ToLocalIj / experimentalLocalIjToH3', assert => {
+    const origin = '8828308281fffff';
+    [
+        [origin, {i: 392, j: 336}],
+        ['882830828dfffff', {i: 393, j: 337}],
+        ['8828308285fffff', {i: 392, j: 337}],
+        ['8828308287fffff', {i: 391, j: 336}],
+        ['8828308283fffff', {i: 391, j: 335}],
+        ['882830828bfffff', {i: 392, j: 335}],
+        ['8828308289fffff', {i: 393, j: 336}]
+    ].forEach(([h3Index, coords]) => {
+        assert.deepEqual(
+            h3core.experimentalH3ToLocalIj(origin, h3Index),
+            coords,
+            `Got expected coordinates for ${h3Index}`
+        );
+        assert.deepEqual(
+            h3core.experimentalLocalIjToH3(origin, coords),
+            h3Index,
+            `Got expected H3 index for ${JSON.stringify(coords)}`
+        );
+    });
+    assert.end();
+});
+
+test('experimentalH3ToLocalIj / experimentalLocalIjToH3 - Pentagon', assert => {
+    const origin = '811c3ffffffffff';
+    [
+        [origin, {i: 0, j: 0}],
+        ['811d3ffffffffff', {i: 1, j: 0}],
+        ['811cfffffffffff', {i: -1, j: 0}]
+    ].forEach(([h3Index, coords]) => {
+        assert.deepEqual(
+            h3core.experimentalH3ToLocalIj(origin, h3Index),
+            coords,
+            `Got expected coordinates for ${h3Index}`
+        );
+        assert.deepEqual(
+            h3core.experimentalLocalIjToH3(origin, coords),
+            h3Index,
+            `Got expected H3 index for ${JSON.stringify(coords)}`
+        );
+    });
+    assert.end();
+});
+
+test('experimentalH3ToLocalIj - errors', assert => {
+    assert.throws(
+        () => h3core.experimentalH3ToLocalIj('832830fffffffff', '822837fffffffff'),
+        /Incompatible/,
+        'Got expected error'
+    );
+    assert.throws(
+        () => h3core.experimentalH3ToLocalIj('822a17fffffffff', '822837fffffffff'),
+        /too far/,
+        'Got expected error'
+    );
+    assert.throws(
+        () => h3core.experimentalH3ToLocalIj('81283ffffffffff', '811cbffffffffff'),
+        /pentagon distortion/,
+        'Got expected error'
+    );
+
+    assert.end();
+});
+
+test('experimentalLocalIjToH3 - errors', assert => {
+    assert.throws(
+        () => h3core.experimentalLocalIjToH3('8049fffffffffff', null),
+        /Coordinates must be provided/,
+        'Got expected error'
+    );
+    assert.throws(
+        () => h3core.experimentalLocalIjToH3('8049fffffffffff', [1, 0]),
+        /Coordinates must be provided/,
+        'Got expected error'
+    );
+    assert.throws(
+        () => h3core.experimentalLocalIjToH3('8049fffffffffff', {i: 2, j: 0}),
+        /Index not defined/,
+        'Got expected error'
+    );
+
+    assert.end();
+});
+
 test('hexArea', assert => {
     let last = 1e14;
     for (let res = 0; res < 16; res++) {
