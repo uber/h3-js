@@ -1,6 +1,6 @@
 {
   "name": "h3-js",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "description": "Emscripten transpiled libh3 'bindings' for Node/Web JS",
   "author": "David Ellis <d.f.ellis@ieee.org>",
   "contributors": [
