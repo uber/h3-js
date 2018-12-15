@@ -36,8 +36,9 @@ pushd src/h3lib/lib
 cp ../../../../build/sizes.h ../include
 cp ../../../../build/sizes.c .
 # Compile with emscripten
-emcc -O3 -I ../include *.c -o libh3.js -DH3_HAVE_VLA -s INVOKE_RUN=0 -s EXPORT_NAME="'libh3'" -s MODULARIZE=1 -s NO_FILESYSTEM=1 -s NODEJS_CATCH_EXIT=0 -s TOTAL_MEMORY=33554432 -s ALLOW_MEMORY_GROWTH=1 -s WARN_UNALIGNED=1 -s EXPORTED_FUNCTIONS=$bound_functions -s EXTRA_EXPORTED_RUNTIME_METHODS='["cwrap", "getValue", "setValue"]' --memory-init-file 0
+emcc -O3 -I ../include *.c -o libh3.js -DH3_HAVE_VLA -s WASM=0 -s INVOKE_RUN=0 -s EXPORT_NAME="'libh3'" -s MODULARIZE=1 -s NO_FILESYSTEM=1 -s NODEJS_CATCH_EXIT=0 -s TOTAL_MEMORY=33554432 -s ALLOW_MEMORY_GROWTH=1 -s WARN_UNALIGNED=1 -s EXPORTED_FUNCTIONS=$bound_functions -s EXTRA_EXPORTED_RUNTIME_METHODS='["cwrap", "getValue", "setValue"]' --memory-init-file 0
 cp libh3.js ../../../../out/libh3.js
 echo "module.exports = libh3();" >> ../../../../out/libh3.js
+echo "Object.keys(module.exports.asmLibraryArg).filter(function(k) { return typeof module.exports.asmLibraryArg[k] === 'function'; }).forEach(function(k) { module.exports[module.exports.asmLibraryArg[k].name] = module.exports.asmLibraryArg[k]; });" >> ../../../../out/libh3.js
 popd
 popd
