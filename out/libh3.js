@@ -33,5 +33,10 @@ if (typeof exports === 'object' && typeof module === 'object')
     define([], function() { return libh3; });
   else if (typeof exports === 'object')
     exports["libh3"] = libh3;
-  module.exports = libh3();
-Object.keys(module.exports.asmLibraryArg).filter(function(k) { return typeof module.exports.asmLibraryArg[k] === 'function'; }).forEach(function(k) { module.exports[module.exports.asmLibraryArg[k].name] = module.exports.asmLibraryArg[k]; });
+  const h3 = libh3();
+module.exports = h3;
+Object.keys(h3.asmLibraryArg)
+  .filter(k => typeof h3.asmLibraryArg[k] === 'function')
+  .forEach((k) => {
+    h3[h3.asmLibraryArg[k].name] = h3.asmLibraryArg[k];
+  });
