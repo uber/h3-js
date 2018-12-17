@@ -35,6 +35,7 @@ if (typeof exports === 'object' && typeof module === 'object')
     exports["libh3"] = libh3;
   const h3 = libh3();
 module.exports = h3;
+// Regression in latest Emscripten drops these methods, re-attach to the object with proper names
 Object.keys(h3.asmLibraryArg)
   .filter(k => typeof h3.asmLibraryArg[k] === 'function')
   .forEach((k) => {
