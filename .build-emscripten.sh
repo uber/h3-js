@@ -41,6 +41,7 @@ cp libh3.js ../../../../out/libh3.js
 cat << EOF >> ../../../../out/libh3.js
 const h3 = libh3();
 module.exports = h3;
+// Regression in latest Emscripten drops these methods, re-attach to the object with proper names
 Object.keys(h3.asmLibraryArg)
   .filter(k => typeof h3.asmLibraryArg[k] === 'function')
   .forEach((k) => {
