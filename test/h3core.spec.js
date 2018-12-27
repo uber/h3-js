@@ -1190,6 +1190,36 @@ test('h3Distance - failure', assert => {
     assert.end();
 });
 
+test('h3Line', assert => {
+    const origin = h3core.geoToH3(37.5, -122, 9);
+    const destination = h3core.geoToH3(25, -120, 9);
+    for (let res = 0; res < 5; res++) {
+        const line = h3core.h3Line(origin, destination);
+        const distance = h3core.h3Distance(origin, destination);
+        assert.equals(line.length, distance + 1, `distance matches expected: ${distance + 1}`);
+        // property-based test for the line
+        assert.ok(
+            line.every(
+                (h3Index, i) => i === 0 || h3core.h3IndexesAreNeighbors(h3Index, line[i - 1])
+            ),
+            'every index in the line is a neighbor of the previous'
+        );
+    }
+    assert.end();
+});
+
+test('h3Line - failure', assert => {
+    const origin = h3core.geoToH3(37.5, -122, 9);
+    const origin10 = h3core.geoToH3(37.5, -122, 10);
+
+    assert.throws(
+        () => h3core.h3Line(origin, origin10),
+        /Line cannot be calculated/,
+        'got expected error for different resolutions'
+    );
+    assert.end();
+});
+
 test('experimentalH3ToLocalIj / experimentalLocalIjToH3', assert => {
     const origin = '8828308281fffff';
     [
