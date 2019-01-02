@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file. This librar
 ## [Unreleased]
 - *None*
 
+## [3.3.0] - 2018-12-31
+### Changed
+- Updated the core library to v3.3.0 (#29)
+### Added
+- Added `h3Line` binding (#29)
+
 ## [3.2.0] - 2018-10-31
 ### Changed
 - Updated the core library to v3.2.0 (#26)
