@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file. This librar
 ## [Unreleased]
 - *None*
 
-## [3.3.0] - 2018-12-31
+## [3.3.0] - 2019-1-8
 ### Changed
 - Updated the core library to v3.3.0 (#29)
 ### Added
