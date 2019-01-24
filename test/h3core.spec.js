@@ -1421,3 +1421,11 @@ test('numHexagons - bad resolution', assert => {
 
     assert.end();
 });
+
+test('getRes0Indexes', assert => {
+    const indexes = h3core.getRes0Indexes();
+    assert.equal(indexes.length, 122, 'Got expected count');
+    assert.ok(indexes.every(h3core.h3IsValid), 'All indexes are valid');
+
+    assert.end();
+});
