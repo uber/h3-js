@@ -3,7 +3,10 @@
 All notable changes to this project will be documented in this file. This library adheres to a versioning policy described in [the README](./README.md#versioning). The public API of this library consists of the functions exported in [h3core.js](./lib/h3core.js).
 
 ## [Unreleased]
-- *None*
+### Changed
+- Updated the core library to v3.4.0 (#31)
+### Added
+- Added `getRes0Indexes` binding (#31)
 
 ## [3.3.0] - 2019-1-8
 ### Changed
