@@ -1,6 +1,6 @@
 # h3-js
 
-[![H3 Version](https://img.shields.io/badge/h3_api-v3.3.0-blue.svg)](https://github.com/uber/h3/releases/tag/v3.3.0) [![Build Status](https://travis-ci.org/uber/h3-js.svg?branch=master)](https://travis-ci.org/uber/h3-js) [![Coverage Status](https://coveralls.io/repos/github/uber/h3-js/badge.svg?branch=master)](https://coveralls.io/github/uber/h3-js?branch=master)
+[![H3 Version](https://img.shields.io/badge/h3_api-v3.4.0-blue.svg)](https://github.com/uber/h3/releases/tag/v3.4.0) [![Build Status](https://travis-ci.org/uber/h3-js.svg?branch=master)](https://travis-ci.org/uber/h3-js) [![Coverage Status](https://coveralls.io/repos/github/uber/h3-js/badge.svg?branch=master)](https://coveralls.io/github/uber/h3-js?branch=master)
 
 The `h3-js` library provides a pure-JavaScript version of the [H3 Core Library](https://github.com/uber/h3), a hexagon-based geographic grid system. It can be used either in Node >= 4 or in the browser. The core library is transpiled from C using [emscripten](http://kripken.github.io/emscripten-site), offering full parity with the C API and highly efficient operations.
 
@@ -99,6 +99,7 @@ const coordinates = h3.h3SetToMultiPolygon(hexagons, true);
     * [.hexArea(res, unit)](#module_h3.hexArea) ⇒ <code>Number</code>
     * [.edgeLength(res, unit)](#module_h3.edgeLength) ⇒ <code>Number</code>
     * [.numHexagons(res)](#module_h3.numHexagons) ⇒ <code>Number</code>
+    * [.getRes0Indexes()](#module_h3.getRes0Indexes) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.degsToRads(deg)](#module_h3.degsToRads) ⇒ <code>Number</code>
     * [.radsToDegs(rad)](#module_h3.radsToDegs) ⇒ <code>Number</code>
 
@@ -655,6 +656,17 @@ so consumers should use caution when applying further operations to the output.
 | --- | --- | --- |
 | res | <code>Number</code> | Hexagon resolution |
 
+
+* * *
+
+<a name="module_h3.getRes0Indexes"></a>
+
+### h3.getRes0Indexes() ⇒ <code>Array.&lt;H3Index&gt;</code>
+Get all H3 indexes at resolution 0. As every index at every resolution > 0 is
+the descendant of a res 0 index, this can be used with h3ToChildren to iterate
+over H3 indexes at any resolution.
+
+**Returns**: <code>Array.&lt;H3Index&gt;</code> - All H3 indexes at res 0  
 
 * * *
 
