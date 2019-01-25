@@ -6,3 +6,5 @@ node_modules/
 .*
 build/
 test/
+*.sublime-project
+*.sublime-workspace

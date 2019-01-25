@@ -25,6 +25,9 @@ pushd h3c
 git pull origin master --tags
 git checkout "v$(cat ../H3_VERSION)"
 
+# Run cmake - necessary for building h3api.h
+cmake .
+
 # Get canonical list of functions the lib should expose
 ./scripts/binding_functions.sh && cp binding-functions ../out
 

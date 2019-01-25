@@ -11,6 +11,7 @@ radsToDegs
 hexArea
 edgeLength
 numHexagons
+getRes0Indexes
 h3GetResolution
 h3GetBaseCell
 stringToH3
