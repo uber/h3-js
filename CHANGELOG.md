@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file. This library adheres to a versioning policy described in [the README](./README.md#versioning). The public API of this library consists of the functions exported in [h3core.js](./lib/h3core.js).
 
 ## [Unreleased]
+- *None*
+
+## [3.4.1] - 2019-01-25
 ### Fixed
 - Updated Emscripten, removing hack for `getTempRet0`
 
