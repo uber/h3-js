@@ -33,5 +33,5 @@ if (typeof exports === 'object' && typeof module === 'object')
       define([], function() { return libh3; });
     else if (typeof exports === 'object')
       exports["libh3"] = libh3;
-    const h3 = libh3();
+    var h3 = libh3();
 module.exports = h3;
