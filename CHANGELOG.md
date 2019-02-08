@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file. This librar
 ## [Unreleased]
 - *None*
 
+## [3.4.2] - 2019-02-08
+### Fixed
+- Changed `const` to `var` for better compatibility in Emscripten-generated code (#37)
+
 ## [3.4.1] - 2019-01-25
 ### Fixed
 - Updated Emscripten, removing hack for `getTempRet0`
