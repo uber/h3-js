@@ -1191,9 +1191,9 @@ test('h3Distance - failure', assert => {
 });
 
 test('h3Line', assert => {
-    const origin = h3core.geoToH3(37.5, -122, 9);
-    const destination = h3core.geoToH3(25, -120, 9);
-    for (let res = 0; res < 5; res++) {
+    for (let res = 0; res < 12; res++) {
+        const origin = h3core.geoToH3(37.5, -122, res);
+        const destination = h3core.geoToH3(25, -120, res);
         const line = h3core.h3Line(origin, destination);
         const distance = h3core.h3Distance(origin, destination);
         assert.equals(line.length, distance + 1, `distance matches expected: ${distance + 1}`);
