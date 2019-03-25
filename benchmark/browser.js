@@ -16,8 +16,8 @@
 
 /* eslint-env browser */
 
-const Benchmark = require('benchmark');
-const makeBenchmarks = require('./benchmarks');
+import Benchmark from 'benchmark';
+import makeBenchmarks from './benchmarks';
 
 window.Benchmark = Benchmark;
 

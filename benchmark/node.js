@@ -17,7 +17,7 @@
 /* eslint-env node */
 /* eslint-disable no-console */
 
-const makeBenchmarks = require('./benchmarks');
+import makeBenchmarks from './benchmarks';
 
 const suite = makeBenchmarks();
 

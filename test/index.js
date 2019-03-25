@@ -14,4 +14,5 @@
  * limitations under the License.
  */
 
-require('./h3core.spec');
+import './h3core.spec';
+import './test-parity';

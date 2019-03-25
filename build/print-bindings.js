@@ -20,7 +20,7 @@
 
 /* eslint-env node */
 /* eslint-disable no-console */
-const BINDINGS = require('../lib/bindings');
+import BINDINGS from '../lib/bindings';
 
 const bindingNames = BINDINGS
     // The _ prefix here is required for references in the built code

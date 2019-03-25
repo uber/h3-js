@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-const test = require('tape');
-const h3core = require('../lib/h3core');
+import test from 'tape';
+import * as h3core from '../lib/h3core.js';
 
 const GEO_PRECISION = 12;
 
