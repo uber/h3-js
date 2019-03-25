@@ -46,7 +46,7 @@
     "test-fast": "yarn test-raw | faucet",
     "test-raw": "yarn rollup-test && node dist/test.js",
     "cover": "yarn rollup-test && nyc --clean node dist/test.js",
-    "cover-view": "nyc --clean -x out/*.js --report=html -- dist/test.js && open coverage/index.html",
+    "cover-view": "yarn rollup-test && nyc --clean --reporter=html node dist/test.js && open coverage/index.html",
     "benchmark-node": "yarn rollup-benchmark-node && node dist/benchmark.node.js",
     "benchmark-browser": "yarn rollup-benchmark-browser && budo dist/benchmark.browser.js --open --title 'h3-js benchmarks'",
     "prepublish": "yarn dist",
@@ -62,7 +62,7 @@
     "faucet": "0.0.1",
     "jsdoc-to-markdown": "^4.0.1",
     "microbundle": "^0.11.0",
-    "nyc": "^13.3.0",
+    "nyc": "git://github.com/istanbuljs/nyc#1f6c3d4a2bd74e3fada35eb029ec9fb6b480e99e",
     "prettier": "^1.12.1",
     "rollup": "^1.7.0",
     "tape": "^4.8.0"
@@ -74,12 +74,9 @@
   },
   "nyc": {
     "exclude": [
-      "out/**",
-      "test/**"
-    ],
-    "sourceMap": true,
-    "excludeAfterRemap": false,
-    "instrument": true
+      "**/out/**",
+      "**/test/**"
+    ]
   },
   "dependencies": {}
 }
