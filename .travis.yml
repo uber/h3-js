@@ -11,7 +11,7 @@ services:
   - docker
 
 before_install:
-  - yarn init-docker
+  - yarn docker-boot
 
 before_script:
   - yarn build-emscripten
@@ -19,13 +19,11 @@ before_script:
 
 script:
   - yarn lint
-  - yarn test-es6
-  - yarn test-dist
-  - yarn test-parity
+  - yarn test-fast
   - yarn check-prettier
   - yarn check-docs
   - yarn cover
 
 after_success:
   - npm install -g coveralls
-  - cat coverage/lcov.info | coveralls
+  - nyc report --reporter=text-lcov | coveralls
