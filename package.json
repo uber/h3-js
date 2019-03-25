@@ -26,7 +26,7 @@
   "es2015": "lib/h3core.js",
   "scripts": {
     "build-update-h3": "bash scripts/update-h3.sh",
-    "build-emscripten": "yarn update-h3 && yarn docker-emscripten",
+    "build-emscripten": "yarn build-update-h3 && yarn docker-emscripten",
     "build-docs": "jsdoc2md --global-index-format grouped --partial doc-files/scope.hbs --helper ./doc-files/insert-version.js --separators --template doc-files/README.tmpl.md lib/h3core.js > README.md",
     "bundle-cjs": "microbundle --output dist --format=cjs --no-compress",
     "bundle-umd": "microbundle --output dist --name h3 --format=umd",
