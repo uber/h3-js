@@ -15,7 +15,6 @@ before_install:
 
 before_script:
   - yarn build-emscripten
-  - yarn dist-test
 
 script:
   - yarn lint
