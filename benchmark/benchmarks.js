@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Uber Technologies, Inc.
+ * Copyright 2018-2019 Uber Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-const Benchmark = require('benchmark');
-const h3core = require('../lib/h3core');
+import Benchmark from 'benchmark';
+import * as h3core from '../lib/h3core';
 
 // fixtures
 
@@ -29,7 +29,7 @@ const polygon = [
 const ring10 = h3core.kRing(h3Index, 10);
 const ring10Compact = h3core.compact(ring10);
 
-module.exports = function makeBenchmarks() {
+export default function makeBenchmarks() {
     const suite = new Benchmark.Suite();
 
     suite.add('h3IsValid', () => {
@@ -89,4 +89,4 @@ module.exports = function makeBenchmarks() {
     });
 
     return suite;
-};
+}

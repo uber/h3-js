@@ -709,17 +709,27 @@ To lint the code:
 
     yarn lint
 
-To run the tests in both native ES6 (requires Node >= 6) and transpiled ES5:
+To run the tests:
 
     yarn test
 
+Code must be formatted with `prettier`; unformatted code will fail the build. To format all files:
+
+    yarn prettier
+
 ### Benchmarks
 
-The `h3-js` library includes a basic benchmark suite using [Benchmark.js](https://benchmarkjs.com/). Because many of the functions may be called over thousands of hexagons in a "hot loop", performance is an important concern. Benchmarks are run against the transpiled ES5 code by default. To run the benchmarks:
+The `h3-js` library includes a basic benchmark suite using [Benchmark.js](https://benchmarkjs.com/). Because many of the functions may be called over thousands of hexagons in a "hot loop", performance is an important concern. Benchmarks are run against the transpiled ES5 code by default.
 
-    yarn run benchmarks
+To run the benchmarks in Node:
 
-Sample output (Macbook Pro running Node 6):
+    yarn benchmark-node
+
+To run the benchmarks in a browser:
+
+    yarn benchmark-browser
+
+Sample Node output (Macbook Pro running Node 6):
 
 ```
 h3IsValid x 3,725,046 ops/sec ±0.47% (90 runs sampled)
@@ -744,12 +754,10 @@ When making code changes that may affect performance, please run benchmarks agai
 
 The core library is transpiled using [emscripten](http://kripken.github.io/emscripten-site). The easiest way to build from source locally is by using Docker. Make sure Docker is installed, then:
 
-    yarn init-docker
-    yarn run build-emscripten
+    yarn docker-boot
+    yarn build-emscripten
 
-The build script uses the `H3_VERSION` file to determine the version of the core library to build.
-
-NOTE: The current `h3-js` is built with `emscripten-1.37.40`. Earlier or later versions MAY NOT WORK (emscripten does not follow semver, so patch updates may include breaking changes).
+The build script uses the `H3_VERSION` file to determine the version of the core library to build. To use a different version of the library (e.g. to test local changes), clone the desired H3 repo to `./h3c` and then run `yarn docker-emscripten`.
 
 ## Contributing
 

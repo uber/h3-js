@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Uber Technologies, Inc.
+ * Copyright 2018-2019 Uber Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 
 /* eslint-env node */
 /* eslint-disable no-console */
-const BINDINGS = require('../lib/bindings');
+import BINDINGS from '../lib/bindings';
 
 const bindingNames = BINDINGS
     // The _ prefix here is required for references in the built code
