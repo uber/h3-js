@@ -12,8 +12,6 @@ services:
 
 before_install:
   - yarn docker-boot
-
-before_script:
   - yarn build-emscripten
 
 script:
