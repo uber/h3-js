@@ -15,6 +15,7 @@ before_install:
 
 before_script:
   - yarn build-emscripten
+  - "curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install.sh | sudo bash"
 
 script:
   - yarn lint
@@ -22,6 +23,7 @@ script:
   - yarn check-prettier
   - yarn check-docs
   - yarn cover
+  - fossa
 
 after_success:
   - npm install -g coveralls
