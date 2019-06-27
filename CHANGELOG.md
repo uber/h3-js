@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file. This librar
 
 ## [Unreleased]
 ### Changed
-- Updated the core library to v3.4.4 (#47)
+- Updated the core library to v3.4.4 (#52)
 
 ## [3.4.3] - 2019-04-01
 ### Added
