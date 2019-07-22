@@ -72,7 +72,7 @@
     "faucet": "0.0.1",
     "jsdoc-to-markdown": "^4.0.1",
     "microbundle": "^0.11.0",
-    "nyc": "git://github.com/istanbuljs/nyc#1f6c3d4a2bd74e3fada35eb029ec9fb6b480e99e",
+    "nyc": "^14.1.1",
     "prettier": "^1.12.1",
     "rollup": "^1.7.0",
     "tape": "^4.8.0"
