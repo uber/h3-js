@@ -23,6 +23,7 @@ compact
 uncompact
 h3IsResClassIII
 h3IsPentagon
+h3GetFaces
 h3IndexesAreNeighbors
 getH3UnidirectionalEdge
 h3UnidirectionalEdgeIsValid
