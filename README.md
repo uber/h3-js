@@ -1,6 +1,6 @@
 # h3-js
 
-[![H3 Version](https://img.shields.io/badge/h3_api-v3.4.4-blue.svg)](https://github.com/uber/h3/releases/tag/v3.4.4) [![Build Status](https://travis-ci.com/uber/h3-js.svg?branch=master)](https://travis-ci.com/uber/h3-js) [![Coverage Status](https://coveralls.io/repos/github/uber/h3-js/badge.svg?branch=master)](https://coveralls.io/github/uber/h3-js?branch=master)
+[![H3 Version](https://img.shields.io/badge/h3_api-v3.5.0-blue.svg)](https://github.com/uber/h3/releases/tag/v3.5.0) [![Build Status](https://travis-ci.com/uber/h3-js.svg?branch=master)](https://travis-ci.com/uber/h3-js) [![Coverage Status](https://coveralls.io/repos/github/uber/h3-js/badge.svg?branch=master)](https://coveralls.io/github/uber/h3-js?branch=master)
 
 The `h3-js` library provides a pure-JavaScript version of the [H3 Core Library](https://github.com/uber/h3), a hexagon-based geographic grid system. It can be used either in Node >= 4 or in the browser. The core library is transpiled from C using [emscripten](http://kripken.github.io/emscripten-site), offering full parity with the C API and highly efficient operations.
 
@@ -71,6 +71,7 @@ const coordinates = h3.h3SetToMultiPolygon(hexagons, true);
     * [.h3IsPentagon(h3Index)](#module_h3.h3IsPentagon) ⇒ <code>Boolean</code>
     * [.h3IsResClassIII(h3Index)](#module_h3.h3IsResClassIII) ⇒ <code>Boolean</code>
     * [.h3GetBaseCell(h3Index)](#module_h3.h3GetBaseCell) ⇒ <code>Number</code>
+    * [.h3GetFaces(h3Index)](#module_h3.h3GetFaces) ⇒ <code>Array.&lt;Number&gt;</code>
     * [.h3GetResolution(h3Index)](#module_h3.h3GetResolution) ⇒ <code>Number</code>
     * [.geoToH3(lat, lng, res)](#module_h3.geoToH3) ⇒ <code>H3Index</code>
     * [.h3ToGeo(h3Index)](#module_h3.h3ToGeo) ⇒ <code>Array.&lt;Number&gt;</code>
@@ -160,6 +161,20 @@ Get the number of the base cell for a given H3 index
 | Param | Type | Description |
 | --- | --- | --- |
 | h3Index | <code>H3Index</code> | H3 index to get the base cell for |
+
+
+* * *
+
+<a name="module_h3.h3GetFaces"></a>
+
+### h3.h3GetFaces(h3Index) ⇒ <code>Array.&lt;Number&gt;</code>
+Get the indices of all icosahedron faces intersected by a given H3 index
+
+**Returns**: <code>Array.&lt;Number&gt;</code> - Indices (0-19) of all intersected faces  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| h3Index | <code>H3Index</code> | H3 index to get faces for |
 
 
 * * *
