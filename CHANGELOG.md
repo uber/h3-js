@@ -4,9 +4,9 @@ All notable changes to this project will be documented in this file. This librar
 
 ## [Unreleased]
 ### Added
-- Added `h3GetFaces` binding
+- Added `h3GetFaces` binding (#54)
 ### Changed
-- Updated the core library to v3.5.0
+- Updated the core library to v3.5.0 (#54)
 
 ## [3.4.3] - 2019-04-01
 ### Added
