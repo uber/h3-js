@@ -23,6 +23,7 @@
   "unpkg": "dist/h3-js.umd.js",
   "module": "dist/h3-js.es.js",
   "es2015": "dist/h3-js.es.js",
+  "types": "dist/types.d.ts",
   "source": "lib/h3core.js",
   "scripts": {
     "build-update-h3": "bash scripts/update-h3.sh",
