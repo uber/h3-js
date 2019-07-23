@@ -48,6 +48,10 @@ export default function makeBenchmarks() {
         h3core.h3ToGeoBoundary(h3Index);
     });
 
+    suite.add('h3GetFaces', () => {
+        h3core.h3GetFaces(h3Index);
+    });
+
     suite.add('kRing', () => {
         h3core.kRing(h3Index, 1);
     });

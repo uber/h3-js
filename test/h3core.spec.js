@@ -826,6 +826,27 @@ test('h3IsResClassIII', assert => {
     assert.end();
 });
 
+test('h3GetFaces', assert => {
+    [
+        {name: 'single face', h3Index: '85283473fffffff', expected: 1},
+        {name: 'edge adjacent', h3Index: '821c37fffffffff', expected: 1},
+        {name: 'edge crossing, distorted', h3Index: '831c06fffffffff', expected: 2},
+        {name: 'edge crossing, aligned', h3Index: '821ce7fffffffff', expected: 2},
+        {name: 'class II pentagon', h3Index: '84a6001ffffffff', expected: 5},
+        {name: 'class III pentagon', h3Index: '85a60003fffffff', expected: 5}
+    ].forEach(({name, h3Index, expected}) => {
+        const faces = h3core.h3GetFaces(h3Index);
+        assert.equal(faces.length, expected, `Got expected face count for ${name}`);
+        assert.equal(faces.length, new Set(faces).size, `Faces are unique for ${name}`);
+        assert.ok(
+            faces.every(face => face >= 0 && face < 20),
+            `Got face indexes in expected range for ${name}`
+        );
+    });
+
+    assert.end();
+});
+
 test('h3GetBaseCell', assert => {
     const h3Index = '8928308280fffff';
 
