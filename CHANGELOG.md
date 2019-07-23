@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This librar
 ## [Unreleased]
 ### Added
 - Added `h3GetFaces` binding (#54)
+- Generate TypeScript definition file from jsdoc comments. (#55)
 ### Changed
 - Updated the core library to v3.5.0 (#52, #54)
 
