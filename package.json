@@ -35,7 +35,7 @@
     "bundle-es": "microbundle --format=es --no-compress",
     "bundle-cjs-browser": "microbundle -o dist/browser --format=cjs --no-compress --alias ../out/libh3=$(printf '%q' \"$PWD\")/dist/libh3-browser",
     "bundle-es-browser": "microbundle -o dist/browser --format=es --no-compress --alias ../out/libh3=$(printf '%q' \"$PWD\")/dist/libh3-browser",
-    "dist": "yarn dist-clean && yarn docker-emscripten-browser && yarn bundle-umd && yarn bundle-cjs && yarn bundle-cjs-browser && yarn bundle-es && yarn bundle-es-browser",
+    "dist": "yarn dist-clean && yarn docker-emscripten-browser && yarn bundle-umd && yarn bundle-cjs && yarn bundle-cjs-browser && yarn bundle-es && yarn bundle-es-browser && yarn build-tsd",
     "dist-clean": "rm -rf dist",
     "rollup-test": "rollup test/index.js --file dist/test.js --sourcemap --format=cjs --external=tape,fs,path",
     "rollup-bindings": "rollup build/print-bindings.js --file dist/print-bindings.js --format cjs",
