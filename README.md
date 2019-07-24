@@ -103,6 +103,7 @@ const coordinates = h3.h3SetToMultiPolygon(hexagons, true);
     * [.getRes0Indexes()](#module_h3.getRes0Indexes) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.degsToRads(deg)](#module_h3.degsToRads) ⇒ <code>Number</code>
     * [.radsToDegs(rad)](#module_h3.radsToDegs) ⇒ <code>Number</code>
+    * [.H3Index](#module_h3.H3Index) : <code>string</code>
 
 
 * * *
@@ -709,6 +710,14 @@ Convert radians to degrees
 | Param | Type | Description |
 | --- | --- | --- |
 | rad | <code>Number</code> | Value in radians |
+
+
+* * *
+
+<a name="module_h3.H3Index"></a>
+
+### h3.H3Index : <code>string</code>
+64-bit hexidecimal string representation of an H3 index
 
 
 * * *
