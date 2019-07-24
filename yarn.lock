@@ -6699,6 +6699,13 @@ trim-right@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/trim-right/-/trim-right-1.0.1.tgz#cb2e1203067e0c8de1f614094b9fe45704ea6003"
 
+tsd-jsdoc@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/tsd-jsdoc/-/tsd-jsdoc-2.3.1.tgz#71e8507326de3ac730a5227206a0e49325d24708"
+  integrity sha512-zrgOVp4TXRYpBBiPa/fXOInlgijKlj4eCMvs1W/s2ssrZs+hYqLKGwpjDZ5trZK2E3XJoh1+JTUbvqhAK30oZg==
+  dependencies:
+    typescript "^3.2.1"
+
 tslib@1.9.3, tslib@^1.9.0:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
@@ -6728,6 +6735,11 @@ typedarray@^0.0.6:
 typescript@>=2.8.3:
   version "3.3.4000"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.3.4000.tgz#76b0f89cfdbf97827e1112d64f283f1151d6adf0"
+
+typescript@^3.2.1:
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.5.3.tgz#c830f657f93f1ea846819e929092f5fe5983e977"
+  integrity sha512-ACzBtm/PhXBDId6a6sDJfroT2pOWt/oOnk4/dElG5G33ZL776N3Y6/6bKZJBFpd+b05F3Ct9qDjMeJmRWtE2/g==
 
 typical@^2.4.2, typical@^2.6.0, typical@^2.6.1:
   version "2.6.1"
