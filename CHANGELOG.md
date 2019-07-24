@@ -3,9 +3,11 @@
 All notable changes to this project will be documented in this file. This library adheres to a versioning policy described in [the README](./README.md#versioning). The public API of this library consists of the functions exported in [h3core.js](./lib/h3core.js).
 
 ## [Unreleased]
+
+## [3.5.0] - 2019-07-24
 ### Added
 - Added `h3GetFaces` binding (#54)
-- Generate TypeScript definition file from jsdoc comments. (#55)
+- Generated a TypeScript definition file from jsdoc comments (#55)
 ### Changed
 - Updated the core library to v3.5.0 (#52, #54)
 
