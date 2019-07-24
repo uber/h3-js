@@ -2,7 +2,7 @@
 
 [![H3 Version](https://img.shields.io/badge/h3_api-v{{h3Version}}-blue.svg)](https://github.com/uber/h3/releases/tag/v{{h3Version}}) [![Build Status](https://travis-ci.com/uber/h3-js.svg?branch=master)](https://travis-ci.com/uber/h3-js) [![Coverage Status](https://coveralls.io/repos/github/uber/h3-js/badge.svg?branch=master)](https://coveralls.io/github/uber/h3-js?branch=master)
 
-The `h3-js` library provides a pure-JavaScript version of the [H3 Core Library](https://github.com/uber/h3), a hexagon-based geographic grid system. It can be used either in Node >= 4 or in the browser. The core library is transpiled from C using [emscripten](http://kripken.github.io/emscripten-site), offering full parity with the C API and highly efficient operations.
+The `h3-js` library provides a pure-JavaScript version of the [H3 Core Library](https://github.com/uber/h3), a hexagon-based geographic grid system. It can be used either in Node >= 6 or in the browser. The core library is transpiled from C using [emscripten](http://kripken.github.io/emscripten-site), offering full parity with the C API and highly efficient operations.
 
 For more information on H3 and for the full API documentation, please see the [H3 Documentation](https://uber.github.io/h3/).
 
@@ -15,13 +15,31 @@ For more information on H3 and for the full API documentation, please see the [H
 
 ## Usage
 
-The library uses CommonJS modules. It can run natively in Node, but will require a bundler like Browserify or Webpack for use in the browser.
+The library uses ES6 modules. Bundles for Node and the browser are built to the `dist` folder.
+
+### Import
+
+ES6 usage:
+
+```js
+import {h3ToGeo} from "h3-js";
+```
+
+CommonJS usage:
+
+```js
+const h3 = require("h3-js");
+```
+
+Pre-bundled script (library is available as an `h3` global):
+
+```html
+<script src="https://unpkg.com/h3-js"></script>
+```
 
 ### Core functions
 
 ```js
-const h3 = require("h3-js");
-
 // Convert a lat/lng point to a hexagon index at resolution 7
 const h3Index = h3.geoToH3(37.3615593, -122.0553238, 7);
 // -> '87283472bffffff'
