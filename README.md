@@ -1,3 +1,5 @@
+<img align="right" src="https://uber.github.io/res/h3Logo-color.svg" alt="H3 Logo" width="200">
+
 # h3-js
 
 [![H3 Version](https://img.shields.io/badge/h3_api-v3.5.0-blue.svg)](https://github.com/uber/h3/releases/tag/v3.5.0) [![Build Status](https://travis-ci.com/uber/h3-js.svg?branch=master)](https://travis-ci.com/uber/h3-js) [![Coverage Status](https://coveralls.io/repos/github/uber/h3-js/badge.svg?branch=master)](https://coveralls.io/github/uber/h3-js?branch=master)
