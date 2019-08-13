@@ -84,7 +84,8 @@
   "resolutions": {
     "lodash": "4.17.15",
     "js-yaml": "3.13.1",
-    "ws": "3.3.3"
+    "ws": "3.3.3",
+    "catharsis": "0.8.9"
   },
   "engines": {
     "node": ">=4",
