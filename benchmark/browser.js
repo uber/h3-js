@@ -21,6 +21,17 @@ import makeBenchmarks from './benchmarks';
 
 window.Benchmark = Benchmark;
 
+// Initial message
+const header = document.createElement('h2');
+header.style.cssText = `
+    font-family: Helvetica, sans-serif;
+    font-size: 24px;
+    margin: 1rem;
+    color: darkgrey;
+`;
+header.innerHTML = 'Running benchmarks...';
+document.body.appendChild(header);
+
 const suite = makeBenchmarks();
 
 suite
@@ -30,7 +41,7 @@ suite
             font-family: Helvetica, sans-serif;
             font-size: 18px;
             color: grey;
-            margin: 1em;
+            margin: 1rem;
             padding-bottom: 1em;
             border-bottom: 1px dashed grey;
         `;

@@ -11,7 +11,14 @@ services:
   - docker
 
 before_install:
+  - mkdir -p "$HOME/.yarn/bin"
+  - curl -L -o "$HOME/.yarn/bin/yarn" https://github.com/yarnpkg/yarn/releases/download/v1.17.3/yarn-1.17.3.js
+  - chmod +x "$HOME/.yarn/bin/yarn"
+  - export PATH="$HOME/.yarn/bin:$PATH"
   - yarn docker-boot
+
+install:
+  - yarn --ignore-engines
 
 before_script:
   - yarn build-emscripten

@@ -39,7 +39,7 @@
     "dist-clean": "rm -rf dist",
     "rollup-test": "rollup test/index.js --file dist/test.js --sourcemap --format=cjs --external=tape,fs,path",
     "rollup-bindings": "rollup build/print-bindings.js --file dist/print-bindings.js --format cjs",
-    "rollup-benchmark-browser": "rollup benchmark/browser.js --file dist/benchmark.browser.js --format=umd --external=benchmark",
+    "rollup-benchmark-browser": "rollup benchmark/browser.js --file dist/benchmark.browser.js --format=umd --external=benchmark --globals=benchmark:Benchmark",
     "rollup-benchmark-node": "rollup benchmark/node.js --file dist/benchmark.node.js --format=cjs --external=benchmark",
     "docker-boot": "docker run -dit --name emscripten -v $(pwd):/src trzeci/emscripten:sdk-tag-1.38.29-64bit bash",
     "docker-reboot": "docker stop emscripten && docker rm emscripten && yarn docker-boot",
@@ -81,10 +81,15 @@
     "tape": "^4.8.0",
     "tsd-jsdoc": "^2.3.1"
   },
+  "resolutions": {
+    "lodash": "4.17.15",
+    "js-yaml": "3.13.1",
+    "ws": "3.3.3"
+  },
   "engines": {
     "node": ">=4",
     "npm": ">=3",
-    "yarn": ">=1.3.0"
+    "yarn": ">=1.17.0"
   },
   "nyc": {
     "exclude": [
