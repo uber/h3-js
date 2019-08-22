@@ -1450,3 +1450,17 @@ test('getRes0Indexes', assert => {
 
     assert.end();
 });
+
+test('getPentagonIndexes', assert => {
+    for (let res = 0; res < 15; res++) {
+        const indexes = h3core.getPentagonIndexes(res);
+        assert.equal(indexes.length, 12, 'Got expected count');
+        assert.ok(indexes.every(h3core.h3IsValid), 'All indexes are valid');
+        assert.ok(indexes.every(h3core.h3IsPentagon), 'All indexes are pentagons');
+        assert.ok(
+            indexes.every(idx => h3core.h3GetResolution(idx) === res),
+            'All indexes have the right resolution'
+        );
+    }
+    assert.end();
+});
