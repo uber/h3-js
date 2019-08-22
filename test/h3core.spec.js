@@ -877,8 +877,8 @@ test('h3ToParent - Invalid', assert => {
     const h3Index = '8928308280fffff';
 
     assert.equals(h3core.h3ToParent(h3Index, 10), null, 'Finer resolution returns null');
-    assert.equals(h3core.h3ToParent(h3Index, -1), null, 'Invalid resolution returns null');
-    assert.equals(h3core.h3ToParent('foo', 10), null, 'Invalid index returns null');
+    assert.throws(() => h3core.h3ToParent(h3Index, -1), /Invalid/, 'throws on invalid resolution');
+    assert.throws(() => h3core.h3ToParent('foo', 10), /Invalid/, 'throws on invalid index');
 
     assert.end();
 });
@@ -892,6 +892,45 @@ test('h3ToChildren', assert => {
     assert.equal(h3core.h3ToChildren(h3Index, 9).length, 49, 'Grandchild count correct');
     assert.deepEqual(h3core.h3ToChildren(h3Index, 7), [h3Index], 'Same resolution returns self');
     assert.deepEqual(h3core.h3ToChildren(h3Index, 6), [], 'Coarser resolution returns empty array');
+    assert.throws(
+        () => h3core.h3ToChildren(h3Index, -1),
+        /Invalid/,
+        'throws on invalid resolution'
+    );
+    assert.throws(() => h3core.h3ToChildren('foo', 10), /Invalid/, 'throws on invalid index');
+
+    assert.end();
+});
+
+test('h3ToCenterChild', assert => {
+    const baseIndex = '8029fffffffffff';
+    const [lat, lng] = h3core.h3ToGeo(baseIndex);
+    for (let res = 0; res < 14; res++) {
+        for (let childRes = res; childRes < 15; childRes++) {
+            const parent = h3core.geoToH3(lat, lng, res);
+            const comparisonChild = h3core.geoToH3(lat, lng, childRes);
+            const child = h3core.h3ToCenterChild(parent, childRes);
+
+            assert.equals(
+                child,
+                comparisonChild,
+                `Got expected center child for ${res}:${childRes}`
+            );
+        }
+    }
+    assert.end();
+});
+
+test('h3ToCenterChild - Invalid', assert => {
+    const h3Index = '8928308280fffff';
+
+    assert.equals(h3core.h3ToCenterChild(h3Index, 5), null, 'Coarser resolution returns null');
+    assert.throws(
+        () => h3core.h3ToCenterChild(h3Index, -1),
+        /Invalid/,
+        'throws on invalid resolution'
+    );
+    assert.throws(() => h3core.h3ToCenterChild('foo', 10), /Invalid/, 'throws on invalid index');
 
     assert.end();
 });
