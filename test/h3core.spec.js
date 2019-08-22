@@ -1503,3 +1503,9 @@ test('getPentagonIndexes', assert => {
     }
     assert.end();
 });
+
+test('getPentagonIndexes - invalid', assert => {
+    assert.throws(() => h3core.getPentagonIndexes(), /Invalid/, 'throws on invalid resolution');
+    assert.throws(() => h3core.getPentagonIndexes(42), /Invalid/, 'throws on invalid resolution');
+    assert.end();
+});
