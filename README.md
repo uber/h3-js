@@ -2,7 +2,7 @@
 
 # h3-js
 
-[![H3 Version](https://img.shields.io/badge/h3_api-v3.5.0-blue.svg)](https://github.com/uber/h3/releases/tag/v3.5.0) [![Build Status](https://travis-ci.com/uber/h3-js.svg?branch=master)](https://travis-ci.com/uber/h3-js) [![Coverage Status](https://coveralls.io/repos/github/uber/h3-js/badge.svg?branch=master)](https://coveralls.io/github/uber/h3-js?branch=master)
+[![H3 Version](https://img.shields.io/badge/h3_api-v3.6.0-blue.svg)](https://github.com/uber/h3/releases/tag/v3.6.0) [![Build Status](https://travis-ci.com/uber/h3-js.svg?branch=master)](https://travis-ci.com/uber/h3-js) [![Coverage Status](https://coveralls.io/repos/github/uber/h3-js/badge.svg?branch=master)](https://coveralls.io/github/uber/h3-js?branch=master)
 
 The `h3-js` library provides a pure-JavaScript version of the [H3 Core Library](https://github.com/uber/h3), a hexagon-based geographic grid system. It can be used either in Node >= 6 or in the browser. The core library is transpiled from C using [emscripten](http://kripken.github.io/emscripten-site), offering full parity with the C API and highly efficient operations.
 
@@ -98,6 +98,7 @@ const coordinates = h3.h3SetToMultiPolygon(hexagons, true);
     * [.h3ToGeoBoundary(h3Index, formatAsGeoJson)](#module_h3.h3ToGeoBoundary) ⇒ <code>Array.&lt;Array&gt;</code>
     * [.h3ToParent(h3Index, res)](#module_h3.h3ToParent) ⇒ <code>H3Index</code>
     * [.h3ToChildren(h3Index, res)](#module_h3.h3ToChildren) ⇒ <code>Array.&lt;H3Index&gt;</code>
+    * [.h3ToCenterChild(h3Index, res)](#module_h3.h3ToCenterChild) ⇒ <code>H3Index</code>
     * [.kRing(h3Index, ringSize)](#module_h3.kRing) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.kRingDistances(h3Index, ringSize)](#module_h3.kRingDistances) ⇒ <code>Array.&lt;Array.&lt;H3Index&gt;&gt;</code>
     * [.hexRing(h3Index, ringSize)](#module_h3.hexRing) ⇒ <code>Array.&lt;H3Index&gt;</code>
@@ -121,6 +122,7 @@ const coordinates = h3.h3SetToMultiPolygon(hexagons, true);
     * [.edgeLength(res, unit)](#module_h3.edgeLength) ⇒ <code>Number</code>
     * [.numHexagons(res)](#module_h3.numHexagons) ⇒ <code>Number</code>
     * [.getRes0Indexes()](#module_h3.getRes0Indexes) ⇒ <code>Array.&lt;H3Index&gt;</code>
+    * [.getPentagonIndexes(res)](#module_h3.getPentagonIndexes) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.degsToRads(deg)](#module_h3.degsToRads) ⇒ <code>Number</code>
     * [.radsToDegs(rad)](#module_h3.radsToDegs) ⇒ <code>Number</code>
     * [.H3Index](#module_h3.H3Index) : <code>string</code>
@@ -287,6 +289,21 @@ Get the children/descendents of the given hexagon at a particular resolution
 | --- | --- | --- |
 | h3Index | <code>H3Index</code> | H3 index to get children for |
 | res | <code>Number</code> | Resolution of hexagons to return |
+
+
+* * *
+
+<a name="module_h3.h3ToCenterChild"></a>
+
+### h3.h3ToCenterChild(h3Index, res) ⇒ <code>H3Index</code>
+Get the center child of the given hexagon at a particular resolution
+
+**Returns**: <code>H3Index</code> - H3 index of child, or null for invalid input  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| h3Index | <code>H3Index</code> | H3 index to get center child for |
+| res | <code>Number</code> | Resolution of hexagon to return |
 
 
 * * *
@@ -703,6 +720,20 @@ the descendant of a res 0 index, this can be used with h3ToChildren to iterate
 over H3 indexes at any resolution.
 
 **Returns**: <code>Array.&lt;H3Index&gt;</code> - All H3 indexes at res 0  
+
+* * *
+
+<a name="module_h3.getPentagonIndexes"></a>
+
+### h3.getPentagonIndexes(res) ⇒ <code>Array.&lt;H3Index&gt;</code>
+Get the twelve pentagon indexes at a given resolution.
+
+**Returns**: <code>Array.&lt;H3Index&gt;</code> - All H3 pentagon indexes at res  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| res | <code>Number</code> | Hexagon resolution |
+
 
 * * *
 
