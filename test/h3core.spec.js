@@ -1497,6 +1497,7 @@ test('getPentagonIndexes', assert => {
             indexes.every(idx => h3core.h3GetResolution(idx) === res),
             'All indexes have the right resolution'
         );
+        assert.equal(new Set(indexes).size, indexes.length, 'All indexes are unique');
     }
     assert.end();
 });
