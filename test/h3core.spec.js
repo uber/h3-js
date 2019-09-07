@@ -892,6 +892,42 @@ test('h3ToChildren', assert => {
     assert.equal(h3core.h3ToChildren(h3Index, 9).length, 49, 'Grandchild count correct');
     assert.deepEqual(h3core.h3ToChildren(h3Index, 7), [h3Index], 'Same resolution returns self');
     assert.deepEqual(h3core.h3ToChildren(h3Index, 6), [], 'Coarser resolution returns empty array');
+    assert.deepEqual(
+        h3core.h3ToChildren(h3Index, -1),
+        [],
+        'Invalid resolution returns empty array'
+    );
+    assert.deepEqual(h3core.h3ToChildren('foo', -1), [], 'Invalid index returns empty array');
+
+    assert.end();
+});
+
+test('h3ToCenterChild', assert => {
+    const baseIndex = '8029fffffffffff';
+    const [lat, lng] = h3core.h3ToGeo(baseIndex);
+    for (let res = 0; res < 14; res++) {
+        for (let childRes = res; childRes < 15; childRes++) {
+            const parent = h3core.geoToH3(lat, lng, res);
+            const comparisonChild = h3core.geoToH3(lat, lng, childRes);
+            const child = h3core.h3ToCenterChild(parent, childRes);
+
+            assert.equals(
+                child,
+                comparisonChild,
+                `Got expected center child for ${res}:${childRes}`
+            );
+        }
+    }
+    assert.end();
+});
+
+test('h3ToCenterChild - Invalid', assert => {
+    const h3Index = '8928308280fffff';
+
+    assert.equals(h3core.h3ToCenterChild(h3Index, 5), null, 'Coarser resolution returns null');
+    assert.equals(h3core.h3ToCenterChild(h3Index, -1), null, 'Invalid resolution returns null');
+    // TODO: Add this assertion when the C library supports this fallback
+    // assert.equals(h3core.h3ToCenterChild('foo', 10), null, 'Invalid index returns null');
 
     assert.end();
 });
@@ -1448,5 +1484,26 @@ test('getRes0Indexes', assert => {
     assert.equal(indexes.length, 122, 'Got expected count');
     assert.ok(indexes.every(h3core.h3IsValid), 'All indexes are valid');
 
+    assert.end();
+});
+
+test('getPentagonIndexes', assert => {
+    for (let res = 0; res < 15; res++) {
+        const indexes = h3core.getPentagonIndexes(res);
+        assert.equal(indexes.length, 12, 'Got expected count');
+        assert.ok(indexes.every(h3core.h3IsValid), 'All indexes are valid');
+        assert.ok(indexes.every(h3core.h3IsPentagon), 'All indexes are pentagons');
+        assert.ok(
+            indexes.every(idx => h3core.h3GetResolution(idx) === res),
+            'All indexes have the right resolution'
+        );
+        assert.equal(new Set(indexes).size, indexes.length, 'All indexes are unique');
+    }
+    assert.end();
+});
+
+test('getPentagonIndexes - invalid', assert => {
+    assert.throws(() => h3core.getPentagonIndexes(), /Invalid/, 'throws on invalid resolution');
+    assert.throws(() => h3core.getPentagonIndexes(42), /Invalid/, 'throws on invalid resolution');
     assert.end();
 });
