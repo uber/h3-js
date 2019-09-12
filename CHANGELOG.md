@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file. This librar
 
 ## [Unreleased]
 
+## [3.6.0] - 2019-09-12
+### Fixed
+- Removed `unhandledRejection` handling from emscripten build (#64)
+- Fixed TypeScript definition file, added a CI test to guard against regressions (#65)
+### Changed
+- Updated the core library to v3.6.0 (#61)
+### Added
+- Added bindings for `getPentgonIndexes` and `h3ToCenterChild` (#61)
+
 ## [3.5.0] - 2019-07-24
 ### Added
 - Added `h3GetFaces` binding (#54)
