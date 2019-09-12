@@ -41,7 +41,7 @@
     "rollup-bindings": "rollup build/print-bindings.js --file dist/print-bindings.js --format cjs",
     "rollup-benchmark-browser": "rollup benchmark/browser.js --file dist/benchmark.browser.js --format=umd --external=benchmark --globals=benchmark:Benchmark",
     "rollup-benchmark-node": "rollup benchmark/node.js --file dist/benchmark.node.js --format=cjs --external=benchmark",
-    "docker-boot": "docker run -dit --name emscripten -v $(pwd):/src trzeci/emscripten:sdk-tag-1.38.29-64bit bash",
+    "docker-boot": "docker run -dit --name emscripten -v $(pwd):/src trzeci/emscripten:sdk-tag-1.38.43-64bit bash",
     "docker-reboot": "docker stop emscripten && docker rm emscripten && yarn docker-boot",
     "docker-emscripten": "yarn docker-emscripten-umd",
     "docker-emscripten-run": "yarn rollup-bindings && docker exec -it emscripten bash scripts/update-emscripten.sh",
