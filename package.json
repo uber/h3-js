@@ -49,6 +49,7 @@
     "docker-emscripten-browser": "yarn docker-emscripten-run -s ENVIRONMENT=web -o libh3-browser.js && mv out/libh3-browser.js dist",
     "check-prettier": "yarn prettier && git diff --exit-code",
     "check-docs": "yarn build-docs && git diff --exit-code",
+    "check-tsd": "yarn build-tsd && tsc --strict --noEmit dist/types.d.ts",
     "lint": "eslint lib* test/*",
     "test": "yarn lint && yarn test-fast",
     "test-fast": "yarn test-raw | faucet",
@@ -79,7 +80,8 @@
     "prettier": "^1.12.1",
     "rollup": "^1.7.0",
     "tape": "^4.8.0",
-    "tsd-jsdoc": "^2.3.1"
+    "tsd-jsdoc": "^2.3.1",
+    "typescript": "^3.6.3"
   },
   "resolutions": {
     "lodash": "4.17.15",

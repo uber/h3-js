@@ -95,7 +95,7 @@ const coordinates = h3.h3SetToMultiPolygon(hexagons, true);
     * [.h3GetResolution(h3Index)](#module_h3.h3GetResolution) ⇒ <code>Number</code>
     * [.geoToH3(lat, lng, res)](#module_h3.geoToH3) ⇒ <code>H3Index</code>
     * [.h3ToGeo(h3Index)](#module_h3.h3ToGeo) ⇒ <code>Array.&lt;Number&gt;</code>
-    * [.h3ToGeoBoundary(h3Index, formatAsGeoJson)](#module_h3.h3ToGeoBoundary) ⇒ <code>Array.&lt;Array&gt;</code>
+    * [.h3ToGeoBoundary(h3Index, formatAsGeoJson)](#module_h3.h3ToGeoBoundary) ⇒ <code>Array.&lt;Array.&lt;Number&gt;&gt;</code>
     * [.h3ToParent(h3Index, res)](#module_h3.h3ToParent) ⇒ <code>H3Index</code>
     * [.h3ToChildren(h3Index, res)](#module_h3.h3ToChildren) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.h3ToCenterChild(h3Index, res)](#module_h3.h3ToCenterChild) ⇒ <code>H3Index</code>
@@ -103,7 +103,7 @@ const coordinates = h3.h3SetToMultiPolygon(hexagons, true);
     * [.kRingDistances(h3Index, ringSize)](#module_h3.kRingDistances) ⇒ <code>Array.&lt;Array.&lt;H3Index&gt;&gt;</code>
     * [.hexRing(h3Index, ringSize)](#module_h3.hexRing) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.polyfill(coordinates, res, isGeoJson)](#module_h3.polyfill) ⇒ <code>Array.&lt;H3Index&gt;</code>
-    * [.h3SetToMultiPolygon(h3Indexes, formatAsGeoJson)](#module_h3.h3SetToMultiPolygon) ⇒ <code>Array.&lt;Array&gt;</code>
+    * [.h3SetToMultiPolygon(h3Indexes, formatAsGeoJson)](#module_h3.h3SetToMultiPolygon) ⇒ <code>Array.&lt;Array.&lt;Array.&lt;Array.&lt;Number&gt;&gt;&gt;&gt;</code>
     * [.compact(h3Set)](#module_h3.compact) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.uncompact(compactedSet, res)](#module_h3.uncompact) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.h3IndexesAreNeighbors(origin, destination)](#module_h3.h3IndexesAreNeighbors) ⇒ <code>Boolean</code>
@@ -113,7 +113,7 @@ const coordinates = h3.h3SetToMultiPolygon(hexagons, true);
     * [.h3UnidirectionalEdgeIsValid(edgeIndex)](#module_h3.h3UnidirectionalEdgeIsValid) ⇒ <code>Boolean</code>
     * [.getH3IndexesFromUnidirectionalEdge(edgeIndex)](#module_h3.getH3IndexesFromUnidirectionalEdge) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.getH3UnidirectionalEdgesFromHexagon(h3Index)](#module_h3.getH3UnidirectionalEdgesFromHexagon) ⇒ <code>Array.&lt;H3Index&gt;</code>
-    * [.getH3UnidirectionalEdgeBoundary(edgeIndex, formatAsGeoJson)](#module_h3.getH3UnidirectionalEdgeBoundary) ⇒ <code>Array.&lt;Array&gt;</code>
+    * [.getH3UnidirectionalEdgeBoundary(edgeIndex, formatAsGeoJson)](#module_h3.getH3UnidirectionalEdgeBoundary) ⇒ <code>Array.&lt;Array.&lt;Number&gt;&gt;</code>
     * [.h3Distance(origin, destination)](#module_h3.h3Distance) ⇒ <code>Number</code>
     * [.h3Line(origin, destination)](#module_h3.h3Line) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.experimentalH3ToLocalIj(origin, destination)](#module_h3.experimentalH3ToLocalIj) ⇒ <code>Object</code>
@@ -248,12 +248,12 @@ Get the lat,lon center of a given hexagon
 
 <a name="module_h3.h3ToGeoBoundary"></a>
 
-### h3.h3ToGeoBoundary(h3Index, formatAsGeoJson) ⇒ <code>Array.&lt;Array&gt;</code>
+### h3.h3ToGeoBoundary(h3Index, formatAsGeoJson) ⇒ <code>Array.&lt;Array.&lt;Number&gt;&gt;</code>
 Get the vertices of a given hexagon (or pentagon), as an array of [lat, lng]
 points. For pentagons and hexagons on the edge of an icosahedron face, this
 function may return up to 10 vertices.
 
-**Returns**: <code>Array.&lt;Array&gt;</code> - Array of [lat, lng] pairs  
+**Returns**: <code>Array.&lt;Array.&lt;Number&gt;&gt;</code> - Array of [lat, lng] pairs  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -372,7 +372,7 @@ expected to be holes.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| coordinates | <code>Array.&lt;Array&gt;</code> | Array of loops, or a single loop |
+| coordinates | <code>Array.&lt;Array.&lt;Number&gt;&gt;</code> \| <code>Array.&lt;Array.&lt;Array.&lt;Number&gt;&gt;&gt;</code> | Array of loops, or a single loop |
 | res | <code>Number</code> | Resolution of hexagons to return |
 | isGeoJson | <code>Boolean</code> | Whether to expect GeoJson-style [lng, lat]                                  pairs instead of [lat, lng] |
 
@@ -381,13 +381,13 @@ expected to be holes.
 
 <a name="module_h3.h3SetToMultiPolygon"></a>
 
-### h3.h3SetToMultiPolygon(h3Indexes, formatAsGeoJson) ⇒ <code>Array.&lt;Array&gt;</code>
+### h3.h3SetToMultiPolygon(h3Indexes, formatAsGeoJson) ⇒ <code>Array.&lt;Array.&lt;Array.&lt;Array.&lt;Number&gt;&gt;&gt;&gt;</code>
 Get the outlines of a set of H3 hexagons, returned in GeoJSON MultiPolygon
 format (an array of polygons, each with an array of loops, each an array of
 coordinates). Coordinates are returned as [lat, lng] pairs unless GeoJSON
 is requested.
 
-**Returns**: <code>Array.&lt;Array&gt;</code> - MultiPolygon-style output.  
+**Returns**: <code>Array.&lt;Array.&lt;Array.&lt;Array.&lt;Number&gt;&gt;&gt;&gt;</code> - MultiPolygon-style output.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -538,11 +538,11 @@ every neighbor)
 
 <a name="module_h3.getH3UnidirectionalEdgeBoundary"></a>
 
-### h3.getH3UnidirectionalEdgeBoundary(edgeIndex, formatAsGeoJson) ⇒ <code>Array.&lt;Array&gt;</code>
+### h3.getH3UnidirectionalEdgeBoundary(edgeIndex, formatAsGeoJson) ⇒ <code>Array.&lt;Array.&lt;Number&gt;&gt;</code>
 Get the vertices of a given edge as an array of [lat, lng] points. Note that for edges that
 cross the edge of an icosahedron face, this may return 3 coordinates.
 
-**Returns**: <code>Array.&lt;Array&gt;</code> - Array of geo coordinate pairs  
+**Returns**: <code>Array.&lt;Array.&lt;Number&gt;&gt;</code> - Array of geo coordinate pairs  
 
 | Param | Type | Description |
 | --- | --- | --- |
