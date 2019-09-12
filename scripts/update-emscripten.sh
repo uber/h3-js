@@ -35,7 +35,7 @@ cp ../../../../build/sizes.c .
 emcc -O3 -I ../include *.c -DH3_HAVE_VLA --memory-init-file 0 \
     -s WASM=0 -s INVOKE_RUN=0 \
     -s MODULARIZE_INSTANCE=1 -s EXPORT_NAME="'libh3'" -s EXPORT_ES6=1 \
-    -s FILESYSTEM=0 -s NODEJS_CATCH_EXIT=0 \
+    -s FILESYSTEM=0 -s NODEJS_CATCH_EXIT=0 -s NODEJS_CATCH_REJECTION=0 \
     -s TOTAL_MEMORY=33554432 -s ALLOW_MEMORY_GROWTH=1 -s WARN_UNALIGNED=1 \
     -s EXPORTED_FUNCTIONS=$bound_functions \
     -s EXTRA_EXPORTED_RUNTIME_METHODS='["cwrap", "getValue", "setValue", "getTempRet0"]' \
