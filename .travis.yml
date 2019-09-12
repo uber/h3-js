@@ -28,6 +28,7 @@ script:
   - yarn test-fast
   - yarn check-prettier
   - yarn check-docs
+  - yarn check-tsd
   - yarn cover
 
 after_success:
