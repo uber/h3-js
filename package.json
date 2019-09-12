@@ -2,9 +2,9 @@
   "name": "h3-js",
   "version": "3.6.0",
   "description": "Emscripten transpiled libh3 'bindings' for Node/Web JS",
-  "author": "David Ellis <isv.damocles@gmail.com>",
+  "author": "Nick Rabinowitz <nickr@uber.com>",
   "contributors": [
-    "Nick Rabinowitz <nickr@uber.com>"
+    "David Ellis <isv.damocles@gmail.com>"
   ],
   "license": "Apache-2.0",
   "repository": {

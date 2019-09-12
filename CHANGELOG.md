@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file. This librar
 ### Changed
 - Updated the core library to v3.6.0 (#61)
 ### Added
-- Added bindings for `getPentgonIndexes` and `h3ToCenterChild` (#61)
+- Added bindings for `getPentagonIndexes` and `h3ToCenterChild` (#61)
 
 ## [3.5.0] - 2019-07-24
 ### Added
