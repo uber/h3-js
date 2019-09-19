@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file. This librar
 
 ## [Unreleased]
 
+## [3.6.1] - 2019-09-19
+### Fixed
+- Downgraded required `yarn` version (#68)
+
 ## [3.6.0] - 2019-09-12
 ### Fixed
 - Removed `unhandledRejection` handling from emscripten build (#64)
