@@ -87,55 +87,56 @@ const coordinates = h3.h3SetToMultiPolygon(hexagons, true);
 ## h3
 
 * [h3](#module_h3)
-    * [.h3IsValid(h3Index)](#module_h3.h3IsValid) ⇒ <code>Boolean</code>
-    * [.h3IsPentagon(h3Index)](#module_h3.h3IsPentagon) ⇒ <code>Boolean</code>
-    * [.h3IsResClassIII(h3Index)](#module_h3.h3IsResClassIII) ⇒ <code>Boolean</code>
-    * [.h3GetBaseCell(h3Index)](#module_h3.h3GetBaseCell) ⇒ <code>Number</code>
-    * [.h3GetFaces(h3Index)](#module_h3.h3GetFaces) ⇒ <code>Array.&lt;Number&gt;</code>
-    * [.h3GetResolution(h3Index)](#module_h3.h3GetResolution) ⇒ <code>Number</code>
+    * [.h3IsValid(h3Index)](#module_h3.h3IsValid) ⇒ <code>boolean</code>
+    * [.h3IsPentagon(h3Index)](#module_h3.h3IsPentagon) ⇒ <code>boolean</code>
+    * [.h3IsResClassIII(h3Index)](#module_h3.h3IsResClassIII) ⇒ <code>boolean</code>
+    * [.h3GetBaseCell(h3Index)](#module_h3.h3GetBaseCell) ⇒ <code>number</code>
+    * [.h3GetFaces(h3Index)](#module_h3.h3GetFaces) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.h3GetResolution(h3Index)](#module_h3.h3GetResolution) ⇒ <code>number</code>
     * [.geoToH3(lat, lng, res)](#module_h3.geoToH3) ⇒ <code>H3Index</code>
-    * [.h3ToGeo(h3Index)](#module_h3.h3ToGeo) ⇒ <code>Array.&lt;Number&gt;</code>
-    * [.h3ToGeoBoundary(h3Index, formatAsGeoJson)](#module_h3.h3ToGeoBoundary) ⇒ <code>Array.&lt;Array.&lt;Number&gt;&gt;</code>
+    * [.h3ToGeo(h3Index)](#module_h3.h3ToGeo) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.h3ToGeoBoundary(h3Index, [formatAsGeoJson])](#module_h3.h3ToGeoBoundary) ⇒ <code>Array.&lt;Array.&lt;number&gt;&gt;</code>
     * [.h3ToParent(h3Index, res)](#module_h3.h3ToParent) ⇒ <code>H3Index</code>
     * [.h3ToChildren(h3Index, res)](#module_h3.h3ToChildren) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.h3ToCenterChild(h3Index, res)](#module_h3.h3ToCenterChild) ⇒ <code>H3Index</code>
     * [.kRing(h3Index, ringSize)](#module_h3.kRing) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.kRingDistances(h3Index, ringSize)](#module_h3.kRingDistances) ⇒ <code>Array.&lt;Array.&lt;H3Index&gt;&gt;</code>
     * [.hexRing(h3Index, ringSize)](#module_h3.hexRing) ⇒ <code>Array.&lt;H3Index&gt;</code>
-    * [.polyfill(coordinates, res, isGeoJson)](#module_h3.polyfill) ⇒ <code>Array.&lt;H3Index&gt;</code>
-    * [.h3SetToMultiPolygon(h3Indexes, formatAsGeoJson)](#module_h3.h3SetToMultiPolygon) ⇒ <code>Array.&lt;Array.&lt;Array.&lt;Array.&lt;Number&gt;&gt;&gt;&gt;</code>
+    * [.polyfill(coordinates, res, [isGeoJson])](#module_h3.polyfill) ⇒ <code>Array.&lt;H3Index&gt;</code>
+    * [.h3SetToMultiPolygon(h3Indexes, [formatAsGeoJson])](#module_h3.h3SetToMultiPolygon) ⇒ <code>Array.&lt;Array.&lt;Array.&lt;Array.&lt;number&gt;&gt;&gt;&gt;</code>
     * [.compact(h3Set)](#module_h3.compact) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.uncompact(compactedSet, res)](#module_h3.uncompact) ⇒ <code>Array.&lt;H3Index&gt;</code>
-    * [.h3IndexesAreNeighbors(origin, destination)](#module_h3.h3IndexesAreNeighbors) ⇒ <code>Boolean</code>
+    * [.h3IndexesAreNeighbors(origin, destination)](#module_h3.h3IndexesAreNeighbors) ⇒ <code>boolean</code>
     * [.getH3UnidirectionalEdge(origin, destination)](#module_h3.getH3UnidirectionalEdge) ⇒ <code>H3Index</code>
     * [.getOriginH3IndexFromUnidirectionalEdge(edgeIndex)](#module_h3.getOriginH3IndexFromUnidirectionalEdge) ⇒ <code>H3Index</code>
     * [.getDestinationH3IndexFromUnidirectionalEdge(edgeIndex)](#module_h3.getDestinationH3IndexFromUnidirectionalEdge) ⇒ <code>H3Index</code>
-    * [.h3UnidirectionalEdgeIsValid(edgeIndex)](#module_h3.h3UnidirectionalEdgeIsValid) ⇒ <code>Boolean</code>
+    * [.h3UnidirectionalEdgeIsValid(edgeIndex)](#module_h3.h3UnidirectionalEdgeIsValid) ⇒ <code>boolean</code>
     * [.getH3IndexesFromUnidirectionalEdge(edgeIndex)](#module_h3.getH3IndexesFromUnidirectionalEdge) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.getH3UnidirectionalEdgesFromHexagon(h3Index)](#module_h3.getH3UnidirectionalEdgesFromHexagon) ⇒ <code>Array.&lt;H3Index&gt;</code>
-    * [.getH3UnidirectionalEdgeBoundary(edgeIndex, formatAsGeoJson)](#module_h3.getH3UnidirectionalEdgeBoundary) ⇒ <code>Array.&lt;Array.&lt;Number&gt;&gt;</code>
-    * [.h3Distance(origin, destination)](#module_h3.h3Distance) ⇒ <code>Number</code>
+    * [.getH3UnidirectionalEdgeBoundary(edgeIndex, [formatAsGeoJson])](#module_h3.getH3UnidirectionalEdgeBoundary) ⇒ <code>Array.&lt;Array.&lt;number&gt;&gt;</code>
+    * [.h3Distance(origin, destination)](#module_h3.h3Distance) ⇒ <code>number</code>
     * [.h3Line(origin, destination)](#module_h3.h3Line) ⇒ <code>Array.&lt;H3Index&gt;</code>
-    * [.experimentalH3ToLocalIj(origin, destination)](#module_h3.experimentalH3ToLocalIj) ⇒ <code>Object</code>
+    * [.experimentalH3ToLocalIj(origin, destination)](#module_h3.experimentalH3ToLocalIj) ⇒ <code>CoordIJ</code>
     * [.experimentalLocalIjToH3(origin, coords)](#module_h3.experimentalLocalIjToH3) ⇒ <code>H3Index</code>
-    * [.hexArea(res, unit)](#module_h3.hexArea) ⇒ <code>Number</code>
-    * [.edgeLength(res, unit)](#module_h3.edgeLength) ⇒ <code>Number</code>
-    * [.numHexagons(res)](#module_h3.numHexagons) ⇒ <code>Number</code>
+    * [.hexArea(res, unit)](#module_h3.hexArea) ⇒ <code>number</code>
+    * [.edgeLength(res, unit)](#module_h3.edgeLength) ⇒ <code>number</code>
+    * [.numHexagons(res)](#module_h3.numHexagons) ⇒ <code>number</code>
     * [.getRes0Indexes()](#module_h3.getRes0Indexes) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.getPentagonIndexes(res)](#module_h3.getPentagonIndexes) ⇒ <code>Array.&lt;H3Index&gt;</code>
-    * [.degsToRads(deg)](#module_h3.degsToRads) ⇒ <code>Number</code>
-    * [.radsToDegs(rad)](#module_h3.radsToDegs) ⇒ <code>Number</code>
+    * [.degsToRads(deg)](#module_h3.degsToRads) ⇒ <code>number</code>
+    * [.radsToDegs(rad)](#module_h3.radsToDegs) ⇒ <code>number</code>
     * [.H3Index](#module_h3.H3Index) : <code>string</code>
+    * [.CoordIJ](#module_h3.CoordIJ) : <code>Object</code>
 
 
 * * *
 
 <a name="module_h3.h3IsValid"></a>
 
-### h3.h3IsValid(h3Index) ⇒ <code>Boolean</code>
+### h3.h3IsValid(h3Index) ⇒ <code>boolean</code>
 Whether a given string represents a valid H3 index
 
-**Returns**: <code>Boolean</code> - Whether the index is valid  
+**Returns**: <code>boolean</code> - Whether the index is valid  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -146,10 +147,10 @@ Whether a given string represents a valid H3 index
 
 <a name="module_h3.h3IsPentagon"></a>
 
-### h3.h3IsPentagon(h3Index) ⇒ <code>Boolean</code>
+### h3.h3IsPentagon(h3Index) ⇒ <code>boolean</code>
 Whether the given H3 index is a pentagon
 
-**Returns**: <code>Boolean</code> - isPentagon  
+**Returns**: <code>boolean</code> - isPentagon  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -160,12 +161,12 @@ Whether the given H3 index is a pentagon
 
 <a name="module_h3.h3IsResClassIII"></a>
 
-### h3.h3IsResClassIII(h3Index) ⇒ <code>Boolean</code>
+### h3.h3IsResClassIII(h3Index) ⇒ <code>boolean</code>
 Whether the given H3 index is in a Class III resolution (rotated versus
 the icosahedron and subject to shape distortion adding extra points on
 icosahedron edges, making them not true hexagons).
 
-**Returns**: <code>Boolean</code> - isResClassIII  
+**Returns**: <code>boolean</code> - isResClassIII  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -176,10 +177,10 @@ icosahedron edges, making them not true hexagons).
 
 <a name="module_h3.h3GetBaseCell"></a>
 
-### h3.h3GetBaseCell(h3Index) ⇒ <code>Number</code>
+### h3.h3GetBaseCell(h3Index) ⇒ <code>number</code>
 Get the number of the base cell for a given H3 index
 
-**Returns**: <code>Number</code> - Index of the base cell (0-121)  
+**Returns**: <code>number</code> - Index of the base cell (0-121)  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -190,10 +191,10 @@ Get the number of the base cell for a given H3 index
 
 <a name="module_h3.h3GetFaces"></a>
 
-### h3.h3GetFaces(h3Index) ⇒ <code>Array.&lt;Number&gt;</code>
+### h3.h3GetFaces(h3Index) ⇒ <code>Array.&lt;number&gt;</code>
 Get the indices of all icosahedron faces intersected by a given H3 index
 
-**Returns**: <code>Array.&lt;Number&gt;</code> - Indices (0-19) of all intersected faces  
+**Returns**: <code>Array.&lt;number&gt;</code> - Indices (0-19) of all intersected faces  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -204,10 +205,10 @@ Get the indices of all icosahedron faces intersected by a given H3 index
 
 <a name="module_h3.h3GetResolution"></a>
 
-### h3.h3GetResolution(h3Index) ⇒ <code>Number</code>
+### h3.h3GetResolution(h3Index) ⇒ <code>number</code>
 Returns the resolution of an H3 index
 
-**Returns**: <code>Number</code> - The number (0-15) resolution, or -1 if invalid  
+**Returns**: <code>number</code> - The number (0-15) resolution, or -1 if invalid  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -225,19 +226,19 @@ Get the hexagon containing a lat,lon point
 
 | Param | Type | Description |
 | --- | --- | --- |
-| lat | <code>Number</code> | Latitude of point |
-| lng | <code>Number</code> | Longtitude of point |
-| res | <code>Number</code> | Resolution of hexagons to return |
+| lat | <code>number</code> | Latitude of point |
+| lng | <code>number</code> | Longtitude of point |
+| res | <code>number</code> | Resolution of hexagons to return |
 
 
 * * *
 
 <a name="module_h3.h3ToGeo"></a>
 
-### h3.h3ToGeo(h3Index) ⇒ <code>Array.&lt;Number&gt;</code>
+### h3.h3ToGeo(h3Index) ⇒ <code>Array.&lt;number&gt;</code>
 Get the lat,lon center of a given hexagon
 
-**Returns**: <code>Array.&lt;Number&gt;</code> - Point as a [lat, lng] pair  
+**Returns**: <code>Array.&lt;number&gt;</code> - Point as a [lat, lng] pair  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -248,17 +249,17 @@ Get the lat,lon center of a given hexagon
 
 <a name="module_h3.h3ToGeoBoundary"></a>
 
-### h3.h3ToGeoBoundary(h3Index, formatAsGeoJson) ⇒ <code>Array.&lt;Array.&lt;Number&gt;&gt;</code>
+### h3.h3ToGeoBoundary(h3Index, [formatAsGeoJson]) ⇒ <code>Array.&lt;Array.&lt;number&gt;&gt;</code>
 Get the vertices of a given hexagon (or pentagon), as an array of [lat, lng]
 points. For pentagons and hexagons on the edge of an icosahedron face, this
 function may return up to 10 vertices.
 
-**Returns**: <code>Array.&lt;Array.&lt;Number&gt;&gt;</code> - Array of [lat, lng] pairs  
+**Returns**: <code>Array.&lt;Array.&lt;number&gt;&gt;</code> - Array of [lat, lng] pairs  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | h3Index | <code>H3Index</code> | H3 index |
-| formatAsGeoJson | <code>Boolean</code> | Whether to provide GeoJSON output: [lng, lat], closed loops |
+| [formatAsGeoJson] | <code>boolean</code> | Whether to provide GeoJSON output: [lng, lat], closed loops |
 
 
 * * *
@@ -273,7 +274,7 @@ Get the parent of the given hexagon at a particular resolution
 | Param | Type | Description |
 | --- | --- | --- |
 | h3Index | <code>H3Index</code> | H3 index to get parent for |
-| res | <code>Number</code> | Resolution of hexagon to return |
+| res | <code>number</code> | Resolution of hexagon to return |
 
 
 * * *
@@ -288,7 +289,7 @@ Get the children/descendents of the given hexagon at a particular resolution
 | Param | Type | Description |
 | --- | --- | --- |
 | h3Index | <code>H3Index</code> | H3 index to get children for |
-| res | <code>Number</code> | Resolution of hexagons to return |
+| res | <code>number</code> | Resolution of hexagons to return |
 
 
 * * *
@@ -303,7 +304,7 @@ Get the center child of the given hexagon at a particular resolution
 | Param | Type | Description |
 | --- | --- | --- |
 | h3Index | <code>H3Index</code> | H3 index to get center child for |
-| res | <code>Number</code> | Resolution of hexagon to return |
+| res | <code>number</code> | Resolution of hexagon to return |
 
 
 * * *
@@ -318,7 +319,7 @@ Get all hexagons in a k-ring around a given center. The order of the hexagons is
 | Param | Type | Description |
 | --- | --- | --- |
 | h3Index | <code>H3Index</code> | H3 index of center hexagon |
-| ringSize | <code>Number</code> | Radius of k-ring |
+| ringSize | <code>number</code> | Radius of k-ring |
 
 
 * * *
@@ -334,7 +335,7 @@ ordered by distance from the origin. The order of the hexagons within each ring 
 | Param | Type | Description |
 | --- | --- | --- |
 | h3Index | <code>H3Index</code> | H3 index of center hexagon |
-| ringSize | <code>Number</code> | Radius of k-ring |
+| ringSize | <code>number</code> | Radius of k-ring |
 
 
 * * *
@@ -354,14 +355,14 @@ Unlike kRing, this function will throw an error if there is a pentagon anywhere 
 | Param | Type | Description |
 | --- | --- | --- |
 | h3Index | <code>H3Index</code> | H3 index of center hexagon |
-| ringSize | <code>Number</code> | Radius of ring |
+| ringSize | <code>number</code> | Radius of ring |
 
 
 * * *
 
 <a name="module_h3.polyfill"></a>
 
-### h3.polyfill(coordinates, res, isGeoJson) ⇒ <code>Array.&lt;H3Index&gt;</code>
+### h3.polyfill(coordinates, res, [isGeoJson]) ⇒ <code>Array.&lt;H3Index&gt;</code>
 Get all hexagons with centers contained in a given polygon. The polygon
 is specified with GeoJson semantics as an array of loops. Each loop is
 an array of [lat, lng] pairs (or [lng, lat] if isGeoJson is specified).
@@ -372,27 +373,27 @@ expected to be holes.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| coordinates | <code>Array.&lt;Array.&lt;Number&gt;&gt;</code> \| <code>Array.&lt;Array.&lt;Array.&lt;Number&gt;&gt;&gt;</code> | Array of loops, or a single loop |
-| res | <code>Number</code> | Resolution of hexagons to return |
-| isGeoJson | <code>Boolean</code> | Whether to expect GeoJson-style [lng, lat]                                  pairs instead of [lat, lng] |
+| coordinates | <code>Array.&lt;Array.&lt;number&gt;&gt;</code> \| <code>Array.&lt;Array.&lt;Array.&lt;number&gt;&gt;&gt;</code> | Array of loops, or a single loop |
+| res | <code>number</code> | Resolution of hexagons to return |
+| [isGeoJson] | <code>boolean</code> | Whether to expect GeoJson-style [lng, lat]                                  pairs instead of [lat, lng] |
 
 
 * * *
 
 <a name="module_h3.h3SetToMultiPolygon"></a>
 
-### h3.h3SetToMultiPolygon(h3Indexes, formatAsGeoJson) ⇒ <code>Array.&lt;Array.&lt;Array.&lt;Array.&lt;Number&gt;&gt;&gt;&gt;</code>
+### h3.h3SetToMultiPolygon(h3Indexes, [formatAsGeoJson]) ⇒ <code>Array.&lt;Array.&lt;Array.&lt;Array.&lt;number&gt;&gt;&gt;&gt;</code>
 Get the outlines of a set of H3 hexagons, returned in GeoJSON MultiPolygon
 format (an array of polygons, each with an array of loops, each an array of
 coordinates). Coordinates are returned as [lat, lng] pairs unless GeoJSON
 is requested.
 
-**Returns**: <code>Array.&lt;Array.&lt;Array.&lt;Array.&lt;Number&gt;&gt;&gt;&gt;</code> - MultiPolygon-style output.  
+**Returns**: <code>Array.&lt;Array.&lt;Array.&lt;Array.&lt;number&gt;&gt;&gt;&gt;</code> - MultiPolygon-style output.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | h3Indexes | <code>Array.&lt;H3Index&gt;</code> | H3 indexes to get outlines for |
-| formatAsGeoJson | <code>Boolean</code> | Whether to provide GeoJSON output:                                    [lng, lat], closed loops |
+| [formatAsGeoJson] | <code>boolean</code> | Whether to provide GeoJSON output:                                    [lng, lat], closed loops |
 
 
 * * *
@@ -430,17 +431,17 @@ Uncompact a compacted set of hexagons to hexagons of the same resolution
 | Param | Type | Description |
 | --- | --- | --- |
 | compactedSet | <code>Array.&lt;H3Index&gt;</code> | H3 indexes to uncompact |
-| res | <code>Number</code> | The resolution to uncompact to |
+| res | <code>number</code> | The resolution to uncompact to |
 
 
 * * *
 
 <a name="module_h3.h3IndexesAreNeighbors"></a>
 
-### h3.h3IndexesAreNeighbors(origin, destination) ⇒ <code>Boolean</code>
+### h3.h3IndexesAreNeighbors(origin, destination) ⇒ <code>boolean</code>
 Whether two H3 indexes are neighbors (share an edge)
 
-**Returns**: <code>Boolean</code> - Whether the hexagons share an edge  
+**Returns**: <code>boolean</code> - Whether the hexagons share an edge  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -495,10 +496,10 @@ Get the destination hexagon from an H3 index representing a unidirectional edge
 
 <a name="module_h3.h3UnidirectionalEdgeIsValid"></a>
 
-### h3.h3UnidirectionalEdgeIsValid(edgeIndex) ⇒ <code>Boolean</code>
+### h3.h3UnidirectionalEdgeIsValid(edgeIndex) ⇒ <code>boolean</code>
 Whether the input is a valid unidirectional edge
 
-**Returns**: <code>Boolean</code> - Whether the index is valid  
+**Returns**: <code>boolean</code> - Whether the index is valid  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -538,28 +539,28 @@ every neighbor)
 
 <a name="module_h3.getH3UnidirectionalEdgeBoundary"></a>
 
-### h3.getH3UnidirectionalEdgeBoundary(edgeIndex, formatAsGeoJson) ⇒ <code>Array.&lt;Array.&lt;Number&gt;&gt;</code>
+### h3.getH3UnidirectionalEdgeBoundary(edgeIndex, [formatAsGeoJson]) ⇒ <code>Array.&lt;Array.&lt;number&gt;&gt;</code>
 Get the vertices of a given edge as an array of [lat, lng] points. Note that for edges that
 cross the edge of an icosahedron face, this may return 3 coordinates.
 
-**Returns**: <code>Array.&lt;Array.&lt;Number&gt;&gt;</code> - Array of geo coordinate pairs  
+**Returns**: <code>Array.&lt;Array.&lt;number&gt;&gt;</code> - Array of geo coordinate pairs  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | edgeIndex | <code>H3Index</code> | H3 index of the edge |
-| formatAsGeoJson | <code>Boolean</code> | Whether to provide GeoJSON output: [lng, lat] |
+| [formatAsGeoJson] | <code>boolean</code> | Whether to provide GeoJSON output: [lng, lat] |
 
 
 * * *
 
 <a name="module_h3.h3Distance"></a>
 
-### h3.h3Distance(origin, destination) ⇒ <code>Number</code>
+### h3.h3Distance(origin, destination) ⇒ <code>number</code>
 Get the grid distance between two hex indexes. This function may fail
 to find the distance between two indexes if they are very far apart or
 on opposite sides of a pentagon.
 
-**Returns**: <code>Number</code> - Distance between hexagons, or a negative
+**Returns**: <code>number</code> - Distance between hexagons, or a negative
                               number if the distance could not be computed  
 
 | Param | Type | Description |
@@ -604,7 +605,7 @@ Notes:
 
 <a name="module_h3.experimentalH3ToLocalIj"></a>
 
-### h3.experimentalH3ToLocalIj(origin, destination) ⇒ <code>Object</code>
+### h3.experimentalH3ToLocalIj(origin, destination) ⇒ <code>CoordIJ</code>
 Produces IJ coordinates for an H3 index anchored by an origin.
 
 - The coordinate space used by this function may have deleted
@@ -616,7 +617,7 @@ or if the index is on the other side of a pentagon.
 - This function is experimental, and its output is not guaranteed
 to be compatible across different versions of H3.
 
-**Returns**: <code>Object</code> - Coordinates as an `{i, j}` pair  
+**Returns**: <code>CoordIJ</code> - Coordinates as an `{i, j}` pair  
 **Throws**:
 
 - <code>Error</code> If the IJ coordinates cannot be calculated
@@ -653,17 +654,17 @@ to be compatible across different versions of H3.
 | Param | Type | Description |
 | --- | --- | --- |
 | origin | <code>H3Index</code> | Origin H3 index |
-| coords | <code>Object</code> | Coordinates as an `{i, j}` pair |
+| coords | <code>CoordIJ</code> | Coordinates as an `{i, j}` pair |
 
 
 * * *
 
 <a name="module_h3.hexArea"></a>
 
-### h3.hexArea(res, unit) ⇒ <code>Number</code>
+### h3.hexArea(res, unit) ⇒ <code>number</code>
 Average hexagon area at a given resolution
 
-**Returns**: <code>Number</code> - Average area  
+**Returns**: <code>number</code> - Average area  
 **Throws**:
 
 - <code>Error</code> If the unit is invalid
@@ -671,18 +672,18 @@ Average hexagon area at a given resolution
 
 | Param | Type | Description |
 | --- | --- | --- |
-| res | <code>Number</code> | Hexagon resolution |
-| unit | <code>String</code> | Area unit (either UNITS.m2 or UNITS.km2) |
+| res | <code>number</code> | Hexagon resolution |
+| unit | <code>string</code> | Area unit (either UNITS.m2 or UNITS.km2) |
 
 
 * * *
 
 <a name="module_h3.edgeLength"></a>
 
-### h3.edgeLength(res, unit) ⇒ <code>Number</code>
+### h3.edgeLength(res, unit) ⇒ <code>number</code>
 Average hexagon edge length at a given resolution
 
-**Returns**: <code>Number</code> - Average edge length  
+**Returns**: <code>number</code> - Average edge length  
 **Throws**:
 
 - <code>Error</code> If the unit is invalid
@@ -690,24 +691,24 @@ Average hexagon edge length at a given resolution
 
 | Param | Type | Description |
 | --- | --- | --- |
-| res | <code>Number</code> | Hexagon resolution |
-| unit | <code>String</code> | Area unit (either UNITS.m or UNITS.km) |
+| res | <code>number</code> | Hexagon resolution |
+| unit | <code>string</code> | Area unit (either UNITS.m or UNITS.km) |
 
 
 * * *
 
 <a name="module_h3.numHexagons"></a>
 
-### h3.numHexagons(res) ⇒ <code>Number</code>
+### h3.numHexagons(res) ⇒ <code>number</code>
 The total count of hexagons in the world at a given resolution. Note that above
 resolution 8 the exact count cannot be represented in a JavaScript 32-bit number,
 so consumers should use caution when applying further operations to the output.
 
-**Returns**: <code>Number</code> - Count  
+**Returns**: <code>number</code> - Count  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| res | <code>Number</code> | Hexagon resolution |
+| res | <code>number</code> | Hexagon resolution |
 
 
 * * *
@@ -732,35 +733,35 @@ Get the twelve pentagon indexes at a given resolution.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| res | <code>Number</code> | Hexagon resolution |
+| res | <code>number</code> | Hexagon resolution |
 
 
 * * *
 
 <a name="module_h3.degsToRads"></a>
 
-### h3.degsToRads(deg) ⇒ <code>Number</code>
+### h3.degsToRads(deg) ⇒ <code>number</code>
 Convert degrees to radians
 
-**Returns**: <code>Number</code> - Value in radians  
+**Returns**: <code>number</code> - Value in radians  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| deg | <code>Number</code> | Value in degrees |
+| deg | <code>number</code> | Value in degrees |
 
 
 * * *
 
 <a name="module_h3.radsToDegs"></a>
 
-### h3.radsToDegs(rad) ⇒ <code>Number</code>
+### h3.radsToDegs(rad) ⇒ <code>number</code>
 Convert radians to degrees
 
-**Returns**: <code>Number</code> - Value in degrees  
+**Returns**: <code>number</code> - Value in degrees  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| rad | <code>Number</code> | Value in radians |
+| rad | <code>number</code> | Value in radians |
 
 
 * * *
@@ -769,6 +770,21 @@ Convert radians to degrees
 
 ### h3.H3Index : <code>string</code>
 64-bit hexidecimal string representation of an H3 index
+
+
+* * *
+
+<a name="module_h3.CoordIJ"></a>
+
+### h3.CoordIJ : <code>Object</code>
+Coordinates as an `{i, j}` pair
+
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| i | <code>number</code> | 
+| j | <code>number</code> | 
 
 
 * * *
