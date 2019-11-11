@@ -577,6 +577,20 @@ test('polyfill - With Two Holes', assert => {
     assert.end();
 });
 
+test('polyfill - BBox corners (#67)', assert => {
+    const {north, south, east, west} = {
+        east: -56.25,
+        north: -33.13755119234615,
+        south: -34.30714385628804,
+        west: -57.65625
+    };
+    const vertices = [[north, east], [north, west], [south, west], [south, east]];
+    const hexagons = h3core.polyfill(vertices, 7);
+
+    assert.equal(hexagons.length, 4499, 'got the expected number of hexagons back');
+    assert.end();
+});
+
 test('h3SetToMultiPolygon - Empty', assert => {
     const h3Indexes = [];
     const multiPolygon = h3core.h3SetToMultiPolygon(h3Indexes);
