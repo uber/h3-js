@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file. This library adheres to a versioning policy described in [the README](./README.md#versioning). The public API of this library consists of the functions exported in [h3core.js](./lib/h3core.js).
 
 ## [Unreleased]
+### Fixed
+- Improved TypeScript typedefs (#73)
+- Fix `polyfill` edge cases, improve perfomance (#74)
+### Changed
+- Updated the core library to v3.6.1 (#74)
 
 ## [3.6.1] - 2019-09-19
 ### Fixed
