@@ -86,7 +86,8 @@
   "resolutions": {
     "lodash": "4.17.15",
     "js-yaml": "3.13.1",
-    "ws": "3.3.3"
+    "ws": "3.3.3",
+    "serialize-javascript": "2.1.1"
   },
   "engines": {
     "node": ">=4",
