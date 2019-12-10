@@ -1,6 +1,6 @@
 {
   "name": "h3-js",
-  "version": "3.6.2",
+  "version": "3.6.3",
   "description": "Emscripten transpiled libh3 'bindings' for Node/Web JS",
   "author": "Nick Rabinowitz <nickr@uber.com>",
   "contributors": [

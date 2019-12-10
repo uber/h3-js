@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file. This librar
 
 ## [Unreleased]
 
+## [3.6.3] - 2019-12-10
+### Fixed
+- Updated the core library to v3.6.2. This rolls back the polyfill algorithm to previous version; we'll roll forward again once we've fixed the known issues.
+
+
 ## [3.6.2] - 2019-11-11
 ### Fixed
 - Improved TypeScript typedefs (#73)
