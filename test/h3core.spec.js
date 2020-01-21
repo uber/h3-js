@@ -67,6 +67,10 @@ test('h3IsValid', assert => {
     assert.ok(h3core.h3IsValid('85283473fffffff'), 'H3 index is considered an index');
     assert.ok(h3core.h3IsValid('821C37FFFFFFFFF'), 'H3 index in upper case is considered an index');
     assert.ok(
+        h3core.h3IsValid('085283473fffffff'),
+        'H3 index with leading zero is considered an index'
+    );
+    assert.ok(
         !h3core.h3IsValid('ff283473fffffff'),
         'Hexidecimal string with incorrect bits is not valid'
     );
