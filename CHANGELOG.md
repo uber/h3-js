@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file. This library adheres to a versioning policy described in [the README](./README.md#versioning). The public API of this library consists of the functions exported in [h3core.js](./lib/h3core.js).
 
 ## [Unreleased]
+### Fixed
+- Fixed `h3IsValid` returning true on certain edge cases (#81)
+### Changed
+- Updated the core library to 3.6.3 - minor fixes for `h3IsValid` and `compact` (#81)
 
 ## [3.6.3] - 2019-12-10
 ### Fixed

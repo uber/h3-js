@@ -65,7 +65,35 @@ function assertMultiPolygon(assert, input, expected, isGeoJSON) {
 
 test('h3IsValid', assert => {
     assert.ok(h3core.h3IsValid('85283473fffffff'), 'H3 index is considered an index');
-    assert.ok(h3core.h3IsValid('850dab63fffffff'), 'H3 index from Java assert also valid');
+    assert.ok(h3core.h3IsValid('821C37FFFFFFFFF'), 'H3 index in upper case is considered an index');
+    assert.ok(
+        h3core.h3IsValid('085283473fffffff'),
+        'H3 index with leading zero is considered an index'
+    );
+    assert.ok(
+        !h3core.h3IsValid('ff283473fffffff'),
+        'Hexidecimal string with incorrect bits is not valid'
+    );
+    assert.ok(
+        !h3core.h3IsValid('85283q73fffffff'),
+        'String with non-hexidecimal chars is not valid'
+    );
+    assert.ok(
+        !h3core.h3IsValid('85283473fffffff112233'),
+        'String with additional parsed chars is not valid'
+    );
+    assert.ok(
+        !h3core.h3IsValid('85283473fffffff_lolwut'),
+        'String with additional unparsed chars is not valid'
+    );
+    assert.ok(
+        !h3core.h3IsValid('8a283081f1f1f1f1f1f5505ffff'),
+        'String with extraneous parsable characters in the middle is not valid'
+    );
+    assert.ok(
+        !h3core.h3IsValid('8a28308_hello_world_5505ffff'),
+        'String with extraneous unparsable characters in the middle is not valid'
+    );
     assert.ok(!h3core.h3IsValid('lolwut'), 'Random string is not considered an index');
     assert.ok(!h3core.h3IsValid(null), 'Null is not considered an index');
     assert.ok(!h3core.h3IsValid(), 'Undefined is not considered an index');
