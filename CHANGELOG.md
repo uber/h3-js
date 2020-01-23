@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file. This librar
 ### Fixed
 - Fixed `h3IsValid` returning true on certain edge cases (#81)
 ### Changed
-- Updated the core library to 3.6.3 (#81)
+- Updated the core library to 3.6.3 - minor fixes for `h3IsValid` and `compact` (#81)
 
 ## [3.6.3] - 2019-12-10
 ### Fixed
