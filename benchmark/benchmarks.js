@@ -28,6 +28,7 @@ const polygon = [
 ];
 const ring10 = h3core.kRing(h3Index, 10);
 const ring10Compact = h3core.compact(ring10);
+const ring10Polygon = h3core.h3SetToMultiPolygon(ring10)[0];
 
 export default function makeBenchmarks() {
     const suite = new Benchmark.Suite();
@@ -56,8 +57,16 @@ export default function makeBenchmarks() {
         h3core.kRing(h3Index, 1);
     });
 
-    suite.add('polyfill', () => {
+    suite.add('polyfill_9', () => {
         h3core.polyfill(polygon, 9, false);
+    });
+
+    suite.add('polyfill_11', () => {
+        h3core.polyfill(polygon, 11, false);
+    });
+
+    suite.add('polyfill_10ring', () => {
+        h3core.polyfill(ring10Polygon, 10, false);
     });
 
     suite.add('h3SetToMultiPolygon', () => {
