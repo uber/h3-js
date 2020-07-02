@@ -3,10 +3,15 @@
 All notable changes to this project will be documented in this file. This library adheres to a versioning policy described in [the README](./README.md#versioning). The public API of this library consists of the functions exported in [h3core.js](./lib/h3core.js).
 
 ## [Unreleased]
+- *None*
+
+## [3.6.4] - 2020-06-02
 ### Fixed
 - Fixed `h3IsValid` returning true on certain edge cases (#81)
+- Fix some `polyfill` edge cases (#86)
 ### Changed
 - Updated the core library to 3.6.3 - minor fixes for `h3IsValid` and `compact` (#81)
+- Updated the core library to 3.6.4 - reinstate new `polyfill` algorithm (#86)
 
 ## [3.6.3] - 2019-12-10
 ### Fixed
