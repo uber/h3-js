@@ -8,8 +8,11 @@ polyfill
 h3SetToMultiPolygon
 degsToRads
 radsToDegs
+pointDist
 hexArea
+cellArea
 edgeLength
+exactEdgeLength
 numHexagons
 getRes0Indexes
 getPentagonIndexes
