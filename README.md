@@ -2,7 +2,7 @@
 
 # h3-js
 
-[![H3 Version](https://img.shields.io/badge/h3_api-v3.6.4-blue.svg)](https://github.com/uber/h3/releases/tag/v3.6.4) [![Build Status](https://travis-ci.com/uber/h3-js.svg?branch=master)](https://travis-ci.com/uber/h3-js) [![Coverage Status](https://coveralls.io/repos/github/uber/h3-js/badge.svg?branch=master)](https://coveralls.io/github/uber/h3-js?branch=master)
+[![H3 Version](https://img.shields.io/badge/h3_api-v3.7.1-blue.svg)](https://github.com/uber/h3/releases/tag/v3.7.1) [![Build Status](https://travis-ci.com/uber/h3-js.svg?branch=master)](https://travis-ci.com/uber/h3-js) [![Coverage Status](https://coveralls.io/repos/github/uber/h3-js/badge.svg?branch=master)](https://coveralls.io/github/uber/h3-js?branch=master)
 
 The `h3-js` library provides a pure-JavaScript version of the [H3 Core Library](https://github.com/uber/h3), a hexagon-based geographic grid system. It can be used either in Node >= 6 or in the browser. The core library is transpiled from C using [emscripten](http://kripken.github.io/emscripten-site), offering full parity with the C API and highly efficient operations.
 
@@ -118,6 +118,9 @@ const coordinates = h3.h3SetToMultiPolygon(hexagons, true);
     * [.h3Line(origin, destination)](#module_h3.h3Line) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.experimentalH3ToLocalIj(origin, destination)](#module_h3.experimentalH3ToLocalIj) ⇒ <code>CoordIJ</code>
     * [.experimentalLocalIjToH3(origin, coords)](#module_h3.experimentalLocalIjToH3) ⇒ <code>H3Index</code>
+    * [.pointDist(latlng1, latlng2, unit)](#module_h3.pointDist) ⇒ <code>number</code>
+    * [.cellArea(h3Index, unit)](#module_h3.cellArea) ⇒ <code>number</code>
+    * [.exactEdgeLength(edge, unit)](#module_h3.exactEdgeLength) ⇒ <code>number</code>
     * [.hexArea(res, unit)](#module_h3.hexArea) ⇒ <code>number</code>
     * [.edgeLength(res, unit)](#module_h3.edgeLength) ⇒ <code>number</code>
     * [.numHexagons(res)](#module_h3.numHexagons) ⇒ <code>number</code>
@@ -660,6 +663,65 @@ to be compatible across different versions of H3.
 
 * * *
 
+<a name="module_h3.pointDist"></a>
+
+### h3.pointDist(latlng1, latlng2, unit) ⇒ <code>number</code>
+Great circle distance between two geo points. This is not specific to H3,
+but is implemented in the library and provided here as a convenience.
+
+**Returns**: <code>number</code> - Great circle distance  
+**Throws**:
+
+- <code>Error</code> If the unit is invalid
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| latlng1 | <code>Array.&lt;number&gt;</code> | Origin coordinate as [lat, lng] |
+| latlng2 | <code>Array.&lt;number&gt;</code> | Destination coordinate as [lat, lng] |
+| unit | <code>string</code> | Distance unit (either UNITS.m or UNITS.km) |
+
+
+* * *
+
+<a name="module_h3.cellArea"></a>
+
+### h3.cellArea(h3Index, unit) ⇒ <code>number</code>
+Exact area of a given cell
+
+**Returns**: <code>number</code> - Cell area  
+**Throws**:
+
+- <code>Error</code> If the unit is invalid
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| h3Index | <code>H3Index</code> | H3 index of the hexagon to measure |
+| unit | <code>string</code> | Distance unit (either UNITS.m2 or UNITS.km2) |
+
+
+* * *
+
+<a name="module_h3.exactEdgeLength"></a>
+
+### h3.exactEdgeLength(edge, unit) ⇒ <code>number</code>
+Exact length of a given unidirectional edge
+
+**Returns**: <code>number</code> - Cell area  
+**Throws**:
+
+- <code>Error</code> If the unit is invalid
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| edge | <code>H3Index</code> | H3 index of the edge to measure |
+| unit | <code>string</code> | Distance unit (either UNITS.m, UNITS.km, or UNITS.rads) |
+
+
+* * *
+
 <a name="module_h3.hexArea"></a>
 
 ### h3.hexArea(res, unit) ⇒ <code>number</code>
@@ -674,7 +736,7 @@ Average hexagon area at a given resolution
 | Param | Type | Description |
 | --- | --- | --- |
 | res | <code>number</code> | Hexagon resolution |
-| unit | <code>string</code> | Area unit (either UNITS.m2 or UNITS.km2) |
+| unit | <code>string</code> | Area unit (either UNITS.m2, UNITS.km2, or UNITS.rads2) |
 
 
 * * *
@@ -693,7 +755,7 @@ Average hexagon edge length at a given resolution
 | Param | Type | Description |
 | --- | --- | --- |
 | res | <code>number</code> | Hexagon resolution |
-| unit | <code>string</code> | Area unit (either UNITS.m or UNITS.km) |
+| unit | <code>string</code> | Distance unit (either UNITS.m, UNITS.km, or UNITS.rads) |
 
 
 * * *
@@ -800,9 +862,11 @@ Length/Area units
 | Name | Type |
 | --- | --- |
 | m | <code>string</code> | 
-| km | <code>string</code> | 
 | m2 | <code>string</code> | 
+| km | <code>string</code> | 
 | km2 | <code>string</code> | 
+| rads | <code>string</code> | 
+| rads2 | <code>string</code> | 
 
 
 * * *
