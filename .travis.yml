@@ -1,36 +1,51 @@
 language: node_js
 
 node_js:
+  - '6'
   - '8'
   - '10'
   - '12'
 
-sudo: required
-
-services:
-  - docker
+# The following setup applies to all Node versions
 
 before_install:
   - mkdir -p "$HOME/.yarn/bin"
   - curl -L -o "$HOME/.yarn/bin/yarn" https://github.com/yarnpkg/yarn/releases/download/v1.17.3/yarn-1.17.3.js
   - chmod +x "$HOME/.yarn/bin/yarn"
   - export PATH="$HOME/.yarn/bin:$PATH"
-  - yarn docker-boot
 
 install:
   - yarn --ignore-engines
 
-before_script:
-  - yarn build-emscripten
-
 script:
-  - yarn lint
   - yarn test-fast
-  - yarn check-prettier
-  - yarn check-docs
-  - yarn check-tsd
-  - yarn cover
 
-after_success:
-  - npm install -g coveralls
-  - nyc report --reporter=text-lcov | coveralls
+matrix:
+  include:
+  # Only run the full CI suite for Node 12. Tests are expected to
+  # pass for all Node versions, but the build only needs to work
+  # for the development version (currently 12 per Volta config)
+  - node_js: '12'
+
+    sudo: required
+  
+    services:
+      - docker
+  
+    before_install:
+      - yarn docker-boot
+  
+    before_script:
+      - yarn build-emscripten
+  
+    script:
+      - yarn lint
+      - yarn test-fast
+      - yarn check-prettier
+      - yarn check-docs
+      - yarn check-tsd
+      - yarn cover
+  
+    after_success:
+      - npm install -g coveralls
+      - nyc report --reporter=text-lcov | coveralls
