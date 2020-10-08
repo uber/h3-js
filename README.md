@@ -127,6 +127,7 @@ const coordinates = h3.h3SetToMultiPolygon(hexagons, true);
     * [.radsToDegs(rad)](#module_h3.radsToDegs) ⇒ <code>number</code>
     * [.H3Index](#module_h3.H3Index) : <code>string</code>
     * [.CoordIJ](#module_h3.CoordIJ) : <code>Object</code>
+    * [.UNITS](#module_h3.UNITS) : <code>Object</code>
 
 
 * * *
@@ -785,6 +786,23 @@ Coordinates as an `{i, j}` pair
 | --- | --- |
 | i | <code>number</code> | 
 | j | <code>number</code> | 
+
+
+* * *
+
+<a name="module_h3.UNITS"></a>
+
+### h3.UNITS : <code>Object</code>
+Length/Area units
+
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| m | <code>string</code> | 
+| km | <code>string</code> | 
+| m2 | <code>string</code> | 
+| km2 | <code>string</code> | 
 
 
 * * *
