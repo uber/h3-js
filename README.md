@@ -857,7 +857,6 @@ Coordinates as an `{i, j}` pair
 ### h3.UNITS : <code>Object</code>
 Length/Area units
 
-**Read only**: true  
 **Properties**
 
 | Name | Type |

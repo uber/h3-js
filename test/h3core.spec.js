@@ -1506,15 +1506,23 @@ test('cellArea', assert => {
             almostEqual(cellAreaKm2, expectedAreas[res]),
             `Area matches expected value at res ${res}`
         );
+        // Property tests
         assert.ok(
             // res 0 has high distortion of average area due to high pentagon proportion
             res === 0 ||
                 // This seems to be the lowest factor that works for other resolutions
                 almostEqual(cellAreaKm2, h3.hexArea(res, h3.UNITS.km2), cellAreaKm2 * 0.4),
-            `Area is close to average area at res ${res}`
+            `Area is close to average area at res ${res}, km2`
         );
-        // Just property tests for the other units
-        assert.ok(h3.cellArea(h3Index, h3.UNITS.m2) > cellAreaKm2, 'm2 > Km2');
+        const cellAreaM2 = h3.cellArea(h3Index, h3.UNITS.m2);
+        assert.ok(
+            // res 0 has high distortion of average area due to high pentagon proportion
+            res === 0 ||
+                // This seems to be the lowest factor that works for other resolutions
+                almostEqual(cellAreaM2, h3.hexArea(res, h3.UNITS.m2), cellAreaM2 * 0.4),
+            `Area is close to average area at res ${res}, m2`
+        );
+        assert.ok(cellAreaM2 > cellAreaKm2, 'm2 > Km2');
         assert.ok(cellAreaKm2 > h3.cellArea(h3Index, h3.UNITS.rads2), 'Km2 > rads2');
     }
     assert.end();
@@ -1543,10 +1551,17 @@ test('exactEdgeLength', assert => {
                 res === 0 ||
                     // This seems to be the lowest factor that works for other resolutions
                     almostEqual(lengthKm, h3.edgeLength(res, h3.UNITS.km), lengthKm * 0.2),
-                `Edge length is close to average edge length at res ${res}`
+                `Edge length is close to average edge length at res ${res}, km`
             );
-            // Just property tests for the other units
-            assert.ok(h3.exactEdgeLength(edge, h3.UNITS.m) > lengthKm, 'm > Km');
+            const lengthM = h3.exactEdgeLength(edge, h3.UNITS.m);
+            assert.ok(
+                // res 0 has high distortion of average edge length due to high pentagon proportion
+                res === 0 ||
+                    // This seems to be the lowest factor that works for other resolutions
+                    almostEqual(lengthM, h3.edgeLength(res, h3.UNITS.m), lengthM * 0.2),
+                `Edge length is close to average edge length at res ${res}, m`
+            );
+            assert.ok(lengthM > lengthKm, 'm > Km');
             assert.ok(lengthKm > h3.exactEdgeLength(edge, h3.UNITS.rads), 'Km > rads');
         }
     }
