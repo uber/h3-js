@@ -857,14 +857,17 @@ Coordinates as an `{i, j}` pair
 ### h3.UNITS : <code>Object</code>
 Length/Area units
 
+**Read only**: true  
 **Properties**
 
 | Name | Type |
 | --- | --- |
 | m | <code>string</code> | 
-| km | <code>string</code> | 
 | m2 | <code>string</code> | 
+| km | <code>string</code> | 
 | km2 | <code>string</code> | 
+| rads | <code>string</code> | 
+| rads2 | <code>string</code> | 
 
 
 * * *
