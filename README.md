@@ -717,7 +717,7 @@ Exact length of a given unidirectional edge
 | Param | Type | Description |
 | --- | --- | --- |
 | edge | <code>H3Index</code> | H3 index of the edge to measure |
-| unit | <code>string</code> | Distance unit (either UNITS.m or UNITS.km) |
+| unit | <code>string</code> | Distance unit (either UNITS.m, UNITS.km, or UNITS.rads) |
 
 
 * * *
@@ -736,7 +736,7 @@ Average hexagon area at a given resolution
 | Param | Type | Description |
 | --- | --- | --- |
 | res | <code>number</code> | Hexagon resolution |
-| unit | <code>string</code> | Area unit (either UNITS.m2 or UNITS.km2) |
+| unit | <code>string</code> | Area unit (either UNITS.m2, UNITS.km2, or UNITS.rads2) |
 
 
 * * *
@@ -755,7 +755,7 @@ Average hexagon edge length at a given resolution
 | Param | Type | Description |
 | --- | --- | --- |
 | res | <code>number</code> | Hexagon resolution |
-| unit | <code>string</code> | Area unit (either UNITS.m or UNITS.km) |
+| unit | <code>string</code> | Distance unit (either UNITS.m, UNITS.km, or UNITS.rads) |
 
 
 * * *
