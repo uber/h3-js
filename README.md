@@ -392,6 +392,11 @@ format (an array of polygons, each with an array of loops, each an array of
 coordinates). Coordinates are returned as [lat, lng] pairs unless GeoJSON
 is requested.
 
+It is the responsibility of the caller to ensure that all hexagons in the
+set have the same resolution and that the set contains no duplicates. Behavior
+is undefined if duplicates or multiple resolutions are present, and the
+algorithm may produce unexpected or invalid polygons.
+
 **Returns**: <code>Array.&lt;Array.&lt;Array.&lt;Array.&lt;number&gt;&gt;&gt;&gt;</code> - MultiPolygon-style output.  
 
 | Param | Type | Description |
