@@ -105,6 +105,15 @@ test('h3IsValid', assert => {
     assert.end();
 });
 
+test('h3IsValid', assert => {
+    assert.ok(h3.h3IsValid([0x3fffffff, 0x8528347]), 'Integer H3 index is considered an index');
+    assert.ok(!h3.h3IsValid([0x73fffffff, 0xff2834]), 'Integer with incorrect bits is not considered an index');
+    assert.ok(!h3.h3IsValid([]), 'Empty array is not valid');
+    assert.ok(!h3.h3IsValid([1]), 'Array with a single element is not valid');
+    assert.ok(!h3.h3IsValid([0x3fffffff, 0x8528347, 0]), 'Array with an additional element is not valid');
+    assert.end();
+});
+
 test('geoToH3', assert => {
     const h3Index = h3.geoToH3(37.3615593, -122.0553238, 5);
     assert.equal(h3Index, '85283473fffffff', 'Got the expected H3 index back');
@@ -132,6 +141,16 @@ test('h3GetResolution', assert => {
 
 test('h3ToGeo', assert => {
     const latlng = h3.h3ToGeo('85283473fffffff');
+    assert.deepEqual(
+        toLowPrecision(latlng),
+        toLowPrecision([37.34579337536848, -121.97637597255124]),
+        'lat/lng matches expected'
+    );
+    assert.end();
+});
+
+test('h3ToGeo - Integer', assert => {
+    const latlng = h3.h3ToGeo([0x3fffffff, 0x8528347]);
     assert.deepEqual(
         toLowPrecision(latlng),
         toLowPrecision([37.34579337536848, -121.97637597255124]),
@@ -855,6 +874,12 @@ test('uncompact - Invalid', assert => {
         /Failed to uncompact/,
         'got expected error for invalid compacted resolution input'
     );
+
+    assert.end();
+});
+
+test('uncompact - Integer', assert => {
+    assert.deepEqual(h3.uncompact([[0x3fffffff, 0x8528347]], 5), ['85283473fffffff'], 'got a single index for same res input');
 
     assert.end();
 });
