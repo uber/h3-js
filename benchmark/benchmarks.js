@@ -20,6 +20,7 @@ import * as h3core from '../lib/h3core';
 // fixtures
 
 const h3Index = '89283080ddbffff';
+const h3IndexInt = [0x0ddbffff, 0x8928308];
 const polygon = [
     [37.85848750746621, -122.48880236632749],
     [37.860723745370926, -122.47361033446712],
@@ -45,8 +46,16 @@ export default function makeBenchmarks() {
         h3core.h3ToGeo(h3Index);
     });
 
+    suite.add('h3ToGeo - integers', () => {
+        h3core.h3ToGeo(h3IndexInt);
+    });
+
     suite.add('h3ToGeoBoundary', () => {
         h3core.h3ToGeoBoundary(h3Index);
+    });
+
+    suite.add('h3ToGeoBoundary - integers', () => {
+        h3core.h3ToGeoBoundary(h3IndexInt);
     });
 
     suite.add('h3GetFaces', () => {
