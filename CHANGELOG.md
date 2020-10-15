@@ -3,11 +3,15 @@
 All notable changes to this project will be documented in this file. This library adheres to a versioning policy described in [the README](./README.md#versioning). The public API of this library consists of the functions exported in [h3core.js](./lib/h3core.js).
 
 ## [Unreleased]
+- *None*
+
+## [3.7.0] - 2020-10-15
 ### Added
 - Added bindings for new area and distance functions (#93):
 	- `cellArea`
 	- `exactEdgeLength`
 	- `pointDist`
+- All functions accepting H3 index input now also accept a `[lowerBits, upperBits]` tuple of 32-bit integers (#91)
 ### Fixed
 - Fixed type definition for `UNITS` (#94)
 ### Changed
