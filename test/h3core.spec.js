@@ -107,10 +107,16 @@ test('h3IsValid', assert => {
 
 test('h3IsValid', assert => {
     assert.ok(h3.h3IsValid([0x3fffffff, 0x8528347]), 'Integer H3 index is considered an index');
-    assert.ok(!h3.h3IsValid([0x73fffffff, 0xff2834]), 'Integer with incorrect bits is not considered an index');
+    assert.ok(
+        !h3.h3IsValid([0x73fffffff, 0xff2834]),
+        'Integer with incorrect bits is not considered an index'
+    );
     assert.ok(!h3.h3IsValid([]), 'Empty array is not valid');
     assert.ok(!h3.h3IsValid([1]), 'Array with a single element is not valid');
-    assert.ok(!h3.h3IsValid([0x3fffffff, 0x8528347, 0]), 'Array with an additional element is not valid');
+    assert.ok(
+        !h3.h3IsValid([0x3fffffff, 0x8528347, 0]),
+        'Array with an additional element is not valid'
+    );
     assert.end();
 });
 
@@ -879,7 +885,11 @@ test('uncompact - Invalid', assert => {
 });
 
 test('uncompact - Integer', assert => {
-    assert.deepEqual(h3.uncompact([[0x3fffffff, 0x8528347]], 5), ['85283473fffffff'], 'got a single index for same res input');
+    assert.deepEqual(
+        h3.uncompact([[0x3fffffff, 0x8528347]], 5),
+        ['85283473fffffff'],
+        'got a single index for same res input'
+    );
 
     assert.end();
 });
