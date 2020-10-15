@@ -129,6 +129,7 @@ const coordinates = h3.h3SetToMultiPolygon(hexagons, true);
     * [.degsToRads(deg)](#module_h3.degsToRads) ⇒ <code>number</code>
     * [.radsToDegs(rad)](#module_h3.radsToDegs) ⇒ <code>number</code>
     * [.H3Index](#module_h3.H3Index) : <code>string</code>
+    * [.H3IndexInput](#module_h3.H3IndexInput) : <code>string</code> \| <code>Array.&lt;number&gt;</code>
     * [.CoordIJ](#module_h3.CoordIJ) : <code>Object</code>
     * [.UNITS](#module_h3.UNITS) : <code>Object</code>
 
@@ -144,7 +145,7 @@ Whether a given string represents a valid H3 index
 
 | Param | Type | Description |
 | --- | --- | --- |
-| h3Index | <code>H3Index</code> | H3 index to check |
+| h3Index | <code>H3IndexInput</code> | H3 index to check |
 
 
 * * *
@@ -158,7 +159,7 @@ Whether the given H3 index is a pentagon
 
 | Param | Type | Description |
 | --- | --- | --- |
-| h3Index | <code>H3Index</code> | H3 index to check |
+| h3Index | <code>H3IndexInput</code> | H3 index to check |
 
 
 * * *
@@ -174,7 +175,7 @@ icosahedron edges, making them not true hexagons).
 
 | Param | Type | Description |
 | --- | --- | --- |
-| h3Index | <code>H3Index</code> | H3 index to check |
+| h3Index | <code>H3IndexInput</code> | H3 index to check |
 
 
 * * *
@@ -188,7 +189,7 @@ Get the number of the base cell for a given H3 index
 
 | Param | Type | Description |
 | --- | --- | --- |
-| h3Index | <code>H3Index</code> | H3 index to get the base cell for |
+| h3Index | <code>H3IndexInput</code> | H3 index to get the base cell for |
 
 
 * * *
@@ -202,7 +203,7 @@ Get the indices of all icosahedron faces intersected by a given H3 index
 
 | Param | Type | Description |
 | --- | --- | --- |
-| h3Index | <code>H3Index</code> | H3 index to get faces for |
+| h3Index | <code>H3IndexInput</code> | H3 index to get faces for |
 
 
 * * *
@@ -216,7 +217,7 @@ Returns the resolution of an H3 index
 
 | Param | Type | Description |
 | --- | --- | --- |
-| h3Index | <code>H3Index</code> | H3 index to get resolution |
+| h3Index | <code>H3IndexInput</code> | H3 index to get resolution |
 
 
 * * *
@@ -246,7 +247,7 @@ Get the lat,lon center of a given hexagon
 
 | Param | Type | Description |
 | --- | --- | --- |
-| h3Index | <code>H3Index</code> | H3 index |
+| h3Index | <code>H3IndexInput</code> | H3 index |
 
 
 * * *
@@ -277,7 +278,7 @@ Get the parent of the given hexagon at a particular resolution
 
 | Param | Type | Description |
 | --- | --- | --- |
-| h3Index | <code>H3Index</code> | H3 index to get parent for |
+| h3Index | <code>H3IndexInput</code> | H3 index to get parent for |
 | res | <code>number</code> | Resolution of hexagon to return |
 
 
@@ -292,7 +293,7 @@ Get the children/descendents of the given hexagon at a particular resolution
 
 | Param | Type | Description |
 | --- | --- | --- |
-| h3Index | <code>H3Index</code> | H3 index to get children for |
+| h3Index | <code>H3IndexInput</code> | H3 index to get children for |
 | res | <code>number</code> | Resolution of hexagons to return |
 
 
@@ -307,7 +308,7 @@ Get the center child of the given hexagon at a particular resolution
 
 | Param | Type | Description |
 | --- | --- | --- |
-| h3Index | <code>H3Index</code> | H3 index to get center child for |
+| h3Index | <code>H3IndexInput</code> | H3 index to get center child for |
 | res | <code>number</code> | Resolution of hexagon to return |
 
 
@@ -322,7 +323,7 @@ Get all hexagons in a k-ring around a given center. The order of the hexagons is
 
 | Param | Type | Description |
 | --- | --- | --- |
-| h3Index | <code>H3Index</code> | H3 index of center hexagon |
+| h3Index | <code>H3IndexInput</code> | H3 index of center hexagon |
 | ringSize | <code>number</code> | Radius of k-ring |
 
 
@@ -338,7 +339,7 @@ ordered by distance from the origin. The order of the hexagons within each ring 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| h3Index | <code>H3Index</code> | H3 index of center hexagon |
+| h3Index | <code>H3IndexInput</code> | H3 index of center hexagon |
 | ringSize | <code>number</code> | Radius of k-ring |
 
 
@@ -358,7 +359,7 @@ Unlike kRing, this function will throw an error if there is a pentagon anywhere 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| h3Index | <code>H3Index</code> | H3 index of center hexagon |
+| h3Index | <code>H3IndexInput</code> | H3 index of center hexagon |
 | ringSize | <code>number</code> | Radius of ring |
 
 
@@ -401,7 +402,7 @@ algorithm may produce unexpected or invalid polygons.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| h3Indexes | <code>Array.&lt;H3Index&gt;</code> | H3 indexes to get outlines for |
+| h3Indexes | <code>Array.&lt;H3IndexInput&gt;</code> | H3 indexes to get outlines for |
 | [formatAsGeoJson] | <code>boolean</code> | Whether to provide GeoJSON output:                                    [lng, lat], closed loops |
 
 
@@ -421,7 +422,7 @@ multiple levels that represents the same area.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| h3Set | <code>Array.&lt;H3Index&gt;</code> | H3 indexes to compact |
+| h3Set | <code>Array.&lt;H3IndexInput&gt;</code> | H3 indexes to compact |
 
 
 * * *
@@ -439,7 +440,7 @@ Uncompact a compacted set of hexagons to hexagons of the same resolution
 
 | Param | Type | Description |
 | --- | --- | --- |
-| compactedSet | <code>Array.&lt;H3Index&gt;</code> | H3 indexes to uncompact |
+| compactedSet | <code>Array.&lt;H3IndexInput&gt;</code> | H3 indexes to uncompact |
 | res | <code>number</code> | The resolution to uncompact to |
 
 
@@ -454,8 +455,8 @@ Whether two H3 indexes are neighbors (share an edge)
 
 | Param | Type | Description |
 | --- | --- | --- |
-| origin | <code>H3Index</code> | Origin hexagon index |
-| destination | <code>H3Index</code> | Destination hexagon index |
+| origin | <code>H3IndexInput</code> | Origin hexagon index |
+| destination | <code>H3IndexInput</code> | Destination hexagon index |
 
 
 * * *
@@ -469,8 +470,8 @@ Get an H3 index representing a unidirectional edge for a given origin and destin
 
 | Param | Type | Description |
 | --- | --- | --- |
-| origin | <code>H3Index</code> | Origin hexagon index |
-| destination | <code>H3Index</code> | Destination hexagon index |
+| origin | <code>H3IndexInput</code> | Origin hexagon index |
+| destination | <code>H3IndexInput</code> | Destination hexagon index |
 
 
 * * *
@@ -484,7 +485,7 @@ Get the origin hexagon from an H3 index representing a unidirectional edge
 
 | Param | Type | Description |
 | --- | --- | --- |
-| edgeIndex | <code>H3Index</code> | H3 index of the edge |
+| edgeIndex | <code>H3IndexInput</code> | H3 index of the edge |
 
 
 * * *
@@ -498,7 +499,7 @@ Get the destination hexagon from an H3 index representing a unidirectional edge
 
 | Param | Type | Description |
 | --- | --- | --- |
-| edgeIndex | <code>H3Index</code> | H3 index of the edge |
+| edgeIndex | <code>H3IndexInput</code> | H3 index of the edge |
 
 
 * * *
@@ -512,7 +513,7 @@ Whether the input is a valid unidirectional edge
 
 | Param | Type | Description |
 | --- | --- | --- |
-| edgeIndex | <code>H3Index</code> | H3 index of the edge |
+| edgeIndex | <code>H3IndexInput</code> | H3 index of the edge |
 
 
 * * *
@@ -526,7 +527,7 @@ Get the [origin, destination] pair represented by a unidirectional edge
 
 | Param | Type | Description |
 | --- | --- | --- |
-| edgeIndex | <code>H3Index</code> | H3 index of the edge |
+| edgeIndex | <code>H3IndexInput</code> | H3 index of the edge |
 
 
 * * *
@@ -541,7 +542,7 @@ every neighbor)
 
 | Param | Type | Description |
 | --- | --- | --- |
-| h3Index | <code>H3Index</code> | H3 index of the origin hexagon |
+| h3Index | <code>H3IndexInput</code> | H3 index of the origin hexagon |
 
 
 * * *
@@ -556,7 +557,7 @@ cross the edge of an icosahedron face, this may return 3 coordinates.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| edgeIndex | <code>H3Index</code> | H3 index of the edge |
+| edgeIndex | <code>H3IndexInput</code> | H3 index of the edge |
 | [formatAsGeoJson] | <code>boolean</code> | Whether to provide GeoJSON output: [lng, lat] |
 
 
@@ -574,8 +575,8 @@ on opposite sides of a pentagon.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| origin | <code>H3Index</code> | Origin hexagon index |
-| destination | <code>H3Index</code> | Destination hexagon index |
+| origin | <code>H3IndexInput</code> | Origin hexagon index |
+| destination | <code>H3IndexInput</code> | Destination hexagon index |
 
 
 * * *
@@ -606,8 +607,8 @@ Notes:
 
 | Param | Type | Description |
 | --- | --- | --- |
-| origin | <code>H3Index</code> | Origin hexagon index |
-| destination | <code>H3Index</code> | Destination hexagon index |
+| origin | <code>H3IndexInput</code> | Origin hexagon index |
+| destination | <code>H3IndexInput</code> | Destination hexagon index |
 
 
 * * *
@@ -634,8 +635,8 @@ to be compatible across different versions of H3.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| origin | <code>H3Index</code> | Origin H3 index |
-| destination | <code>H3Index</code> | H3 index for which to find relative coordinates |
+| origin | <code>H3IndexInput</code> | Origin H3 index |
+| destination | <code>H3IndexInput</code> | H3 index for which to find relative coordinates |
 
 
 * * *
@@ -662,7 +663,7 @@ to be compatible across different versions of H3.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| origin | <code>H3Index</code> | Origin H3 index |
+| origin | <code>H3IndexInput</code> | Origin H3 index |
 | coords | <code>CoordIJ</code> | Coordinates as an `{i, j}` pair |
 
 
@@ -838,6 +839,15 @@ Convert radians to degrees
 
 ### h3.H3Index : <code>string</code>
 64-bit hexidecimal string representation of an H3 index
+
+
+* * *
+
+<a name="module_h3.H3IndexInput"></a>
+
+### h3.H3IndexInput : <code>string</code> \| <code>Array.&lt;number&gt;</code>
+64-bit hexidecimal string representation of an H3 index,
+or two 32-bit integers in little endian order in an array.
 
 
 * * *
