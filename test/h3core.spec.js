@@ -689,8 +689,6 @@ test('polyfill - memory management bug (#103)', assert => {
 });
 
 test('polyfill - memory management bug (#103, holes)', assert => {
-    // Note that when this memory mangement issue occurs, it makes a number of *other* tests fail.
-    // Unfortunately this test itself doesn't seem to fail, though the
     const simplePolygon = makePolygon(4);
     const complexPolygon = [simplePolygon, makePolygon(1260, 0.5), makePolygon(2000, 0.5)];
 
