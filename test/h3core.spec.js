@@ -676,7 +676,8 @@ function makePolygon(numVerts, radius = 1) {
 
 test('polyfill - memory management bug (#103)', assert => {
     // Note that when this memory mangement issue occurs, it makes a number of *other* tests fail.
-    // Unfortunately this test itself doesn't seem to fail, though the
+    // Unfortunately this test itself doesn't seem to fail, though the original pair of polygons
+    // in #103 failed deterministically with this length check.
     const simplePolygon = makePolygon(4);
     const complexPolygon = makePolygon(1260);
 
