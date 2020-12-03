@@ -663,6 +663,44 @@ test('polyfill - BBox corners (#67)', assert => {
     assert.end();
 });
 
+// Helper - make a polygon from a unit circle with an arbitrary number of vertices
+function makePolygon(numVerts, radius = 1) {
+    const interval = (2 * Math.PI) / numVerts;
+    const polygon = [];
+    for (let i = 0; i < numVerts; i++) {
+        const theta = interval * i;
+        polygon.push([radius * Math.cos(theta), radius * Math.sin(theta)]);
+    }
+    return polygon;
+}
+
+test('polyfill - memory management bug (#103)', assert => {
+    // Note that when this memory mangement issue occurs, it makes a number of *other* tests fail.
+    // Unfortunately this test itself doesn't seem to fail, though the original pair of polygons
+    // in #103 failed deterministically with this length check.
+    const simplePolygon = makePolygon(4);
+    const complexPolygon = makePolygon(1260);
+
+    const len1 = h3.polyfill(simplePolygon, 3).length;
+    h3.polyfill(complexPolygon, 3);
+    const len2 = h3.polyfill(simplePolygon, 3).length;
+
+    assert.equal(len1, len2, 'polyfill with many vertexes should not mess up later polyfills');
+    assert.end();
+});
+
+test('polyfill - memory management bug (#103, holes)', assert => {
+    const simplePolygon = makePolygon(4);
+    const complexPolygon = [simplePolygon, makePolygon(1260, 0.5), makePolygon(2000, 0.5)];
+
+    const len1 = h3.polyfill(simplePolygon, 3).length;
+    h3.polyfill(complexPolygon, 3);
+    const len2 = h3.polyfill(simplePolygon, 3).length;
+
+    assert.equal(len1, len2, 'polyfill with many vertexes should not mess up later polyfills');
+    assert.end();
+});
+
 test('h3SetToMultiPolygon - Empty', assert => {
     const h3Indexes = [];
     const multiPolygon = h3.h3SetToMultiPolygon(h3Indexes);
