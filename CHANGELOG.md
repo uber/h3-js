@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file. This librar
 ## [Unreleased]
 - *None*
 
+## [3.7.1] - 2021-03-10
+### Fixed
+- Fixed bug in freeing geo polygon memory during `polyfill` (#104)
+
 ## [3.7.0] - 2020-10-15
 ### Added
 - Added bindings for new area and distance functions (#93):
