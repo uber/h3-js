@@ -145,6 +145,32 @@ test('h3GetResolution', assert => {
     assert.end();
 });
 
+test('h3GetResolution - integers', assert => {
+    // Same as in h3GetResolution above
+    const indexes = [
+        [4294967295, 134389759],
+        [4294967295, 135431167],
+        [4294967295, 136479615],
+        [4294967295, 137528143],
+        [4294967295, 138576711],
+        [1073741823, 139625287],
+        [805306367, 140673863],
+        [738197503, 141722439],
+        [725614591, 142771015],
+        [227803135, 143819591],
+        [227704831, 144868167],
+        [227680255, 145916743],
+        [227679743, 146965319],
+        [227679359, 148013895],
+        [227679335, 149062471],
+        [227679333, 150111047]
+    ];
+    for (let res = 0; res < 16; res++) {
+        assert.equal(h3.h3GetResolution(indexes[res]), res, 'Got the expected resolution back');
+    }
+    assert.end();
+});
+
 test('h3ToGeo', assert => {
     const latlng = h3.h3ToGeo('85283473fffffff');
     assert.deepEqual(
