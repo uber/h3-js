@@ -145,6 +145,20 @@ test('h3GetResolution', assert => {
     assert.end();
 });
 
+test('h3GetResolution - integers', assert => {
+    for (let res = 0; res < 16; res++) {
+        // Same as in h3GetResolution above
+        const h3Index = h3.geoToH3(37.3615593, -122.0553238, res);
+        const h3IndexInt = h3.h3IndexToSplitLong(h3Index);
+        assert.equal(
+            h3.h3GetResolution(h3IndexInt),
+            res,
+            'Got the expected resolution back for int'
+        );
+    }
+    assert.end();
+});
+
 test('h3ToGeo', assert => {
     const latlng = h3.h3ToGeo('85283473fffffff');
     assert.deepEqual(
