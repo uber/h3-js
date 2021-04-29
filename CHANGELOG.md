@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file. This librar
 ## [Unreleased]
 - *None*
 
+## [3.7.2] - 2021-04-29
+### Fixed
+- Accept integer input to `h3GetResolution` (#113)
+
 ## [3.7.1] - 2021-03-10
 ### Fixed
 - Fixed bug in freeing geo polygon memory during `polyfill` (#104)
