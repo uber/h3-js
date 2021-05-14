@@ -54,6 +54,7 @@ jobs:
 
       - name: Setup Docker
         run: |
+          yarn
           yarn docker-boot
           yarn build-emscripten
 
