@@ -34,11 +34,6 @@ jobs:
           yarn --ignore-engines
           yarn test-fast
 
-      - uses: coverallsapp/github-action@master
-        with:
-          path-to-lcov: ./coverage/lcov.info
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
   # Run the full CI suite for Node 12. Tests are expected to pass for all Node versions,
   # but the build only needs to work for the development version, which should match the
   # Volta config in package.json
@@ -71,7 +66,7 @@ jobs:
           yarn check-tsd
           yarn cover
 
-      - uses: coverallsapp/github-action@master
-        with:
-          path-to-lcov: ./coverage/lcov.info
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Coverage
+        run: |
+          npm install -g coveralls
+          nyc report --reporter=text-lcov | coveralls
