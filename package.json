@@ -54,7 +54,7 @@
     "test": "yarn lint && yarn test-fast",
     "test-fast": "yarn test-raw | faucet",
     "test-raw": "yarn rollup-test && node dist/test.js",
-    "cover": "yarn rollup-test && nyc --clean node dist/test.js",
+    "cover": "yarn rollup-test && nyc --clean --reporter=lcov --reporter=text node dist/test.js",
     "cover-view": "yarn rollup-test && nyc --clean --reporter=html node dist/test.js && open coverage/index.html",
     "benchmark-node": "yarn rollup-benchmark-node && node dist/benchmark.node.js",
     "benchmark-browser": "yarn rollup-benchmark-browser && budo dist/benchmark.browser.js --open --title 'h3-js benchmarks'",
