@@ -1,0 +1,74 @@
+name: test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  
+  # Run quick tests for all Node versions
+  version-tests:
+    name: Test Node ${{ matrix.node_version }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node_version: [6, 8, 10, 14]
+
+    steps:
+      - uses: actions/checkout@v2.1.1
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '${{ matrix.node_version }}'
+
+      - name: Install
+        run: |
+          yarn --ignore-engines
+
+      - name: Tests
+        run: |
+          yarn test-fast
+  
+  # Run the full CI suite for the dev Node version. Tests are expected to pass for all 
+  # Node versions, but the build only needs to work for the development version, which 
+  # should match the Volta config in package.json
+  build-tests:
+    name: Build Test Node ${{ matrix.node_version }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node_version: [12]
+
+    steps:
+      - uses: actions/checkout@v2.1.1
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '${{ matrix.node_version }}'
+
+      - name: Install
+        run: |
+          yarn --ignore-engines
+
+      - name: Build
+        run: |
+          yarn docker-boot
+          yarn build-emscripten
+
+      - name: Tests
+        run: |
+          yarn lint
+          yarn test-fast
+          yarn check-prettier
+          yarn check-docs
+          yarn check-tsd
+          yarn cover
+      
+      - uses: coverallsapp/github-action@master
+        with:
+          path-to-lcov: ./coverage/lcov.info
+          github-token: ${{ secrets.GITHUB_TOKEN }}
