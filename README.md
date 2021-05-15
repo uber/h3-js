@@ -4,11 +4,15 @@
 
 # h3-js
 
-[![H3 Version](https://img.shields.io/badge/h3_api-v3.7.1-blue.svg)](https://github.com/uber/h3/releases/tag/v3.7.1) [![Build Status](https://github.com/uber/h3-js/workflows/test/badge.svg)](https://github.com/uber/h3-js/actions) [![Coverage Status](https://coveralls.io/repos/github/uber/h3-js/badge.svg?branch=master)](https://coveralls.io/github/uber/h3-js?branch=master)
+[![Build Status](https://github.com/uber/h3-js/workflows/test/badge.svg)](https://github.com/uber/h3-js/actions)
+[![Coverage Status](https://coveralls.io/repos/github/uber/h3-js/badge.svg?branch=master)](https://coveralls.io/github/uber/h3-js?branch=master)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![npm version](https://badge.fury.io/js/h3-js.svg)](https://badge.fury.io/js/h3-js)
+[![H3 Version](https://img.shields.io/badge/h3_api-v3.7.1-blue.svg)](https://github.com/uber/h3/releases/tag/v3.7.1)
 
 The `h3-js` library provides a pure-JavaScript version of the [H3 Core Library](https://github.com/uber/h3), a hexagon-based geographic grid system. It can be used either in Node >= 6 or in the browser. The core library is transpiled from C using [emscripten](http://kripken.github.io/emscripten-site), offering full parity with the C API and highly efficient operations.
 
-For more information on H3 and for the full API documentation, please see the [H3 Documentation](https://uber.github.io/h3/).
+For more information on H3 and for the full API documentation, please see the [H3 Documentation](https://h3geo.org).
 
 -   Post **bug reports or feature requests** to the [Github Issues page](https://github.com/uber/h3-js/issues)
 -   Ask **questions** by posting to the [H3 tag on StackOverflow](https://stackoverflow.com/questions/tagged/h3)
