@@ -93,6 +93,7 @@ const coordinates = h3.h3SetToMultiPolygon(hexagons, true);
 ## h3
 
 * [h3](#module_h3)
+    * [.UNITS](#module_h3.UNITS) : <code>Object</code>
     * [.h3IsValid(h3Index)](#module_h3.h3IsValid) ⇒ <code>boolean</code>
     * [.h3IsPentagon(h3Index)](#module_h3.h3IsPentagon) ⇒ <code>boolean</code>
     * [.h3IsResClassIII(h3Index)](#module_h3.h3IsResClassIII) ⇒ <code>boolean</code>
@@ -137,7 +138,25 @@ const coordinates = h3.h3SetToMultiPolygon(hexagons, true);
     * [.H3Index](#module_h3.H3Index) : <code>string</code>
     * [.H3IndexInput](#module_h3.H3IndexInput) : <code>string</code> \| <code>Array.&lt;number&gt;</code>
     * [.CoordIJ](#module_h3.CoordIJ) : <code>Object</code>
-    * [.UNITS](#module_h3.UNITS) : <code>Object</code>
+
+
+* * *
+
+<a name="module_h3.UNITS"></a>
+
+### h3.UNITS : <code>Object</code>
+Length/Area units
+
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| m | <code>string</code> | 
+| m2 | <code>string</code> | 
+| km | <code>string</code> | 
+| km2 | <code>string</code> | 
+| rads | <code>string</code> | 
+| rads2 | <code>string</code> | 
 
 
 * * *
@@ -869,25 +888,6 @@ Coordinates as an `{i, j}` pair
 | --- | --- |
 | i | <code>number</code> | 
 | j | <code>number</code> | 
-
-
-* * *
-
-<a name="module_h3.UNITS"></a>
-
-### h3.UNITS : <code>Object</code>
-Length/Area units
-
-**Properties**
-
-| Name | Type |
-| --- | --- |
-| m | <code>string</code> | 
-| m2 | <code>string</code> | 
-| km | <code>string</code> | 
-| km2 | <code>string</code> | 
-| rads | <code>string</code> | 
-| rads2 | <code>string</code> | 
 
 
 * * *
