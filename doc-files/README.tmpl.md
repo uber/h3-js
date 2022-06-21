@@ -30,7 +30,7 @@ The library uses ES6 modules. Bundles for Node and the browser are built to the 
 ES6 usage:
 
 ```js
-import {h3ToGeo} from "h3-js";
+import {latLngToCell} from "h3-js";
 ```
 
 CommonJS usage:
@@ -49,15 +49,15 @@ Pre-bundled script (library is available as an `h3` global):
 
 ```js
 // Convert a lat/lng point to a hexagon index at resolution 7
-const h3Index = h3.geoToH3(37.3615593, -122.0553238, 7);
+const h3Index = h3.latLngToCell(37.3615593, -122.0553238, 7);
 // -> '87283472bffffff'
 
 // Get the center of the hexagon
-const hexCenterCoordinates = h3.h3ToGeo(h3Index);
+const hexCenterCoordinates = h3.cellToLatLng(h3Index);
 // -> [37.35171820183272, -122.05032565263946]
 
 // Get the vertices of the hexagon
-const hexBoundary = h3.h3ToGeoBoundary(h3Index);
+const hexBoundary = h3.cellToBoundary(h3Index);
 // -> [ [37.341099093235684, -122.04156135164334 ], ...]
 ```
 
@@ -65,7 +65,7 @@ const hexBoundary = h3.h3ToGeoBoundary(h3Index);
 
 ```js
 // Get all neighbors within 1 step of the hexagon
-const kRing = h3.kRing(h3Index, 1);
+const disk = h3.gridDisk(h3Index, 1);
 // -> ['87283472bffffff', '87283472affffff', ...]
 
 // Get the set of hexagons within a polygon
@@ -74,11 +74,11 @@ const polygon = [
     [37.7198061999978478, -122.3544736999993603],
     [37.8151571999998453, -122.4798767000009008]
 ];
-const hexagons = h3.polyfill(polygon, 7);
+const hexagons = h3.polygonToCells(polygon, 7);
 // -> ['872830828ffffff', '87283082effffff', ...]
 
 // Get the outline of a set of hexagons, as a GeoJSON-style MultiPolygon
-const coordinates = h3.h3SetToMultiPolygon(hexagons, true);
+const coordinates = h3.cellsToMultiPolygon(hexagons, true);
 // -> [[[
 //      [-122.37681938644465, 37.76546768434345],
 //      [-122.3856345540363,37.776004200673846],
@@ -120,23 +120,28 @@ To run the benchmarks in a browser:
 
     yarn benchmark-browser
 
-Sample Node output (Macbook Pro running Node 6):
+Sample Node output (Macbook Pro running Node 12):
 
 ```
-h3IsValid x 3,725,046 ops/sec ±0.47% (90 runs sampled)
-geoToH3 x 227,458 ops/sec ±0.84% (89 runs sampled)
-h3ToGeo x 843,167 ops/sec ±0.96% (87 runs sampled)
-h3ToGeoBoundary x 220,797 ops/sec ±2.56% (86 runs sampled)
-kRing x 144,955 ops/sec ±3.06% (85 runs sampled)
-polyfill x 9,291 ops/sec ±1.12% (88 runs sampled)
-h3SetToMultiPolygon x 311 ops/sec ±1.56% (82 runs sampled)
-compact x 1,336 ops/sec ±4.51% (86 runs sampled)
-uncompact x 574 ops/sec ±0.91% (85 runs sampled)
-h3IndexesAreNeighbors x 670,031 ops/sec ±1.36% (88 runs sampled)
-getH3UnidirectionalEdge x 356,089 ops/sec ±1.17% (85 runs sampled)
-getOriginH3IndexFromUnidirectionalEdge x 1,052,652 ops/sec ±0.54% (89 runs sampled)
-getDestinationH3IndexFromUnidirectionalEdge x 891,680 ops/sec ±0.90% (91 runs sampled)
-h3UnidirectionalEdgeIsValid x 3,551,111 ops/sec ±0.69% (85 runs sampled)
+isValidCell x 3,650,995 ops/sec ±1.67% (87 runs sampled)
+latLngToCell x 429,982 ops/sec ±1.39% (86 runs sampled)
+cellToLatLng x 1,161,867 ops/sec ±1.11% (84 runs sampled)
+cellToLatLng - integers x 1,555,791 ops/sec ±1.29% (86 runs sampled)
+cellToBoundary x 375,938 ops/sec ±1.25% (87 runs sampled)
+cellToBoundary - integers x 377,181 ops/sec ±1.18% (85 runs sampled)
+getIcosahedronFaces x 992,946 ops/sec ±1.13% (85 runs sampled)
+gridDisk x 194,400 ops/sec ±1.16% (85 runs sampled)
+polygonToCells_9 x 4,919 ops/sec ±0.79% (87 runs sampled)
+polygonToCells_11 x 368 ops/sec ±0.76% (86 runs sampled)
+polygonToCells_10ring x 76.88 ops/sec ±0.57% (68 runs sampled)
+cellsToMultiPolygon x 760 ops/sec ±1.06% (86 runs sampled)
+compactCells x 2,466 ops/sec ±0.75% (86 runs sampled)
+uncompactCells x 715 ops/sec ±1.15% (85 runs sampled)
+areNeighborCells x 1,073,086 ops/sec ±1.56% (89 runs sampled)
+cellsToDirectedEdge x 692,172 ops/sec ±1.06% (86 runs sampled)
+getDirectedEdgeOrigin x 995,390 ops/sec ±1.60% (85 runs sampled)
+getDirectedEdgeDestination x 930,473 ops/sec ±1.11% (86 runs sampled)
+isValidDirectedEdge x 3,505,407 ops/sec ±1.05% (87 runs sampled)
 ```
 
 When making code changes that may affect performance, please run benchmarks against `master` and then against your branch to identify any regressions.
