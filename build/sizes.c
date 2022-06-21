@@ -25,16 +25,20 @@ int sizeOfH3Index() {
     return sizeof(H3Index);
 }
 
-int sizeOfGeoCoord() {
-    return sizeof(GeoCoord);
+int sizeOfH3Error() {
+    return sizeof(H3Error);
 }
 
-int sizeOfGeoBoundary() {
-    return sizeof(GeoBoundary);
+int sizeOfLatLng() {
+    return sizeof(LatLng);
 }
 
-int sizeOfGeofence() {
-    return sizeof(Geofence);
+int sizeOfCellBoundary() {
+    return sizeof(CellBoundary);
+}
+
+int sizeOfGeoLoop() {
+    return sizeof(GeoLoop);
 }
 
 int sizeOfGeoPolygon() {

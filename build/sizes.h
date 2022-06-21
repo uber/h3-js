@@ -23,9 +23,10 @@
 #define SIZES_H
 
 int sizeOfH3Index();
-int sizeOfGeoCoord();
-int sizeOfGeoBoundary();
-int sizeOfGeofence();
+int sizeOfH3Error();
+int sizeOfLatLng();
+int sizeOfCellBoundary();
+int sizeOfGeoLoop();
 int sizeOfGeoPolygon();
 int sizeOfLinkedGeoPolygon();
 int sizeOfCoordIJ();
