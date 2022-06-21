@@ -25,10 +25,6 @@ int sizeOfH3Index() {
     return sizeof(H3Index);
 }
 
-int sizeOfH3Error() {
-    return sizeof(H3Error);
-}
-
 int sizeOfLatLng() {
     return sizeof(LatLng);
 }

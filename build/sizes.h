@@ -23,7 +23,6 @@
 #define SIZES_H
 
 int sizeOfH3Index();
-int sizeOfH3Error();
 int sizeOfLatLng();
 int sizeOfCellBoundary();
 int sizeOfGeoLoop();
