@@ -26,9 +26,13 @@ const BINDING_FUNCTIONS = fs
 
 // Exclude methods that don't make sense for the JS bindings
 const EXCLUDE_METHODS = [
-    'h3ToString', 'stringToH3',
+    'h3ToString',
+    'stringToH3',
     // TODO: Vertex functions are not supported in JS
-    'isValidVertex', 'vertexToLatLng', 'cellToVertexes', 'cellToVertex'
+    'isValidVertex',
+    'vertexToLatLng',
+    'cellToVertexes',
+    'cellToVertex'
 ];
 
 test('implementsBindingFunctions', assert => {
