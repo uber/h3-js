@@ -287,7 +287,7 @@ test('gridDisk 2', assert => {
 });
 
 test('gridDisk - Bad Radius', assert => {
-    assert.throws(() => h3.gridDisk('8928308280fffff', -7), /Failed/, 'Throws with bad radius');
+    assert.throws(() => h3.gridDisk('8928308280fffff', -7), /\(2\)$/, 'Throws with bad radius');
     assert.end();
 });
 
@@ -458,17 +458,17 @@ test('gridRingUnsafe - ring 0', assert => {
 test('gridRingUnsafe - pentagon', assert => {
     assert.throws(
         () => h3.gridRingUnsafe('821c07fffffffff', 2),
-        /Failed/,
+        /\(9\)$/,
         'Throws with a pentagon origin'
     );
     assert.throws(
         () => h3.gridRingUnsafe('821c2ffffffffff', 1),
-        /Failed/,
+        /\(9\)$/,
         'Throws with a pentagon in the ring itself'
     );
     assert.throws(
         () => h3.gridRingUnsafe('821c2ffffffffff', 5),
-        /Failed/,
+        /\(9\)$/,
         'Throws with a pentagon inside the ring'
     );
 
@@ -928,7 +928,7 @@ test('compactCells - Invalid', assert => {
         .slice(0, -1);
     assert.throws(
         () => h3.compactCells(dupeHexagons, 9),
-        /Failed/,
+        /\(10\)$/,
         'got expected error for invalid hex set input'
     );
 
@@ -939,7 +939,7 @@ test('uncompactCells - Invalid', assert => {
     const hexagons = [h3.latLngToCell(37.3615593, -122.0553238, 10)];
     assert.throws(
         () => h3.uncompactCells(hexagons, 5),
-        /Failed/,
+        /\(12\)$/,
         'got expected error for invalid compacted resolution input'
     );
 
@@ -1030,9 +1030,9 @@ test('cellToParent', assert => {
 test('cellToParent - Invalid', assert => {
     const h3Index = '8928308280fffff';
 
-    assert.throws(() => h3.cellToParent(h3Index, 10), /Failed/, 'Throws on finer resolution');
-    assert.throws(() => h3.cellToParent(h3Index, -1), /Failed/, 'Throws on invalid resolution');
-    assert.throws(() => h3.cellToParent('foo', 10), /Failed/, 'Throws on invalid index');
+    assert.throws(() => h3.cellToParent(h3Index, 10), /\(12\)$/, 'Throws on finer resolution');
+    assert.throws(() => h3.cellToParent(h3Index, -1), /\(4\)$/, 'Throws on invalid resolution');
+    assert.throws(() => h3.cellToParent('foo', 10), /\(12\)$/, 'Throws on invalid index');
     assert.end();
 });
 
@@ -1349,7 +1349,7 @@ test('gridPathCells - failure', assert => {
 
     assert.throws(
         () => h3.gridPathCells(origin, origin10),
-        /Failed/,
+        /\(12\)$/,
         'got expected error for different resolutions'
     );
     assert.end();
@@ -1404,27 +1404,27 @@ test('cellToLocalIj / localIjToCell - Pentagon', assert => {
 test('cellToLocalIj - errors', assert => {
     assert.throws(
         () => h3.cellToLocalIj('832830fffffffff', '822837fffffffff'),
-        /Failed/,
+        /\(12\)$/,
         'Got expected error'
     );
     assert.throws(
         () => h3.cellToLocalIj('822a17fffffffff', '822837fffffffff'),
-        /Failed/,
+        /\(1\)$/,
         'Got expected error'
     );
     assert.throws(
         () => h3.cellToLocalIj('8828308281fffff', '8841492553fffff'),
-        /Failed/,
+        /\(1\)$/,
         'Got expected error for opposite sides of the world'
     );
     assert.throws(
         () => h3.cellToLocalIj('81283ffffffffff', '811cbffffffffff'),
-        /Failed/,
+        /\(1\)$/,
         'Got expected error'
     );
     assert.throws(
         () => h3.cellToLocalIj('811d3ffffffffff', '8122bffffffffff'),
-        /Failed/,
+        /\(1\)$/,
         'Got expected error'
     );
 
@@ -1444,7 +1444,7 @@ test('localIjToCell - errors', assert => {
     );
     assert.throws(
         () => h3.localIjToCell('8049fffffffffff', {i: 2, j: 0}),
-        /Failed/,
+        /\(1\)$/,
         'Got expected error'
     );
 
