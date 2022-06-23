@@ -3,7 +3,10 @@
 All notable changes to this project will be documented in this file. This library adheres to a versioning policy described in [the README](./README.md#versioning). The public API of this library consists of the functions exported in [h3core.js](./lib/h3core.js).
 
 ## [Unreleased]
-- *None*
+### Added
+- Added vertex mode functions (#138)
+### Breaking Changes
+- Updated the core library to 4.0.0-rc2 (#136)
 
 ## [3.7.2] - 2021-04-29
 ### Fixed
