@@ -25,15 +25,7 @@ const BINDING_FUNCTIONS = fs
     .split(/\s+/);
 
 // Exclude methods that don't make sense for the JS bindings
-const EXCLUDE_METHODS = [
-    'h3ToString',
-    'stringToH3',
-    // TODO: Vertex functions are not supported in JS
-    'isValidVertex',
-    'vertexToLatLng',
-    'cellToVertexes',
-    'cellToVertex'
-];
+const EXCLUDE_METHODS = ['h3ToString', 'stringToH3'];
 
 test('implementsBindingFunctions', assert => {
     BINDING_FUNCTIONS.forEach(fn => {

@@ -130,6 +130,10 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
     * [.exactEdgeLength(edge, unit)](#module_h3.exactEdgeLength) ⇒ <code>number</code>
     * [.getHexagonAreaAvg(res, unit)](#module_h3.getHexagonAreaAvg) ⇒ <code>number</code>
     * [.getHexagonEdgeLengthAvg(res, unit)](#module_h3.getHexagonEdgeLengthAvg) ⇒ <code>number</code>
+    * [.cellToVertex(h3Index, vertexNum)](#module_h3.cellToVertex) ⇒ <code>H3Index</code>
+    * [.cellToVertexes(h3Index)](#module_h3.cellToVertexes) ⇒ <code>Array.&lt;H3Index&gt;</code>
+    * [.vertexToLatLng(h3Index)](#module_h3.vertexToLatLng) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.isValidVertex(h3Index)](#module_h3.isValidVertex) ⇒ <code>boolean</code>
     * [.getNumCells(res)](#module_h3.getNumCells) ⇒ <code>number</code>
     * [.getRes0Cells()](#module_h3.getRes0Cells) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.getPentagons(res)](#module_h3.getPentagons) ⇒ <code>Array.&lt;H3Index&gt;</code>
@@ -787,6 +791,63 @@ Average hexagon edge length at a given resolution
 | --- | --- | --- |
 | res | <code>number</code> | Hexagon resolution |
 | unit | <code>string</code> | Distance unit (either UNITS.m, UNITS.km, or UNITS.rads) |
+
+
+* * *
+
+<a name="module_h3.cellToVertex"></a>
+
+### h3.cellToVertex(h3Index, vertexNum) ⇒ <code>H3Index</code>
+Find the index for a vertex of a cell.
+
+**Returns**: <code>H3Index</code> - Vertex index  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| h3Index | <code>H3IndexInput</code> | Cell to find the vertex for |
+| vertexNum | <code>number</code> | Number (index) of the vertex to calculate |
+
+
+* * *
+
+<a name="module_h3.cellToVertexes"></a>
+
+### h3.cellToVertexes(h3Index) ⇒ <code>Array.&lt;H3Index&gt;</code>
+Find the indexes for all vertexes of a cell.
+
+**Returns**: <code>Array.&lt;H3Index&gt;</code> - All vertex indexes of this cell  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| h3Index | <code>H3IndexInput</code> | Cell to find all vertexes for |
+
+
+* * *
+
+<a name="module_h3.vertexToLatLng"></a>
+
+### h3.vertexToLatLng(h3Index) ⇒ <code>Array.&lt;number&gt;</code>
+Get the lat, lng of a given vertex
+
+**Returns**: <code>Array.&lt;number&gt;</code> - Latitude, longitude coordinates of the vertex  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| h3Index | <code>H3IndexInput</code> | A vertex index |
+
+
+* * *
+
+<a name="module_h3.isValidVertex"></a>
+
+### h3.isValidVertex(h3Index) ⇒ <code>boolean</code>
+Returns true if the input is a valid vertex index.
+
+**Returns**: <code>boolean</code> - True if the index represents a vertex  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| h3Index | <code>H3IndexInput</code> | An index to test for being a vertex index |
 
 
 * * *
