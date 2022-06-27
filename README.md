@@ -710,7 +710,7 @@ but is implemented in the library and provided here as a convenience.
 | --- | --- | --- |
 | latlng1 | <code>Array.&lt;number&gt;</code> | Origin coordinate as [lat, lng] |
 | latlng2 | <code>Array.&lt;number&gt;</code> | Destination coordinate as [lat, lng] |
-| unit | <code>string</code> | Distance unit (either UNITS.m or UNITS.km) |
+| unit | <code>string</code> | Distance unit (either UNITS.m, UNITS.km, or UNITS.rads) |
 
 
 * * *
@@ -729,7 +729,7 @@ Exact area of a given cell
 | Param | Type | Description |
 | --- | --- | --- |
 | h3Index | <code>H3Index</code> | H3 index of the hexagon to measure |
-| unit | <code>string</code> | Distance unit (either UNITS.m2 or UNITS.km2) |
+| unit | <code>string</code> | Distance unit (either UNITS.m2, UNITS.km2, or UNITS.rads2) |
 
 
 * * *
