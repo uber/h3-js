@@ -15,8 +15,8 @@
  */
 
 /**
- * Sizes exported for use in Emscripten. This file is copied into the
- * h3 src/h3lib/lib directory
+ * Sizes and C helpers exported for use in Emscripten. This file is copied into
+ * the h3 src/h3lib/lib directory
  */
 
 #include <stdint.h>
