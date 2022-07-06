@@ -125,7 +125,7 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
     * [.gridPathCells(origin, destination)](#module_h3.gridPathCells) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.cellToLocalIj(origin, destination)](#module_h3.cellToLocalIj) ⇒ <code>CoordIJ</code>
     * [.localIjToCell(origin, coords)](#module_h3.localIjToCell) ⇒ <code>H3Index</code>
-    * [.distance(latlng1, latlng2, unit)](#module_h3.distance) ⇒ <code>number</code>
+    * [.latLngDistance(latLng1, latLng2, unit)](#module_h3.latLngDistance) ⇒ <code>number</code>
     * [.cellArea(h3Index, unit)](#module_h3.cellArea) ⇒ <code>number</code>
     * [.exactEdgeLength(edge, unit)](#module_h3.exactEdgeLength) ⇒ <code>number</code>
     * [.getHexagonAreaAvg(res, unit)](#module_h3.getHexagonAreaAvg) ⇒ <code>number</code>
@@ -694,9 +694,9 @@ to be compatible across different versions of H3.
 
 * * *
 
-<a name="module_h3.distance"></a>
+<a name="module_h3.latLngDistance"></a>
 
-### h3.distance(latlng1, latlng2, unit) ⇒ <code>number</code>
+### h3.latLngDistance(latLng1, latLng2, unit) ⇒ <code>number</code>
 Great circle distance between two geo points. This is not specific to H3,
 but is implemented in the library and provided here as a convenience.
 
@@ -708,8 +708,8 @@ but is implemented in the library and provided here as a convenience.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| latlng1 | <code>Array.&lt;number&gt;</code> | Origin coordinate as [lat, lng] |
-| latlng2 | <code>Array.&lt;number&gt;</code> | Destination coordinate as [lat, lng] |
+| latLng1 | <code>Array.&lt;number&gt;</code> | Origin coordinate as [lat, lng] |
+| latLng2 | <code>Array.&lt;number&gt;</code> | Destination coordinate as [lat, lng] |
 | unit | <code>string</code> | Distance unit (either UNITS.m, UNITS.km, or UNITS.rads) |
 
 
