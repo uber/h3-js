@@ -17,6 +17,21 @@
 import test from 'tape';
 import * as h3 from '../lib/h3core.js';
 
+// Error codes from the code library, aliased here for legibility
+const E_FAILED = 1;
+const E_DOMAIN = 2;
+const E_LATLNG_DOMAIN = 3;
+const E_RES_DOMAIN = 4;
+const E_CELL_INVALID = 5;
+const E_DIR_EDGE_INVALID = 6;
+const E_PENTAGON = 9;
+const E_DUPLICATE_INPUT = 10;
+const E_NOT_NEIGHBORS = 11;
+const E_RES_MISMATCH = 12;
+
+// At present this one is binding only
+const E_UNKNOWN_UNIT = 100;
+
 const GEO_PRECISION = 12;
 
 function toLowPrecision(maybeNumber) {
@@ -287,7 +302,11 @@ test('gridDisk 2', assert => {
 });
 
 test('gridDisk - Bad Radius', assert => {
-    assert.throws(() => h3.gridDisk('8928308280fffff', -7), /\(2\)$/, 'Throws with bad radius');
+    assert.throws(
+        () => h3.gridDisk('8928308280fffff', -7),
+        {code: E_DOMAIN},
+        'Throws with bad radius'
+    );
     assert.end();
 });
 
@@ -458,17 +477,17 @@ test('gridRingUnsafe - ring 0', assert => {
 test('gridRingUnsafe - pentagon', assert => {
     assert.throws(
         () => h3.gridRingUnsafe('821c07fffffffff', 2),
-        /\(9\)$/,
+        {code: E_PENTAGON},
         'Throws with a pentagon origin'
     );
     assert.throws(
         () => h3.gridRingUnsafe('821c2ffffffffff', 1),
-        /\(9\)$/,
+        {code: E_PENTAGON},
         'Throws with a pentagon in the ring itself'
     );
     assert.throws(
         () => h3.gridRingUnsafe('821c2ffffffffff', 5),
-        /\(9\)$/,
+        {code: E_PENTAGON},
         'Throws with a pentagon inside the ring'
     );
 
@@ -928,7 +947,7 @@ test('compactCells - Invalid', assert => {
         .slice(0, -1);
     assert.throws(
         () => h3.compactCells(dupeHexagons, 9),
-        /\(10\)$/,
+        {code: E_DUPLICATE_INPUT},
         'got expected error for invalid hex set input'
     );
 
@@ -939,7 +958,7 @@ test('uncompactCells - Invalid', assert => {
     const hexagons = [h3.latLngToCell(37.3615593, -122.0553238, 10)];
     assert.throws(
         () => h3.uncompactCells(hexagons, 5),
-        /\(12\)$/,
+        {code: E_RES_MISMATCH},
         'got expected error for invalid compacted resolution input'
     );
 
@@ -1030,9 +1049,21 @@ test('cellToParent', assert => {
 test('cellToParent - Invalid', assert => {
     const h3Index = '8928308280fffff';
 
-    assert.throws(() => h3.cellToParent(h3Index, 10), /\(12\)$/, 'Throws on finer resolution');
-    assert.throws(() => h3.cellToParent(h3Index, -1), /\(4\)$/, 'Throws on invalid resolution');
-    assert.throws(() => h3.cellToParent('foo', 10), /\(12\)$/, 'Throws on invalid index');
+    assert.throws(
+        () => h3.cellToParent(h3Index, 10),
+        {code: E_RES_MISMATCH},
+        'Throws on finer resolution'
+    );
+    assert.throws(
+        () => h3.cellToParent(h3Index, -1),
+        {code: E_RES_DOMAIN},
+        'Throws on invalid resolution'
+    );
+    assert.throws(
+        () => h3.cellToParent('foo', 10),
+        {code: E_RES_MISMATCH},
+        'Throws on invalid index'
+    );
     assert.end();
 });
 
@@ -1044,8 +1075,16 @@ test('cellToChildren', assert => {
     assert.equal(h3.cellToChildren(h3Index, 8).length, 7, 'Immediate child count correct');
     assert.equal(h3.cellToChildren(h3Index, 9).length, 49, 'Grandchild count correct');
     assert.deepEqual(h3.cellToChildren(h3Index, 7), [h3Index], 'Same resolution returns self');
-    assert.throws(() => h3.cellToChildren(h3Index, 6), 'Coarser resolution throws');
-    assert.throws(() => h3.cellToChildren(h3Index, -1), 'Invalid resolution throws');
+    assert.throws(
+        () => h3.cellToChildren(h3Index, 6),
+        {code: E_RES_DOMAIN},
+        'Coarser resolution throws'
+    );
+    assert.throws(
+        () => h3.cellToChildren(h3Index, -1),
+        {code: E_RES_DOMAIN},
+        'Invalid resolution throws'
+    );
     assert.deepEqual(h3.cellToChildren('foo', -1), [], 'Invalid index returns empty array');
 
     assert.end();
@@ -1073,8 +1112,16 @@ test('cellToCenterChild', assert => {
 test('cellToCenterChild - Invalid', assert => {
     const h3Index = '8928308280fffff';
 
-    assert.throws(() => h3.cellToCenterChild(h3Index, 5), 'Coarser resolution throws');
-    assert.throws(() => h3.cellToCenterChild(h3Index, -1), 'Invalid resolution throws');
+    assert.throws(
+        () => h3.cellToCenterChild(h3Index, 5),
+        {code: E_RES_DOMAIN},
+        'Coarser resolution throws'
+    );
+    assert.throws(
+        () => h3.cellToCenterChild(h3Index, -1),
+        {code: E_RES_DOMAIN},
+        'Invalid resolution throws'
+    );
     // TODO: Add this assertion when the C library supports this fallback
     // assert.equals(h3.cellToCenterChild('foo', 10), null, 'Invalid index returns null');
 
@@ -1100,18 +1147,29 @@ test('areNeighborCells', assert => {
     );
     assert.throws(
         () => h3.areNeighborCells(origin, 'foo'),
+        {code: E_CELL_INVALID},
         'A hexagon is not a neighbor to an invalid index'
     );
     assert.throws(
         () => h3.areNeighborCells(origin, 42),
+        {code: E_CELL_INVALID},
         'A hexagon is not a neighbor to an invalid index'
     );
     assert.throws(
         () => h3.areNeighborCells(origin, null),
-        'A hexagon is not a neighbor to an invalid index'
+        {code: E_CELL_INVALID},
+        'A hexagon is not a neighbor to a null index'
     );
-    assert.throws(() => h3.areNeighborCells('foo', 'foo'), 'Two invalid indexes are not neighbors');
-    assert.throws(() => h3.areNeighborCells(null, null), 'Two invalid indexes are not neighbors');
+    assert.throws(
+        () => h3.areNeighborCells('foo', 'foo'),
+        {code: E_CELL_INVALID},
+        'Two invalid indexes are not neighbors'
+    );
+    assert.throws(
+        () => h3.areNeighborCells(null, null),
+        {code: E_CELL_INVALID},
+        'Two null indexes are not neighbors'
+    );
 
     assert.end();
 });
@@ -1130,14 +1188,27 @@ test('cellsToDirectedEdge', assert => {
 
     assert.throws(
         () => h3.cellsToDirectedEdge(origin, notAdjacent),
+        {code: E_NOT_NEIGHBORS},
         'Got null for non-adjacent hexagons'
     );
 
-    assert.throws(() => h3.cellsToDirectedEdge(origin, origin), 'Throws for same hexagons');
+    assert.throws(
+        () => h3.cellsToDirectedEdge(origin, origin),
+        {code: E_NOT_NEIGHBORS},
+        'Throws for same hexagons'
+    );
 
-    assert.throws(() => h3.cellsToDirectedEdge(origin, 'foo'), 'Throws for invalid destination');
+    assert.throws(
+        () => h3.cellsToDirectedEdge(origin, 'foo'),
+        {code: E_NOT_NEIGHBORS},
+        'Throws for invalid destination'
+    );
 
-    assert.throws(() => h3.cellsToDirectedEdge('bar', 'foo'), 'Got null for invalid hexagons');
+    assert.throws(
+        () => h3.cellsToDirectedEdge('bar', origin),
+        {code: E_NOT_NEIGHBORS},
+        'Throws for invalid origin'
+    );
 
     assert.end();
 });
@@ -1148,9 +1219,17 @@ test('getDirectedEdgeOrigin', assert => {
 
     assert.equal(h3.getDirectedEdgeOrigin(edge), origin, 'Got expected origin for edge');
 
-    assert.throws(() => h3.getDirectedEdgeOrigin(origin), 'Throws for non-edge hexagon');
+    assert.throws(
+        () => h3.getDirectedEdgeOrigin(origin),
+        {code: E_DIR_EDGE_INVALID},
+        'Throws for non-edge hexagon'
+    );
 
-    assert.throws(() => h3.getDirectedEdgeOrigin(null), 'Throws for non-hexagon');
+    assert.throws(
+        () => h3.getDirectedEdgeOrigin(null),
+        {code: E_DIR_EDGE_INVALID},
+        'Throws for non-hexagon'
+    );
 
     assert.end();
 });
@@ -1161,9 +1240,17 @@ test('getDirectedEdgeDestination', assert => {
 
     assert.equal(h3.getDirectedEdgeDestination(edge), destination, 'Got expected origin for edge');
 
-    assert.throws(() => h3.getDirectedEdgeDestination(destination), 'Throws for non-edge hexagon');
+    assert.throws(
+        () => h3.getDirectedEdgeDestination(destination),
+        {code: E_DIR_EDGE_INVALID},
+        'Throws for non-edge hexagon'
+    );
 
-    assert.throws(() => h3.getDirectedEdgeDestination(null), 'Throws for non-hexagon');
+    assert.throws(
+        () => h3.getDirectedEdgeDestination(null),
+        {code: E_DIR_EDGE_INVALID},
+        'Throws for non-hexagon'
+    );
 
     assert.end();
 });
@@ -1314,14 +1401,17 @@ test('gridDistance - failure', assert => {
 
     assert.throws(
         () => h3.gridDistance(origin, origin10),
+        {code: E_RES_MISMATCH},
         'Throws for distance between different resolutions'
     );
     assert.throws(
         () => h3.gridDistance(origin, edge),
+        {code: E_FAILED},
         'Throws for distance between hexagon and edge'
     );
     assert.throws(
         () => h3.gridDistance(origin, distantHex),
+        {code: E_FAILED},
         'Throws for distance between distant hexagons'
     );
     assert.end();
@@ -1349,7 +1439,7 @@ test('gridPathCells - failure', assert => {
 
     assert.throws(
         () => h3.gridPathCells(origin, origin10),
-        /\(12\)$/,
+        {code: E_RES_MISMATCH},
         'got expected error for different resolutions'
     );
     assert.end();
@@ -1404,27 +1494,27 @@ test('cellToLocalIj / localIjToCell - Pentagon', assert => {
 test('cellToLocalIj - errors', assert => {
     assert.throws(
         () => h3.cellToLocalIj('832830fffffffff', '822837fffffffff'),
-        /\(12\)$/,
+        {code: E_RES_MISMATCH},
         'Got expected error'
     );
     assert.throws(
         () => h3.cellToLocalIj('822a17fffffffff', '822837fffffffff'),
-        /\(1\)$/,
+        {code: E_FAILED},
         'Got expected error'
     );
     assert.throws(
         () => h3.cellToLocalIj('8828308281fffff', '8841492553fffff'),
-        /\(1\)$/,
+        {code: E_FAILED},
         'Got expected error for opposite sides of the world'
     );
     assert.throws(
         () => h3.cellToLocalIj('81283ffffffffff', '811cbffffffffff'),
-        /\(1\)$/,
+        {code: E_FAILED},
         'Got expected error'
     );
     assert.throws(
         () => h3.cellToLocalIj('811d3ffffffffff', '8122bffffffffff'),
-        /\(1\)$/,
+        {code: E_FAILED},
         'Got expected error'
     );
 
@@ -1444,7 +1534,7 @@ test('localIjToCell - errors', assert => {
     );
     assert.throws(
         () => h3.localIjToCell('8049fffffffffff', {i: 2, j: 0}),
-        /\(1\)$/,
+        {code: E_FAILED},
         'Got expected error'
     );
 
@@ -1473,12 +1563,24 @@ test('getHexagonAreaAvg', assert => {
 
 test('getHexagonAreaAvg - bad units', assert => {
     const res = 9;
-    assert.throws(() => h3.getHexagonAreaAvg(res), /Unknown/, 'throws on missing unit');
-    assert.throws(() => h3.getHexagonAreaAvg(res, 'foo'), /Unknown/, 'throws on unknown unit');
-    assert.throws(() => h3.getHexagonAreaAvg(res, 42), /Unknown/, 'throws on unknown unit');
+    assert.throws(
+        () => h3.getHexagonAreaAvg(res),
+        {code: E_UNKNOWN_UNIT},
+        'throws on missing unit'
+    );
+    assert.throws(
+        () => h3.getHexagonAreaAvg(res, 'foo'),
+        {code: E_UNKNOWN_UNIT},
+        'throws on unknown unit'
+    );
+    assert.throws(
+        () => h3.getHexagonAreaAvg(res, 42),
+        {code: E_UNKNOWN_UNIT},
+        'throws on unknown unit'
+    );
     assert.throws(
         () => h3.getHexagonAreaAvg(res, h3.UNITS.km),
-        /Unknown/,
+        {code: E_UNKNOWN_UNIT},
         'throws on invalid unit'
     );
 
@@ -1488,11 +1590,15 @@ test('getHexagonAreaAvg - bad units', assert => {
 test('getHexagonAreaAvg - bad resolution', assert => {
     assert.throws(
         () => h3.getHexagonAreaAvg(42, h3.UNITS.m2),
-        /Invalid/,
+        {code: E_RES_DOMAIN},
         'throws on invalid resolution'
     );
 
-    assert.throws(() => h3.getHexagonAreaAvg(), /Invalid/, 'throws on invalid resolution');
+    assert.throws(
+        () => h3.getHexagonAreaAvg(),
+        {code: E_RES_DOMAIN},
+        'throws on invalid resolution'
+    );
 
     assert.end();
 });
@@ -1519,16 +1625,24 @@ test('getHexagonEdgeLengthAvg', assert => {
 
 test('getHexagonEdgeLengthAvg - bad units', assert => {
     const res = 9;
-    assert.throws(() => h3.getHexagonEdgeLengthAvg(res), /Unknown/, 'throws on missing unit');
+    assert.throws(
+        () => h3.getHexagonEdgeLengthAvg(res),
+        {code: E_UNKNOWN_UNIT},
+        'throws on missing unit'
+    );
     assert.throws(
         () => h3.getHexagonEdgeLengthAvg(res, 'foo'),
-        /Unknown/,
+        {code: E_UNKNOWN_UNIT},
         'throws on unknown unit'
     );
-    assert.throws(() => h3.getHexagonEdgeLengthAvg(res, 42), /Unknown/, 'throws on unknown unit');
+    assert.throws(
+        () => h3.getHexagonEdgeLengthAvg(res, 42),
+        {code: E_UNKNOWN_UNIT},
+        'throws on unknown unit'
+    );
     assert.throws(
         () => h3.getHexagonEdgeLengthAvg(res, h3.UNITS.km2),
-        /Unknown/,
+        {code: E_UNKNOWN_UNIT},
         'throws on invalid unit'
     );
 
@@ -1538,11 +1652,15 @@ test('getHexagonEdgeLengthAvg - bad units', assert => {
 test('getHexagonEdgeLengthAvg - bad resolution', assert => {
     assert.throws(
         () => h3.getHexagonEdgeLengthAvg(42, h3.UNITS.m),
-        /Invalid/,
+        {code: E_RES_DOMAIN},
         'throws on invalid resolution'
     );
 
-    assert.throws(() => h3.getHexagonEdgeLengthAvg(), /Invalid/, 'throws on invalid resolution');
+    assert.throws(
+        () => h3.getHexagonEdgeLengthAvg(),
+        {code: E_RES_DOMAIN},
+        'throws on invalid resolution'
+    );
 
     assert.end();
 });
@@ -1599,10 +1717,18 @@ test('cellArea', assert => {
 
 test('cellArea - bad units', assert => {
     const h3Index = h3.latLngToCell(0, 0, 9);
-    assert.throws(() => h3.cellArea(h3Index), /Unknown/, 'throws on missing unit');
-    assert.throws(() => h3.cellArea(h3Index, 'foo'), /Unknown/, 'throws on unknown unit');
-    assert.throws(() => h3.cellArea(h3Index, 42), /Unknown/, 'throws on unknown unit');
-    assert.throws(() => h3.cellArea(h3Index, h3.UNITS.km), /Unknown/, 'throws on invalid unit');
+    assert.throws(() => h3.cellArea(h3Index), {code: E_UNKNOWN_UNIT}, 'throws on missing unit');
+    assert.throws(
+        () => h3.cellArea(h3Index, 'foo'),
+        {code: E_UNKNOWN_UNIT},
+        'throws on unknown unit'
+    );
+    assert.throws(() => h3.cellArea(h3Index, 42), {code: E_UNKNOWN_UNIT}, 'throws on unknown unit');
+    assert.throws(
+        () => h3.cellArea(h3Index, h3.UNITS.km),
+        {code: E_UNKNOWN_UNIT},
+        'throws on invalid unit'
+    );
 
     assert.end();
 });
@@ -1640,44 +1766,68 @@ test('exactEdgeLength', assert => {
 test('exactEdgeLength - bad units', assert => {
     const h3Index = h3.latLngToCell(0, 0, 9);
     const edge = h3.originToDirectedEdges(h3Index)[0];
-    assert.throws(() => h3.exactEdgeLength(edge), /Unknown/, 'throws on missing unit');
-    assert.throws(() => h3.exactEdgeLength(edge, 'foo'), /Unknown/, 'throws on unknown unit');
-    assert.throws(() => h3.exactEdgeLength(edge, 42), /Unknown/, 'throws on unknown unit');
-    assert.throws(() => h3.exactEdgeLength(edge, h3.UNITS.m2), /Unknown/, 'throws on invalid unit');
+    assert.throws(() => h3.exactEdgeLength(edge), {code: E_UNKNOWN_UNIT}, 'throws on missing unit');
+    assert.throws(
+        () => h3.exactEdgeLength(edge, 'foo'),
+        {code: E_UNKNOWN_UNIT},
+        'throws on unknown unit'
+    );
+    assert.throws(
+        () => h3.exactEdgeLength(edge, 42),
+        {code: E_UNKNOWN_UNIT},
+        'throws on unknown unit'
+    );
+    assert.throws(
+        () => h3.exactEdgeLength(edge, h3.UNITS.m2),
+        {code: E_UNKNOWN_UNIT},
+        'throws on invalid unit'
+    );
 
     assert.end();
 });
 
-test('distance', assert => {
+test('latLngDistance', assert => {
     assert.ok(
-        almostEqual(h3.distance([-10, 0], [10, 0], h3.UNITS.rads), h3.degsToRads(20)),
+        almostEqual(h3.latLngDistance([-10, 0], [10, 0], h3.UNITS.rads), h3.degsToRads(20)),
         'Got expected angular distance for latitude along the equator'
     );
     assert.ok(
-        almostEqual(h3.distance([0, -10], [0, 10], h3.UNITS.rads), h3.degsToRads(20)),
+        almostEqual(h3.latLngDistance([0, -10], [0, 10], h3.UNITS.rads), h3.degsToRads(20)),
         'Got expected angular distance for latitude along a meridian'
     );
     assert.equal(
-        h3.distance([23, 23], [23, 23], h3.UNITS.rads),
+        h3.latLngDistance([23, 23], [23, 23], h3.UNITS.rads),
         0,
         'Got expected angular distance for same point'
     );
     // Just rough tests for the other units
-    const distKm = h3.distance([0, 0], [39, -122], h3.UNITS.km);
+    const distKm = h3.latLngDistance([0, 0], [39, -122], h3.UNITS.km);
     assert.ok(distKm > 12e3 && distKm < 13e3, 'has some reasonable distance in Km');
-    const distM = h3.distance([0, 0], [39, -122], h3.UNITS.m);
+    const distM = h3.latLngDistance([0, 0], [39, -122], h3.UNITS.m);
     assert.ok(distM > 12e6 && distM < 13e6, 'has some reasonable distance in m');
 
     assert.end();
 });
 
-test('distance - bad units', assert => {
-    assert.throws(() => h3.distance([0, 0], [0, 0]), /Unknown/, 'throws on missing unit');
-    assert.throws(() => h3.distance([0, 0], [0, 0], 'foo'), /Unknown/, 'throws on unknown unit');
-    assert.throws(() => h3.distance([0, 0], [0, 0], 42), /Unknown/, 'throws on unknown unit');
+test('latLngDistance - bad units', assert => {
     assert.throws(
-        () => h3.distance([0, 0], [0, 0], h3.UNITS.m2),
-        /Unknown/,
+        () => h3.latLngDistance([0, 0], [0, 0]),
+        {code: E_UNKNOWN_UNIT},
+        'throws on missing unit'
+    );
+    assert.throws(
+        () => h3.latLngDistance([0, 0], [0, 0], 'foo'),
+        {code: E_UNKNOWN_UNIT},
+        'throws on unknown unit'
+    );
+    assert.throws(
+        () => h3.latLngDistance([0, 0], [0, 0], 42),
+        {code: E_UNKNOWN_UNIT},
+        'throws on unknown unit'
+    );
+    assert.throws(
+        () => h3.latLngDistance([0, 0], [0, 0], h3.UNITS.m2),
+        {code: E_UNKNOWN_UNIT},
         'throws on invalid unit'
     );
 
@@ -1696,8 +1846,8 @@ test('getNumCells', assert => {
 });
 
 test('getNumCells - bad resolution', assert => {
-    assert.throws(() => h3.getNumCells(42), /Invalid/, 'throws on invalid resolution');
-    assert.throws(() => h3.getNumCells(), /Invalid/, 'throws on invalid resolution');
+    assert.throws(() => h3.getNumCells(42), {code: E_RES_DOMAIN}, 'throws on invalid resolution');
+    assert.throws(() => h3.getNumCells(), {code: E_RES_DOMAIN}, 'throws on invalid resolution');
 
     assert.end();
 });
@@ -1726,7 +1876,7 @@ test('getPentagons', assert => {
 });
 
 test('getPentagons - invalid', assert => {
-    assert.throws(() => h3.getPentagons(), /Invalid/, 'throws on invalid resolution');
-    assert.throws(() => h3.getPentagons(42), /Invalid/, 'throws on invalid resolution');
+    assert.throws(() => h3.getPentagons(), {code: E_RES_DOMAIN}, 'throws on invalid resolution');
+    assert.throws(() => h3.getPentagons(42), {code: E_RES_DOMAIN}, 'throws on invalid resolution');
     assert.end();
 });
