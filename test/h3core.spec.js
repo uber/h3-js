@@ -334,6 +334,16 @@ test('gridDisk - Bad Radius', assert => {
     assert.end();
 });
 
+test('gridDisk - out of bounds', assert => {
+    assert.throws(
+        () => h3.gridDisk(['8928308280fffff'], 1e6),
+        {code: E_ARRAY_LENGTH},
+        'throws if the output is too large'
+    );
+
+    assert.end();
+});
+
 test('gridDisk - Pentagon', assert => {
     const hexagons = h3.gridDisk('821c07fffffffff', 1);
     assert.equal(
@@ -449,6 +459,16 @@ test('gridDiskDistances - Pentagon', assert => {
     ].forEach(hexagonAddress => {
         assert.ok(hexagons[1].indexOf(hexagonAddress) > -1, 'found an expected hexagon');
     });
+    assert.end();
+});
+
+test('gridDiskDistances - out of bounds', assert => {
+    assert.throws(
+        () => h3.gridDiskDistances(['8928308280fffff'], 1e6),
+        {code: E_ARRAY_LENGTH},
+        'throws if the output is too large'
+    );
+
     assert.end();
 });
 
@@ -615,12 +635,29 @@ test('polygonToCells - Empty Loop', assert => {
 });
 
 test('polygonToCells - Bad Input', assert => {
+    assert.throws(() => h3.polygonToCells([]), {code: E_RES_DOMAIN});
+    assert.throws(() => h3.polygonToCells([], 42), {code: E_RES_DOMAIN});
+    assert.throws(() => h3.polygonToCells([], null), {code: E_RES_DOMAIN});
+    // These throw simple JS errors, probably fine for now
     assert.throws(() => h3.polygonToCells(null, 9));
     assert.throws(() => h3.polygonToCells(undefined, 9));
     assert.throws(() => h3.polygonToCells({}, 9));
-    assert.throws(() => h3.polygonToCells([]));
-    assert.throws(() => h3.polygonToCells([], 42));
-    assert.throws(() => h3.polygonToCells([], null));
+    assert.end();
+});
+
+test('polygonToCells - out of bounds', assert => {
+    const polygon = [
+        [85, 85],
+        [85, -85],
+        [-85, -85],
+        [-85, 85],
+        [85, 85]
+    ];
+    assert.throws(
+        () => h3.polygonToCells(polygon, 15),
+        {code: E_ARRAY_LENGTH},
+        'throws if expected output is too large'
+    );
     assert.end();
 });
 
@@ -989,11 +1026,21 @@ test('uncompactCells - Invalid', assert => {
     assert.end();
 });
 
-test('uncompactCells - Integer', assert => {
+test('uncompactCells - integer', assert => {
     assert.deepEqual(
         h3.uncompactCells([[0x3fffffff, 0x8528347]], 5),
         ['85283473fffffff'],
         'got a single index for same res input'
+    );
+
+    assert.end();
+});
+
+test('uncompactCells - out of bounds', assert => {
+    assert.throws(
+        () => h3.uncompactCells(['8029fffffffffff'], 15),
+        {code: E_ARRAY_LENGTH},
+        'throws if the output is too large'
     );
 
     assert.end();
@@ -1110,6 +1157,16 @@ test('cellToChildren', assert => {
         'Invalid resolution throws'
     );
     assert.deepEqual(h3.cellToChildren('foo', -1), [], 'Invalid index returns empty array');
+
+    assert.end();
+});
+
+test('cellToChildren - out of bounds', assert => {
+    assert.throws(
+        () => h3.cellToChildren('8029fffffffffff', 15),
+        {code: E_ARRAY_LENGTH},
+        'throws if the output is too large'
+    );
 
     assert.end();
 });
