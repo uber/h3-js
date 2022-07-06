@@ -15,22 +15,21 @@
  */
 
 import test from 'tape';
-import * as h3 from '../lib/h3core.js';
-
-// Error codes from the code library, aliased here for legibility
-const E_FAILED = 1;
-const E_DOMAIN = 2;
-const E_LATLNG_DOMAIN = 3;
-const E_RES_DOMAIN = 4;
-const E_CELL_INVALID = 5;
-const E_DIR_EDGE_INVALID = 6;
-const E_PENTAGON = 9;
-const E_DUPLICATE_INPUT = 10;
-const E_NOT_NEIGHBORS = 11;
-const E_RES_MISMATCH = 12;
-
-// At present this one is binding only
-const E_UNKNOWN_UNIT = 100;
+import * as h3 from '../lib/h3core';
+import {
+    E_FAILED,
+    E_DOMAIN,
+    E_LATLNG_DOMAIN,
+    E_RES_DOMAIN,
+    E_CELL_INVALID,
+    E_DIR_EDGE_INVALID,
+    E_PENTAGON,
+    E_DUPLICATE_INPUT,
+    E_NOT_NEIGHBORS,
+    E_RES_MISMATCH,
+    E_UNKNOWN_UNIT,
+    E_ARRAY_LENGTH
+} from '../lib/errors';
 
 const GEO_PRECISION = 12;
 
@@ -148,9 +147,34 @@ test('latLngToCell', assert => {
     assert.end();
 });
 
-test('sillyLatLngToCell', assert => {
+test('latLngToCell - longitude wrapping', assert => {
     const h3Index = h3.latLngToCell(37.3615593, -122.0553238 + 360.0, 5);
     assert.equal(h3Index, '85283473fffffff', 'world-wrapping lng accepted');
+    assert.end();
+});
+
+test('latLngToCell - invalid lat/lng', assert => {
+    assert.throws(
+        () => h3.latLngToCell(Infinity, 0, 5),
+        {code: E_LATLNG_DOMAIN},
+        'non-finite lat throws'
+    );
+    assert.throws(
+        () => h3.latLngToCell(0, Infinity, 5),
+        {code: E_LATLNG_DOMAIN},
+        'non-finite lng throws'
+    );
+    assert.throws(
+        () => h3.latLngToCell(NaN, 0, 5),
+        {code: E_LATLNG_DOMAIN},
+        'non-finite lat throws'
+    );
+    assert.throws(
+        () => h3.latLngToCell('spam', 0, 5),
+        {code: E_LATLNG_DOMAIN},
+        'non-numeric lat throws'
+    );
+    assert.throws(() => h3.latLngToCell(0, NaN, 5), {code: E_LATLNG_DOMAIN}, 'NaN lng throws');
     assert.end();
 });
 
