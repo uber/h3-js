@@ -1915,13 +1915,29 @@ test('latLngDistance - bad units', assert => {
     assert.end();
 });
 
+// From https://h3geo.org/docs/core-library/restable
+const EXPECTED_NUM_CELLS = [
+    122,
+    842,
+    5882,
+    41162,
+    288122,
+    2016842,
+    14117882,
+    98825162,
+    691776122,
+    4842432842,
+    33897029882,
+    237279209162,
+    1660954464122,
+    11626681248842,
+    81386768741882,
+    569707381193162
+];
+
 test('getNumCells', assert => {
-    let last = 0;
     for (let res = 0; res < 16; res++) {
-        const result = h3.getNumCells(res);
-        assert.ok(typeof result === 'number', `Got numeric response ${result}`);
-        assert.ok(result > last, `result > last result: ${result}` + `, ${last}`);
-        last = result;
+        assert.equal(h3.getNumCells(res), EXPECTED_NUM_CELLS[res]);
     }
     assert.end();
 });
