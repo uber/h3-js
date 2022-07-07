@@ -50,9 +50,13 @@ int sizeOfCoordIJ() {
     return sizeof(CoordIJ);
 }
 
-// Helper: Get the value of a int64_t pointer as a double. JS can't handle the
-// 64-bit int, but it can get the value in a double (precise if less than
-// MAX_SAFE_INTEGER, approximate if over)
-double int64PointerAsDouble(int64_t *input) {
+/**
+ * Helper: Get the value of a int64_t pointer as a double. JS can't handle the
+ * 64-bit int, but it can get the value in a double (precise if less than
+ * MAX_SAFE_INTEGER, approximate if over)
+ * @param {number} Pointer to int64 value
+ * @returns {number} Value cast to double, with potential for lost precision
+ */
+double readInt64AsDoubleFromPointer(int64_t *input) {
     return (double)(*input);
 }

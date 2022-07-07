@@ -22,6 +22,8 @@
 #ifndef SIZES_H
 #define SIZES_H
 
+#include <stdint.h>
+
 int sizeOfH3Index();
 int sizeOfLatLng();
 int sizeOfCellBoundary();
@@ -29,5 +31,6 @@ int sizeOfGeoLoop();
 int sizeOfGeoPolygon();
 int sizeOfLinkedGeoPolygon();
 int sizeOfCoordIJ();
+double readInt64AsDoubleFromPointer(int64_t *input);
 
 #endif
