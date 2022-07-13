@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 Uber Technologies, Inc.
+ * Copyright 2018-2019, 2022 Uber Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,21 @@
  */
 
 import test from 'tape';
-import * as h3 from '../lib/h3core.js';
+import * as h3 from '../lib/h3core';
+import {
+    E_FAILED,
+    E_DOMAIN,
+    E_LATLNG_DOMAIN,
+    E_RES_DOMAIN,
+    E_CELL_INVALID,
+    E_DIR_EDGE_INVALID,
+    E_PENTAGON,
+    E_DUPLICATE_INPUT,
+    E_NOT_NEIGHBORS,
+    E_RES_MISMATCH,
+    E_UNKNOWN_UNIT,
+    E_ARRAY_LENGTH
+} from '../lib/errors';
 
 const GEO_PRECISION = 12;
 
@@ -67,100 +81,124 @@ function assertMultiPolygon(assert, input, expected, isGeoJSON) {
     }
 }
 
-test('h3IsValid', assert => {
-    assert.ok(h3.h3IsValid('85283473fffffff'), 'H3 index is considered an index');
-    assert.ok(h3.h3IsValid('821C37FFFFFFFFF'), 'H3 index in upper case is considered an index');
+test('isValidCell', assert => {
+    assert.ok(h3.isValidCell('85283473fffffff'), 'H3 index is considered an index');
+    assert.ok(h3.isValidCell('821C37FFFFFFFFF'), 'H3 index in upper case is considered an index');
     assert.ok(
-        h3.h3IsValid('085283473fffffff'),
+        h3.isValidCell('085283473fffffff'),
         'H3 index with leading zero is considered an index'
     );
     assert.ok(
-        !h3.h3IsValid('ff283473fffffff'),
+        !h3.isValidCell('ff283473fffffff'),
         'Hexidecimal string with incorrect bits is not valid'
     );
-    assert.ok(!h3.h3IsValid('85283q73fffffff'), 'String with non-hexidecimal chars is not valid');
+    assert.ok(!h3.isValidCell('85283q73fffffff'), 'String with non-hexidecimal chars is not valid');
     assert.ok(
-        !h3.h3IsValid('85283473fffffff112233'),
+        !h3.isValidCell('85283473fffffff112233'),
         'String with additional parsed chars is not valid'
     );
     assert.ok(
-        !h3.h3IsValid('85283473fffffff_lolwut'),
+        !h3.isValidCell('85283473fffffff_lolwut'),
         'String with additional unparsed chars is not valid'
     );
     assert.ok(
-        !h3.h3IsValid('8a283081f1f1f1f1f1f5505ffff'),
+        !h3.isValidCell('8a283081f1f1f1f1f1f5505ffff'),
         'String with extraneous parsable characters in the middle is not valid'
     );
     assert.ok(
-        !h3.h3IsValid('8a28308_hello_world_5505ffff'),
+        !h3.isValidCell('8a28308_hello_world_5505ffff'),
         'String with extraneous unparsable characters in the middle is not valid'
     );
-    assert.ok(!h3.h3IsValid('lolwut'), 'Random string is not considered an index');
-    assert.ok(!h3.h3IsValid(null), 'Null is not considered an index');
-    assert.ok(!h3.h3IsValid(), 'Undefined is not considered an index');
-    assert.ok(!h3.h3IsValid({}), 'Object is not considered an index');
+    assert.ok(!h3.isValidCell('lolwut'), 'Random string is not considered an index');
+    assert.ok(!h3.isValidCell(null), 'Null is not considered an index');
+    assert.ok(!h3.isValidCell(), 'Undefined is not considered an index');
+    assert.ok(!h3.isValidCell({}), 'Object is not considered an index');
     for (let res = 0; res < 16; res++) {
-        assert.ok(h3.h3IsValid(h3.geoToH3(37, -122, res)), 'H3 index is considered an index');
-    }
-    assert.end();
-});
-
-test('h3IsValid', assert => {
-    assert.ok(h3.h3IsValid([0x3fffffff, 0x8528347]), 'Integer H3 index is considered an index');
-    assert.ok(
-        !h3.h3IsValid([0x73fffffff, 0xff2834]),
-        'Integer with incorrect bits is not considered an index'
-    );
-    assert.ok(!h3.h3IsValid([]), 'Empty array is not valid');
-    assert.ok(!h3.h3IsValid([1]), 'Array with a single element is not valid');
-    assert.ok(
-        !h3.h3IsValid([0x3fffffff, 0x8528347, 0]),
-        'Array with an additional element is not valid'
-    );
-    assert.end();
-});
-
-test('geoToH3', assert => {
-    const h3Index = h3.geoToH3(37.3615593, -122.0553238, 5);
-    assert.equal(h3Index, '85283473fffffff', 'Got the expected H3 index back');
-    const ffffffffAddress = h3.geoToH3(30.943387, -164.991559, 5);
-    assert.equal(ffffffffAddress, '8547732ffffffff', 'Properly handle 8 Fs');
-    const centralAddress = h3.geoToH3(46.04189431883772, 71.52790329909925, 15);
-    assert.equal(centralAddress, '8f2000000000000', 'Properly handle leading zeros');
-    assert.end();
-});
-
-test('sillyGeoToH3', assert => {
-    const h3Index = h3.geoToH3(37.3615593, -122.0553238 + 360.0, 5);
-    assert.equal(h3Index, '85283473fffffff', 'world-wrapping lng accepted');
-    assert.end();
-});
-
-test('h3GetResolution', assert => {
-    assert.equal(h3.h3GetResolution(), -1, 'Got an invalid resolution back with no query');
-    for (let res = 0; res < 16; res++) {
-        const h3Index = h3.geoToH3(37.3615593, -122.0553238, res);
-        assert.equal(h3.h3GetResolution(h3Index), res, 'Got the expected resolution back');
-    }
-    assert.end();
-});
-
-test('h3GetResolution - integers', assert => {
-    for (let res = 0; res < 16; res++) {
-        // Same as in h3GetResolution above
-        const h3Index = h3.geoToH3(37.3615593, -122.0553238, res);
-        const h3IndexInt = h3.h3IndexToSplitLong(h3Index);
-        assert.equal(
-            h3.h3GetResolution(h3IndexInt),
-            res,
-            'Got the expected resolution back for int'
+        assert.ok(
+            h3.isValidCell(h3.latLngToCell(37, -122, res)),
+            'H3 index is considered an index'
         );
     }
     assert.end();
 });
 
-test('h3ToGeo', assert => {
-    const latlng = h3.h3ToGeo('85283473fffffff');
+test('isValidCell split long', assert => {
+    assert.ok(h3.isValidCell([0x3fffffff, 0x8528347]), 'Integer H3 index is considered an index');
+    assert.ok(
+        !h3.isValidCell([0x73fffffff, 0xff2834]),
+        'Integer with incorrect bits is not considered an index'
+    );
+    assert.ok(!h3.isValidCell([]), 'Empty array is not valid');
+    assert.ok(!h3.isValidCell([1]), 'Array with a single element is not valid');
+    assert.ok(
+        !h3.isValidCell([0x3fffffff, 0x8528347, 0]),
+        'Array with an additional element is not valid'
+    );
+    assert.end();
+});
+
+test('latLngToCell', assert => {
+    const h3Index = h3.latLngToCell(37.3615593, -122.0553238, 5);
+    assert.equal(h3Index, '85283473fffffff', 'Got the expected H3 index back');
+    const ffffffffAddress = h3.latLngToCell(30.943387, -164.991559, 5);
+    assert.equal(ffffffffAddress, '8547732ffffffff', 'Properly handle 8 Fs');
+    const centralAddress = h3.latLngToCell(46.04189431883772, 71.52790329909925, 15);
+    assert.equal(centralAddress, '8f2000000000000', 'Properly handle leading zeros');
+    assert.end();
+});
+
+test('latLngToCell - longitude wrapping', assert => {
+    const h3Index = h3.latLngToCell(37.3615593, -122.0553238 + 360.0, 5);
+    assert.equal(h3Index, '85283473fffffff', 'world-wrapping lng accepted');
+    assert.end();
+});
+
+test('latLngToCell - invalid lat/lng', assert => {
+    assert.throws(
+        () => h3.latLngToCell(Infinity, 0, 5),
+        {code: E_LATLNG_DOMAIN},
+        'non-finite lat throws'
+    );
+    assert.throws(
+        () => h3.latLngToCell(0, Infinity, 5),
+        {code: E_LATLNG_DOMAIN},
+        'non-finite lng throws'
+    );
+    assert.throws(
+        () => h3.latLngToCell(NaN, 0, 5),
+        {code: E_LATLNG_DOMAIN},
+        'non-finite lat throws'
+    );
+    assert.throws(
+        () => h3.latLngToCell('spam', 0, 5),
+        {code: E_LATLNG_DOMAIN},
+        'non-numeric lat throws'
+    );
+    assert.throws(() => h3.latLngToCell(0, NaN, 5), {code: E_LATLNG_DOMAIN}, 'NaN lng throws');
+    assert.end();
+});
+
+test('getResolution', assert => {
+    assert.equal(h3.getResolution(), -1, 'Got an invalid resolution back with no query');
+    for (let res = 0; res < 16; res++) {
+        const h3Index = h3.latLngToCell(37.3615593, -122.0553238, res);
+        assert.equal(h3.getResolution(h3Index), res, 'Got the expected resolution back');
+    }
+    assert.end();
+});
+
+test('getResolution - integers', assert => {
+    for (let res = 0; res < 16; res++) {
+        // Same as in h3GetResolution above
+        const h3Index = h3.latLngToCell(37.3615593, -122.0553238, res);
+        const h3IndexInt = h3.h3IndexToSplitLong(h3Index);
+        assert.equal(h3.getResolution(h3IndexInt), res, 'Got the expected resolution back for int');
+    }
+    assert.end();
+});
+
+test('cellToLatLng', assert => {
+    const latlng = h3.cellToLatLng('85283473fffffff');
     assert.deepEqual(
         toLowPrecision(latlng),
         toLowPrecision([37.34579337536848, -121.97637597255124]),
@@ -169,8 +207,8 @@ test('h3ToGeo', assert => {
     assert.end();
 });
 
-test('h3ToGeo - Integer', assert => {
-    const latlng = h3.h3ToGeo([0x3fffffff, 0x8528347]);
+test('cellToLatLng - Integer', assert => {
+    const latlng = h3.cellToLatLng([0x3fffffff, 0x8528347]);
     assert.deepEqual(
         toLowPrecision(latlng),
         toLowPrecision([37.34579337536848, -121.97637597255124]),
@@ -179,8 +217,8 @@ test('h3ToGeo - Integer', assert => {
     assert.end();
 });
 
-test('h3ToGeoBoundary', assert => {
-    const latlngs = h3.h3ToGeoBoundary('85283473fffffff');
+test('cellToBoundary', assert => {
+    const latlngs = h3.cellToBoundary('85283473fffffff');
     const expectedlatlngs = [
         [37.271355866731895, -121.91508032705622],
         [37.353926450852256, -121.86222328902491],
@@ -197,8 +235,8 @@ test('h3ToGeoBoundary', assert => {
     assert.end();
 });
 
-test('h3ToGeoBoundary - GeoJson', assert => {
-    const latlngs = h3.h3ToGeoBoundary('85283473fffffff', true);
+test('cellToBoundary - GeoJson', assert => {
+    const latlngs = h3.cellToBoundary('85283473fffffff', true);
     const expectedlatlngs = [
         [37.271355866731895, -121.91508032705622].reverse(),
         [37.353926450852256, -121.86222328902491].reverse(),
@@ -217,8 +255,8 @@ test('h3ToGeoBoundary - GeoJson', assert => {
     assert.end();
 });
 
-test('h3ToGeoBoundary - 10-Vertex Pentagon', assert => {
-    const latlngs = h3.h3ToGeoBoundary('81623ffffffffff', true);
+test('cellToBoundary - 10-Vertex Pentagon', assert => {
+    const latlngs = h3.cellToBoundary('81623ffffffffff', true);
     const expectedlatlngs = [
         [55.94007484027041, 12.754829243237465],
         [55.178175815407634, 10.2969712998247],
@@ -241,8 +279,8 @@ test('h3ToGeoBoundary - 10-Vertex Pentagon', assert => {
     assert.end();
 });
 
-test('kRing', assert => {
-    const hexagons = h3.kRing('8928308280fffff', 1);
+test('gridDisk', assert => {
+    const hexagons = h3.gridDisk('8928308280fffff', 1);
     assert.equal(1 + 6, hexagons.length, 'got the expected number of hexagons for a single ring');
     [
         '8928308280fffff',
@@ -258,8 +296,8 @@ test('kRing', assert => {
     assert.end();
 });
 
-test('kRing 2', assert => {
-    const hexagons = h3.kRing('8928308280fffff', 2);
+test('gridDisk 2', assert => {
+    const hexagons = h3.gridDisk('8928308280fffff', 2);
     assert.equal(1 + 6 + 12, hexagons.length, 'got the expected number of hexagons for two rings');
     [
         '89283082813ffff',
@@ -287,14 +325,27 @@ test('kRing 2', assert => {
     assert.end();
 });
 
-test('kRing - Bad Radius', assert => {
-    const hexagons = h3.kRing('8928308280fffff', -7);
-    assert.deepEqual(hexagons, ['8928308280fffff'], 'Got origin for bad radius');
+test('gridDisk - Bad Radius', assert => {
+    assert.throws(
+        () => h3.gridDisk('8928308280fffff', -7),
+        {code: E_DOMAIN},
+        'Throws with bad radius'
+    );
     assert.end();
 });
 
-test('kRing - Pentagon', assert => {
-    const hexagons = h3.kRing('821c07fffffffff', 1);
+test('gridDisk - out of bounds', assert => {
+    assert.throws(
+        () => h3.gridDisk(['8928308280fffff'], 1e6),
+        {code: E_ARRAY_LENGTH},
+        'throws if the output is too large'
+    );
+
+    assert.end();
+});
+
+test('gridDisk - Pentagon', assert => {
+    const hexagons = h3.gridDisk('821c07fffffffff', 1);
     assert.equal(
         1 + 5,
         hexagons.length,
@@ -313,9 +364,9 @@ test('kRing - Pentagon', assert => {
     assert.end();
 });
 
-test('kRing - Edge case', assert => {
+test('gridDisk - Edge case', assert => {
     // There was an issue reading particular 64-bit integers correctly, this kRing ran into it
-    const hexagons = h3.kRing('8928308324bffff', 1);
+    const hexagons = h3.gridDisk('8928308324bffff', 1);
     assert.equal(1 + 6, hexagons.length, 'got the expected number of hexagons');
     [
         '8928308324bffff',
@@ -331,8 +382,8 @@ test('kRing - Edge case', assert => {
     assert.end();
 });
 
-test('kRingDistances', assert => {
-    const hexagons = h3.kRingDistances('8928308280fffff', 1);
+test('gridDiskDistances', assert => {
+    const hexagons = h3.gridDiskDistances('8928308280fffff', 1);
     assert.equal(1, hexagons[0].length, 'got the expected number of hexagons for the origin');
     assert.equal(6, hexagons[1].length, 'got the expected number of hexagons for ring 1');
 
@@ -350,8 +401,8 @@ test('kRingDistances', assert => {
     assert.end();
 });
 
-test('kRingDistances - 2 rings', assert => {
-    const hexagons = h3.kRingDistances('8928308280fffff', 2);
+test('gridDiskDistances - 2 rings', assert => {
+    const hexagons = h3.gridDiskDistances('8928308280fffff', 2);
     assert.equal(1, hexagons[0].length, 'got the expected number of hexagons for the origin');
     assert.equal(6, hexagons[1].length, 'got the expected number of hexagons for ring 1');
     assert.equal(12, hexagons[2].length, 'got the expected number of hexagons for ring 1');
@@ -388,8 +439,8 @@ test('kRingDistances - 2 rings', assert => {
     assert.end();
 });
 
-test('kRingDistances - Pentagon', assert => {
-    const hexagons = h3.kRingDistances('821c07fffffffff', 1);
+test('gridDiskDistances - Pentagon', assert => {
+    const hexagons = h3.gridDiskDistances('821c07fffffffff', 1);
 
     assert.equal(1, hexagons[0].length, 'got the expected number of hexagons for the origin');
     assert.equal(
@@ -411,8 +462,18 @@ test('kRingDistances - Pentagon', assert => {
     assert.end();
 });
 
-test('hexRing', assert => {
-    const hexagons = h3.hexRing('8928308280fffff', 1);
+test('gridDiskDistances - out of bounds', assert => {
+    assert.throws(
+        () => h3.gridDiskDistances(['8928308280fffff'], 1e6),
+        {code: E_ARRAY_LENGTH},
+        'throws if the output is too large'
+    );
+
+    assert.end();
+});
+
+test('gridRingUnsafe', assert => {
+    const hexagons = h3.gridRingUnsafe('8928308280fffff', 1);
     assert.equal(6, hexagons.length, 'got the expected number of hexagons for ring 1');
 
     [
@@ -428,8 +489,8 @@ test('hexRing', assert => {
     assert.end();
 });
 
-test('hexRing - ring 2', assert => {
-    const hexagons = h3.hexRing('8928308280fffff', 2);
+test('gridRingUnsafe - ring 2', assert => {
+    const hexagons = h3.gridRingUnsafe('8928308280fffff', 2);
     assert.equal(12, hexagons.length, 'got the expected number of hexagons for ring 1');
 
     [
@@ -451,34 +512,34 @@ test('hexRing - ring 2', assert => {
     assert.end();
 });
 
-test('hexRing - ring 0', assert => {
-    const hexagons = h3.hexRing('8928308280fffff', 0);
+test('gridRingUnsafe - ring 0', assert => {
+    const hexagons = h3.gridRingUnsafe('8928308280fffff', 0);
     assert.deepEqual(hexagons, ['8928308280fffff'], 'Got origin in ring 0');
     assert.end();
 });
 
-test('hexRing - pentagon', assert => {
+test('gridRingUnsafe - pentagon', assert => {
     assert.throws(
-        () => h3.hexRing('821c07fffffffff', 2),
-        /Failed/,
+        () => h3.gridRingUnsafe('821c07fffffffff', 2),
+        {code: E_PENTAGON},
         'Throws with a pentagon origin'
     );
     assert.throws(
-        () => h3.hexRing('821c2ffffffffff', 1),
-        /Failed/,
+        () => h3.gridRingUnsafe('821c2ffffffffff', 1),
+        {code: E_PENTAGON},
         'Throws with a pentagon in the ring itself'
     );
     assert.throws(
-        () => h3.hexRing('821c2ffffffffff', 5),
-        /Failed/,
+        () => h3.gridRingUnsafe('821c2ffffffffff', 5),
+        {code: E_PENTAGON},
         'Throws with a pentagon inside the ring'
     );
 
     assert.end();
 });
 
-test('polyfill', assert => {
-    const hexagons = h3.polyfill(
+test('polygonToCells', assert => {
+    const hexagons = h3.polygonToCells(
         [
             [
                 [37.813318999983238, -122.4089866999972145],
@@ -495,8 +556,8 @@ test('polyfill', assert => {
     assert.end();
 });
 
-test('polyfill - GeoJson', assert => {
-    const hexagons = h3.polyfill(
+test('polygonToCells - GeoJson', assert => {
+    const hexagons = h3.polygonToCells(
         [
             [
                 [-122.4089866999972145, 37.813318999983238],
@@ -514,8 +575,8 @@ test('polyfill - GeoJson', assert => {
     assert.end();
 });
 
-test('polyfill - Single Loop', assert => {
-    const hexagons = h3.polyfill(
+test('polygonToCells - Single Loop', assert => {
+    const hexagons = h3.polygonToCells(
         [
             [37.813318999983238, -122.4089866999972145],
             [37.7866302000007224, -122.3805436999997056],
@@ -530,8 +591,8 @@ test('polyfill - Single Loop', assert => {
     assert.end();
 });
 
-test('polyfill - Single Loop GeoJson', assert => {
-    const hexagons = h3.polyfill(
+test('polygonToCells - Single Loop GeoJson', assert => {
+    const hexagons = h3.polygonToCells(
         [
             [-122.4089866999972145, 37.813318999983238],
             [-122.3805436999997056, 37.7866302000007224],
@@ -547,8 +608,8 @@ test('polyfill - Single Loop GeoJson', assert => {
     assert.end();
 });
 
-test('polyfill - Single Loop Transmeridian', assert => {
-    const hexagons = h3.polyfill(
+test('polygonToCells - Single Loop Transmeridian', assert => {
+    const hexagons = h3.polygonToCells(
         [
             [0.5729577951308232, -179.4270422048692],
             [0.5729577951308232, 179.4270422048692],
@@ -561,30 +622,47 @@ test('polyfill - Single Loop Transmeridian', assert => {
     assert.end();
 });
 
-test('polyfill - Empty', assert => {
-    const hexagons = h3.polyfill([], 9);
+test('polygonToCells - Empty', assert => {
+    const hexagons = h3.polygonToCells([], 9);
     assert.equal(hexagons.length, 0, 'got no hexagons back');
     assert.end();
 });
 
-test('polyfill - Empty Loop', assert => {
-    const hexagons = h3.polyfill([[]], 9);
+test('polygonToCells - Empty Loop', assert => {
+    const hexagons = h3.polygonToCells([[]], 9);
     assert.equal(hexagons.length, 0, 'got no hexagons back');
     assert.end();
 });
 
-test('polyfill - Bad Input', assert => {
-    assert.throws(() => h3.polyfill(null, 9));
-    assert.throws(() => h3.polyfill(undefined, 9));
-    assert.throws(() => h3.polyfill({}, 9));
-    assert.throws(() => h3.polyfill([]));
-    assert.throws(() => h3.polyfill([], 42));
-    assert.throws(() => h3.polyfill([], null));
+test('polygonToCells - Bad Input', assert => {
+    assert.throws(() => h3.polygonToCells([]), {code: E_RES_DOMAIN});
+    assert.throws(() => h3.polygonToCells([], 42), {code: E_RES_DOMAIN});
+    assert.throws(() => h3.polygonToCells([], null), {code: E_RES_DOMAIN});
+    // These throw simple JS errors, probably fine for now
+    assert.throws(() => h3.polygonToCells(null, 9));
+    assert.throws(() => h3.polygonToCells(undefined, 9));
+    assert.throws(() => h3.polygonToCells({}, 9));
     assert.end();
 });
 
-test('polyfill - With Hole', assert => {
-    const hexagons = h3.polyfill(
+test('polygonToCells - out of bounds', assert => {
+    const polygon = [
+        [85, 85],
+        [85, -85],
+        [-85, -85],
+        [-85, 85],
+        [85, 85]
+    ];
+    assert.throws(
+        () => h3.polygonToCells(polygon, 15),
+        {code: E_ARRAY_LENGTH},
+        'throws if expected output is too large'
+    );
+    assert.end();
+});
+
+test('polygonToCells - With Hole', assert => {
+    const hexagons = h3.polygonToCells(
         [
             [
                 [37.813318999983238, -122.4089866999972145],
@@ -606,8 +684,8 @@ test('polyfill - With Hole', assert => {
     assert.end();
 });
 
-test('polyfill - With Hole GeoJson', assert => {
-    const hexagons = h3.polyfill(
+test('polygonToCells - With Hole GeoJson', assert => {
+    const hexagons = h3.polygonToCells(
         [
             [
                 [-122.4089866999972145, 37.813318999983238],
@@ -630,8 +708,8 @@ test('polyfill - With Hole GeoJson', assert => {
     assert.end();
 });
 
-test('polyfill - With Two Holes', assert => {
-    const hexagons = h3.polyfill(
+test('polygonToCells - With Two Holes', assert => {
+    const hexagons = h3.polygonToCells(
         [
             [
                 [37.813318999983238, -122.4089866999972145],
@@ -658,7 +736,7 @@ test('polyfill - With Two Holes', assert => {
     assert.end();
 });
 
-test('polyfill - BBox corners (#67)', assert => {
+test('polygonToCells - BBox corners (#67)', assert => {
     const {north, south, east, west} = {
         east: -56.25,
         north: -33.13755119234615,
@@ -671,7 +749,7 @@ test('polyfill - BBox corners (#67)', assert => {
         [south, west],
         [south, east]
     ];
-    const hexagons = h3.polyfill(vertices, 7);
+    const hexagons = h3.polygonToCells(vertices, 7);
 
     assert.equal(hexagons.length, 4499, 'got the expected number of hexagons back');
     assert.end();
@@ -688,46 +766,54 @@ function makePolygon(numVerts, radius = 1) {
     return polygon;
 }
 
-test('polyfill - memory management bug (#103)', assert => {
+test('polygonToCells - memory management bug (#103)', assert => {
     // Note that when this memory mangement issue occurs, it makes a number of *other* tests fail.
     // Unfortunately this test itself doesn't seem to fail, though the original pair of polygons
     // in #103 failed deterministically with this length check.
     const simplePolygon = makePolygon(4);
     const complexPolygon = makePolygon(1260);
 
-    const len1 = h3.polyfill(simplePolygon, 3).length;
-    h3.polyfill(complexPolygon, 3);
-    const len2 = h3.polyfill(simplePolygon, 3).length;
+    const len1 = h3.polygonToCells(simplePolygon, 3).length;
+    h3.polygonToCells(complexPolygon, 3);
+    const len2 = h3.polygonToCells(simplePolygon, 3).length;
 
-    assert.equal(len1, len2, 'polyfill with many vertexes should not mess up later polyfills');
+    assert.equal(
+        len1,
+        len2,
+        'polygonToCells with many vertexes should not mess up later polyfills'
+    );
     assert.end();
 });
 
-test('polyfill - memory management bug (#103, holes)', assert => {
+test('polygonToCells - memory management bug (#103, holes)', assert => {
     const simplePolygon = makePolygon(4);
     const complexPolygon = [simplePolygon, makePolygon(1260, 0.5), makePolygon(2000, 0.5)];
 
-    const len1 = h3.polyfill(simplePolygon, 3).length;
-    h3.polyfill(complexPolygon, 3);
-    const len2 = h3.polyfill(simplePolygon, 3).length;
+    const len1 = h3.polygonToCells(simplePolygon, 3).length;
+    h3.polygonToCells(complexPolygon, 3);
+    const len2 = h3.polygonToCells(simplePolygon, 3).length;
 
-    assert.equal(len1, len2, 'polyfill with many vertexes should not mess up later polyfills');
+    assert.equal(
+        len1,
+        len2,
+        'polygonToCells with many vertexes should not mess up later polyfills'
+    );
     assert.end();
 });
 
-test('h3SetToMultiPolygon - Empty', assert => {
+test('cellsToMultiPolygon - Empty', assert => {
     const h3Indexes = [];
-    const multiPolygon = h3.h3SetToMultiPolygon(h3Indexes);
+    const multiPolygon = h3.cellsToMultiPolygon(h3Indexes);
 
     assert.deepEqual(multiPolygon, [], 'no hexagons yields an empty array');
 
     assert.end();
 });
 
-test('h3SetToMultiPolygon - Single', assert => {
+test('cellsToMultiPolygon - Single', assert => {
     const h3Indexes = ['89283082837ffff'];
-    const multiPolygon = h3.h3SetToMultiPolygon(h3Indexes);
-    const vertices = h3.h3ToGeoBoundary(h3Indexes[0]);
+    const multiPolygon = h3.cellsToMultiPolygon(h3Indexes);
+    const vertices = h3.cellToBoundary(h3Indexes[0]);
     const expected = [[vertices]];
 
     assertMultiPolygon(assert, multiPolygon, expected);
@@ -735,10 +821,10 @@ test('h3SetToMultiPolygon - Single', assert => {
     assert.end();
 });
 
-test('h3SetToMultiPolygon - Single GeoJson', assert => {
+test('cellsToMultiPolygon - Single GeoJson', assert => {
     const h3Indexes = ['89283082837ffff'];
-    const multiPolygon = h3.h3SetToMultiPolygon(h3Indexes, true);
-    const vertices = h3.h3ToGeoBoundary(h3Indexes[0], true);
+    const multiPolygon = h3.cellsToMultiPolygon(h3Indexes, true);
+    const vertices = h3.cellToBoundary(h3Indexes[0], true);
     const expected = [[vertices]];
 
     assertMultiPolygon(assert, multiPolygon, expected, true);
@@ -746,12 +832,12 @@ test('h3SetToMultiPolygon - Single GeoJson', assert => {
     assert.end();
 });
 
-test('h3SetToMultiPolygon - Contiguous 2', assert => {
+test('cellsToMultiPolygon - Contiguous 2', assert => {
     // the second hexagon shares v0 and v1 with the first
     const h3Indexes = ['89283082837ffff', '89283082833ffff'];
-    const multiPolygon = h3.h3SetToMultiPolygon(h3Indexes);
-    const vertices0 = h3.h3ToGeoBoundary(h3Indexes[0]);
-    const vertices1 = h3.h3ToGeoBoundary(h3Indexes[1]);
+    const multiPolygon = h3.cellsToMultiPolygon(h3Indexes);
+    const vertices0 = h3.cellToBoundary(h3Indexes[0]);
+    const vertices1 = h3.cellToBoundary(h3Indexes[1]);
     const expected = [
         [
             [
@@ -774,12 +860,12 @@ test('h3SetToMultiPolygon - Contiguous 2', assert => {
     assert.end();
 });
 
-test('h3SetToMultiPolygon - Non-contiguous 2', assert => {
+test('cellsToMultiPolygon - Non-contiguous 2', assert => {
     // the second hexagon does not touch the first
     const h3Indexes = ['89283082837ffff', '8928308280fffff'];
-    const multiPolygon = h3.h3SetToMultiPolygon(h3Indexes);
-    const vertices0 = h3.h3ToGeoBoundary(h3Indexes[0]);
-    const vertices1 = h3.h3ToGeoBoundary(h3Indexes[1]);
+    const multiPolygon = h3.cellsToMultiPolygon(h3Indexes);
+    const vertices0 = h3.cellToBoundary(h3Indexes[0]);
+    const vertices1 = h3.cellToBoundary(h3Indexes[1]);
     const expected = [[vertices0], [vertices1]];
 
     assertMultiPolygon(assert, multiPolygon, expected);
@@ -787,7 +873,7 @@ test('h3SetToMultiPolygon - Non-contiguous 2', assert => {
     assert.end();
 });
 
-test('h3SetToMultiPolygon - Hole', assert => {
+test('cellsToMultiPolygon - Hole', assert => {
     // Six hexagons in a ring around a hole
     const h3Indexes = [
         '892830828c7ffff',
@@ -797,7 +883,7 @@ test('h3SetToMultiPolygon - Hole', assert => {
         '8928308288fffff',
         '89283082883ffff'
     ];
-    const multiPolygon = h3.h3SetToMultiPolygon(h3Indexes);
+    const multiPolygon = h3.cellsToMultiPolygon(h3Indexes);
 
     assert.equal(multiPolygon.length, 1, 'polygon count matches expected');
     assert.equal(multiPolygon[0].length, 2, 'loop count matches expected');
@@ -807,10 +893,10 @@ test('h3SetToMultiPolygon - Hole', assert => {
     assert.end();
 });
 
-test('h3SetToMultiPolygon - kRing', assert => {
+test('cellsToMultiPolygon - kRing', assert => {
     // 2-ring in order returned by algo
-    let h3Indexes = h3.kRing('8930062838bffff', 2);
-    let multiPolygon = h3.h3SetToMultiPolygon(h3Indexes);
+    let h3Indexes = h3.gridDisk('8930062838bffff', 2);
+    let multiPolygon = h3.cellsToMultiPolygon(h3Indexes);
 
     assert.equal(multiPolygon.length, 1, 'polygon count matches expected');
     assert.equal(multiPolygon[0].length, 1, 'loop count matches expected');
@@ -839,24 +925,24 @@ test('h3SetToMultiPolygon - kRing', assert => {
         '893006283c7ffff'
     ];
 
-    multiPolygon = h3.h3SetToMultiPolygon(h3Indexes);
+    multiPolygon = h3.cellsToMultiPolygon(h3Indexes);
 
     assert.equal(multiPolygon.length, 1, 'polygon count matches expected');
     assert.equal(multiPolygon[0].length, 1, 'loop count matches expected');
     assert.equal(multiPolygon[0][0].length, 6 * (2 * 2 + 1), 'coord count matches expected');
 
-    h3Indexes = h3.kRing('8930062838bffff', 6).sort();
-    multiPolygon = h3.h3SetToMultiPolygon(h3Indexes);
+    h3Indexes = h3.gridDisk('8930062838bffff', 6).sort();
+    multiPolygon = h3.cellsToMultiPolygon(h3Indexes);
 
     assert.equal(multiPolygon[0].length, 1, 'loop count matches expected');
 
     assert.end();
 });
 
-test('h3SetToMultiPolygon - Nested Donuts', assert => {
+test('cellsToMultiPolygon - Nested Donuts', assert => {
     const origin = '892830828c7ffff';
-    const h3Indexes = h3.hexRing(origin, 1).concat(h3.hexRing(origin, 3));
-    const multiPolygon = h3.h3SetToMultiPolygon(h3Indexes);
+    const h3Indexes = h3.gridRingUnsafe(origin, 1).concat(h3.gridRingUnsafe(origin, 3));
+    const multiPolygon = h3.cellsToMultiPolygon(h3Indexes);
 
     // This assertion is brittle, as the order of polygons is undefined, and it would
     // be equally correct if the smaller ring was first
@@ -871,8 +957,8 @@ test('h3SetToMultiPolygon - Nested Donuts', assert => {
     assert.end();
 });
 
-test('compact and uncompact', assert => {
-    const hexagons = h3.polyfill(
+test('compactCells and uncompactCells', assert => {
+    const hexagons = h3.polygonToCells(
         [
             [
                 [37.813318999983238, -122.4089866999972145],
@@ -885,60 +971,64 @@ test('compact and uncompact', assert => {
         ],
         9
     );
-    const compactedHexagons = h3.compact(hexagons);
+    const compactedHexagons = h3.compactCells(hexagons);
     assert.equal(compactedHexagons.length, 209, 'got an appropriate number of hexagons back');
-    const uncompactedHexagons = h3.uncompact(compactedHexagons, 9);
+    const uncompactedHexagons = h3.uncompactCells(compactedHexagons, 9);
     assert.equal(uncompactedHexagons.length, 1253, 'got an appropriate number of hexagons back');
     assert.end();
 });
 
-test('compact - Empty', assert => {
-    assert.deepEqual(h3.compact(), [], 'got an empty array for an undefined input');
-    assert.deepEqual(h3.compact(null), [], 'got an empty array for a falsy input');
-    assert.deepEqual(h3.compact([]), [], 'got an empty array for an empty input');
-    assert.deepEqual(h3.compact({}), [], 'got an empty array for an invalid input');
+test('compactCells - Empty', assert => {
+    assert.deepEqual(h3.compactCells(), [], 'got an empty array for an undefined input');
+    assert.deepEqual(h3.compactCells(null), [], 'got an empty array for a falsy input');
+    assert.deepEqual(h3.compactCells([]), [], 'got an empty array for an empty input');
+    assert.deepEqual(h3.compactCells({}), [], 'got an empty array for an invalid input');
 
     assert.end();
 });
 
-test('uncompact - Empty', assert => {
-    assert.deepEqual(h3.uncompact(undefined, 9), [], 'got an empty array for an undefined input');
-    assert.deepEqual(h3.uncompact(null, 9), [], 'got an empty array for a falsy input');
-    assert.deepEqual(h3.uncompact([], 9), [], 'got an empty array for an empty input');
-    assert.deepEqual(h3.uncompact({}, 9), [], 'got an empty array for an invalid input');
+test('uncompactCells - Empty', assert => {
+    assert.deepEqual(
+        h3.uncompactCells(undefined, 9),
+        [],
+        'got an empty array for an undefined input'
+    );
+    assert.deepEqual(h3.uncompactCells(null, 9), [], 'got an empty array for a falsy input');
+    assert.deepEqual(h3.uncompactCells([], 9), [], 'got an empty array for an empty input');
+    assert.deepEqual(h3.uncompactCells({}, 9), [], 'got an empty array for an invalid input');
 
     assert.end();
 });
 
-test('compact - Invalid', assert => {
+test('compactCells - Invalid', assert => {
     // A slightly ridiculous substitute for Array#fill
     const dupeHexagons = new Array(11)
         .join('8500924bfffffff,')
         .split(',')
         .slice(0, -1);
     assert.throws(
-        () => h3.compact(dupeHexagons, 9),
-        /Failed to compact/,
+        () => h3.compactCells(dupeHexagons, 9),
+        {code: E_DUPLICATE_INPUT},
         'got expected error for invalid hex set input'
     );
 
     assert.end();
 });
 
-test('uncompact - Invalid', assert => {
-    const hexagons = [h3.geoToH3(37.3615593, -122.0553238, 10)];
+test('uncompactCells - Invalid', assert => {
+    const hexagons = [h3.latLngToCell(37.3615593, -122.0553238, 10)];
     assert.throws(
-        () => h3.uncompact(hexagons, 5),
-        /Failed to uncompact/,
+        () => h3.uncompactCells(hexagons, 5),
+        {code: E_RES_MISMATCH},
         'got expected error for invalid compacted resolution input'
     );
 
     assert.end();
 });
 
-test('uncompact - Integer', assert => {
+test('uncompactCells - integer', assert => {
     assert.deepEqual(
-        h3.uncompact([[0x3fffffff, 0x8528347]], 5),
+        h3.uncompactCells([[0x3fffffff, 0x8528347]], 5),
         ['85283473fffffff'],
         'got a single index for same res input'
     );
@@ -946,31 +1036,41 @@ test('uncompact - Integer', assert => {
     assert.end();
 });
 
-test('h3IsPentagon', assert => {
-    assert.equals(h3.h3IsPentagon('8928308280fffff'), false, 'False for hexagon');
-    assert.equals(h3.h3IsPentagon('821c07fffffffff'), true, 'True for pentagon');
-    assert.equals(h3.h3IsPentagon('foo'), false, 'False for invalid (bad string)');
+test('uncompactCells - out of bounds', assert => {
+    assert.throws(
+        () => h3.uncompactCells(['8029fffffffffff'], 15),
+        {code: E_ARRAY_LENGTH},
+        'throws if the output is too large'
+    );
 
     assert.end();
 });
 
-test('h3IsResClassIII', assert => {
+test('isPentagon', assert => {
+    assert.equals(h3.isPentagon('8928308280fffff'), false, 'False for hexagon');
+    assert.equals(h3.isPentagon('821c07fffffffff'), true, 'True for pentagon');
+    assert.equals(h3.isPentagon('foo'), false, 'False for invalid (bad string)');
+
+    assert.end();
+});
+
+test('isResClassIII', assert => {
     // Test all even indexes
     for (let i = 0; i < 15; i += 2) {
-        const h3Index = h3.geoToH3(37.3615593, -122.0553238, i);
-        assert.equals(h3.h3IsResClassIII(h3Index), false, `False for res ${i}`);
+        const h3Index = h3.latLngToCell(37.3615593, -122.0553238, i);
+        assert.equals(h3.isResClassIII(h3Index), false, `False for res ${i}`);
     }
 
     // Test all odd indexes
     for (let i = 1; i < 15; i += 2) {
-        const h3Index = h3.geoToH3(37.3615593, -122.0553238, i);
-        assert.equals(h3.h3IsResClassIII(h3Index), true, `True for res ${i}`);
+        const h3Index = h3.latLngToCell(37.3615593, -122.0553238, i);
+        assert.equals(h3.isResClassIII(h3Index), true, `True for res ${i}`);
     }
 
     assert.end();
 });
 
-test('h3GetFaces', assert => {
+test('getIcosahedronFaces', assert => {
     [
         {name: 'single face', h3Index: '85283473fffffff', expected: 1},
         {name: 'edge adjacent', h3Index: '821c37fffffffff', expected: 1},
@@ -979,7 +1079,7 @@ test('h3GetFaces', assert => {
         {name: 'class II pentagon', h3Index: '84a6001ffffffff', expected: 5},
         {name: 'class III pentagon', h3Index: '85a60003fffffff', expected: 5}
     ].forEach(({name, h3Index, expected}) => {
-        const faces = h3.h3GetFaces(h3Index);
+        const faces = h3.getIcosahedronFaces(h3Index);
         assert.equal(faces.length, expected, `Got expected face count for ${name}`);
         assert.equal(faces.length, new Set(faces).size, `Faces are unique for ${name}`);
         assert.ok(
@@ -991,15 +1091,15 @@ test('h3GetFaces', assert => {
     assert.end();
 });
 
-test('h3GetBaseCell', assert => {
+test('getBaseCellNumber', assert => {
     const h3Index = '8928308280fffff';
 
-    assert.equal(h3.h3GetBaseCell(h3Index), 20, 'Got expected base cell');
+    assert.equal(h3.getBaseCellNumber(h3Index), 20, 'Got expected base cell');
 
     assert.end();
 });
 
-test('h3ToParent', assert => {
+test('cellToParent', assert => {
     // NB: This test will not work with every hexagon, it has to be a location
     // that does not fall in the margin of error between the 7 children and
     // the parent's true boundaries at every resolution
@@ -1007,9 +1107,9 @@ test('h3ToParent', assert => {
     const lng = -122.409290778685;
     for (let res = 1; res < 10; res++) {
         for (let step = 0; step < res; step++) {
-            const child = h3.geoToH3(lat, lng, res);
-            const comparisonParent = h3.geoToH3(lat, lng, res - step);
-            const parent = h3.h3ToParent(child, res - step);
+            const child = h3.latLngToCell(lat, lng, res);
+            const comparisonParent = h3.latLngToCell(lat, lng, res - step);
+            const parent = h3.cellToParent(child, res - step);
 
             assert.equals(parent, comparisonParent, `Got expected parent for ${res}:${res - step}`);
         }
@@ -1017,39 +1117,68 @@ test('h3ToParent', assert => {
     assert.end();
 });
 
-test('h3ToParent - Invalid', assert => {
+test('cellToParent - Invalid', assert => {
     const h3Index = '8928308280fffff';
 
-    assert.equals(h3.h3ToParent(h3Index, 10), null, 'Finer resolution returns null');
-    assert.equals(h3.h3ToParent(h3Index, -1), null, 'Invalid resolution returns null');
-    assert.equals(h3.h3ToParent('foo', 10), null, 'Invalid index returns null');
-
+    assert.throws(
+        () => h3.cellToParent(h3Index, 10),
+        {code: E_RES_MISMATCH},
+        'Throws on finer resolution'
+    );
+    assert.throws(
+        () => h3.cellToParent(h3Index, -1),
+        {code: E_RES_DOMAIN},
+        'Throws on invalid resolution'
+    );
+    assert.throws(
+        () => h3.cellToParent('foo', 10),
+        {code: E_RES_MISMATCH},
+        'Throws on invalid index'
+    );
     assert.end();
 });
 
-test('h3ToChildren', assert => {
+test('cellToChildren', assert => {
     const lat = 37.81331899988944;
     const lng = -122.409290778685;
-    const h3Index = h3.geoToH3(lat, lng, 7);
+    const h3Index = h3.latLngToCell(lat, lng, 7);
 
-    assert.equal(h3.h3ToChildren(h3Index, 8).length, 7, 'Immediate child count correct');
-    assert.equal(h3.h3ToChildren(h3Index, 9).length, 49, 'Grandchild count correct');
-    assert.deepEqual(h3.h3ToChildren(h3Index, 7), [h3Index], 'Same resolution returns self');
-    assert.deepEqual(h3.h3ToChildren(h3Index, 6), [], 'Coarser resolution returns empty array');
-    assert.deepEqual(h3.h3ToChildren(h3Index, -1), [], 'Invalid resolution returns empty array');
-    assert.deepEqual(h3.h3ToChildren('foo', -1), [], 'Invalid index returns empty array');
+    assert.equal(h3.cellToChildren(h3Index, 8).length, 7, 'Immediate child count correct');
+    assert.equal(h3.cellToChildren(h3Index, 9).length, 49, 'Grandchild count correct');
+    assert.deepEqual(h3.cellToChildren(h3Index, 7), [h3Index], 'Same resolution returns self');
+    assert.throws(
+        () => h3.cellToChildren(h3Index, 6),
+        {code: E_RES_DOMAIN},
+        'Coarser resolution throws'
+    );
+    assert.throws(
+        () => h3.cellToChildren(h3Index, -1),
+        {code: E_RES_DOMAIN},
+        'Invalid resolution throws'
+    );
+    assert.deepEqual(h3.cellToChildren('foo', -1), [], 'Invalid index returns empty array');
 
     assert.end();
 });
 
-test('h3ToCenterChild', assert => {
+test('cellToChildren - out of bounds', assert => {
+    assert.throws(
+        () => h3.cellToChildren('8029fffffffffff', 15),
+        {code: E_ARRAY_LENGTH},
+        'throws if the output is too large'
+    );
+
+    assert.end();
+});
+
+test('cellToCenterChild', assert => {
     const baseIndex = '8029fffffffffff';
-    const [lat, lng] = h3.h3ToGeo(baseIndex);
+    const [lat, lng] = h3.cellToLatLng(baseIndex);
     for (let res = 0; res < 14; res++) {
         for (let childRes = res; childRes < 15; childRes++) {
-            const parent = h3.geoToH3(lat, lng, res);
-            const comparisonChild = h3.geoToH3(lat, lng, childRes);
-            const child = h3.h3ToCenterChild(parent, childRes);
+            const parent = h3.latLngToCell(lat, lng, res);
+            const comparisonChild = h3.latLngToCell(lat, lng, childRes);
+            const child = h3.cellToCenterChild(parent, childRes);
 
             assert.equals(
                 child,
@@ -1061,179 +1190,183 @@ test('h3ToCenterChild', assert => {
     assert.end();
 });
 
-test('h3ToCenterChild - Invalid', assert => {
+test('cellToCenterChild - Invalid', assert => {
     const h3Index = '8928308280fffff';
 
-    assert.equals(h3.h3ToCenterChild(h3Index, 5), null, 'Coarser resolution returns null');
-    assert.equals(h3.h3ToCenterChild(h3Index, -1), null, 'Invalid resolution returns null');
+    assert.throws(
+        () => h3.cellToCenterChild(h3Index, 5),
+        {code: E_RES_DOMAIN},
+        'Coarser resolution throws'
+    );
+    assert.throws(
+        () => h3.cellToCenterChild(h3Index, -1),
+        {code: E_RES_DOMAIN},
+        'Invalid resolution throws'
+    );
     // TODO: Add this assertion when the C library supports this fallback
-    // assert.equals(h3.h3ToCenterChild('foo', 10), null, 'Invalid index returns null');
+    // assert.equals(h3.cellToCenterChild('foo', 10), null, 'Invalid index returns null');
 
     assert.end();
 });
 
-test('h3IndexesAreNeighbors', assert => {
+test('areNeighborCells', assert => {
     const origin = '891ea6d6533ffff';
     const adjacent = '891ea6d65afffff';
     const notAdjacent = '891ea6992dbffff';
 
+    assert.equal(h3.areNeighborCells(origin, adjacent), true, 'Adjacent hexagons are neighbors');
+    assert.equal(h3.areNeighborCells(adjacent, origin), true, 'Adjacent hexagons are neighbors');
     assert.equal(
-        h3.h3IndexesAreNeighbors(origin, adjacent),
-        true,
-        'Adjacent hexagons are neighbors'
-    );
-    assert.equal(
-        h3.h3IndexesAreNeighbors(adjacent, origin),
-        true,
-        'Adjacent hexagons are neighbors'
-    );
-    assert.equal(
-        h3.h3IndexesAreNeighbors(origin, notAdjacent),
+        h3.areNeighborCells(origin, notAdjacent),
         false,
         'Non-adjacent hexagons are not neighbors'
     );
     assert.equal(
-        h3.h3IndexesAreNeighbors(origin, origin),
+        h3.areNeighborCells(origin, origin),
         false,
         'A hexagon is not a neighbor to itself'
     );
-    assert.equal(
-        h3.h3IndexesAreNeighbors(origin, 'foo'),
-        false,
+    assert.throws(
+        () => h3.areNeighborCells(origin, 'foo'),
+        {code: E_CELL_INVALID},
         'A hexagon is not a neighbor to an invalid index'
     );
-    assert.equal(
-        h3.h3IndexesAreNeighbors(origin, 42),
-        false,
+    assert.throws(
+        () => h3.areNeighborCells(origin, 42),
+        {code: E_CELL_INVALID},
         'A hexagon is not a neighbor to an invalid index'
     );
-    assert.equal(
-        h3.h3IndexesAreNeighbors(origin, null),
-        false,
-        'A hexagon is not a neighbor to an invalid index'
+    assert.throws(
+        () => h3.areNeighborCells(origin, null),
+        {code: E_CELL_INVALID},
+        'A hexagon is not a neighbor to a null index'
     );
-    assert.equal(
-        h3.h3IndexesAreNeighbors('foo', 'foo'),
-        false,
+    assert.throws(
+        () => h3.areNeighborCells('foo', 'foo'),
+        {code: E_CELL_INVALID},
         'Two invalid indexes are not neighbors'
     );
-    assert.equal(
-        h3.h3IndexesAreNeighbors(null, null),
-        false,
-        'Two invalid indexes are not neighbors'
+    assert.throws(
+        () => h3.areNeighborCells(null, null),
+        {code: E_CELL_INVALID},
+        'Two null indexes are not neighbors'
     );
 
     assert.end();
 });
 
-test('getH3UnidirectionalEdge', assert => {
+test('cellsToDirectedEdge', assert => {
     const origin = '891ea6d6533ffff';
     const destination = '891ea6d65afffff';
     const edge = '1591ea6d6533ffff';
     const notAdjacent = '891ea6992dbffff';
 
     assert.equal(
-        h3.getH3UnidirectionalEdge(origin, destination),
+        h3.cellsToDirectedEdge(origin, destination),
         edge,
         'Got expected edge for adjacent hexagons'
     );
 
-    assert.equal(
-        h3.getH3UnidirectionalEdge(origin, notAdjacent),
-        null,
+    assert.throws(
+        () => h3.cellsToDirectedEdge(origin, notAdjacent),
+        {code: E_NOT_NEIGHBORS},
         'Got null for non-adjacent hexagons'
     );
 
-    assert.equal(h3.getH3UnidirectionalEdge(origin, origin), null, 'Got null for same hexagons');
-
-    assert.equal(
-        h3.getH3UnidirectionalEdge(origin, 'foo'),
-        null,
-        'Got null for invalid destination'
+    assert.throws(
+        () => h3.cellsToDirectedEdge(origin, origin),
+        {code: E_NOT_NEIGHBORS},
+        'Throws for same hexagons'
     );
 
-    assert.equal(h3.getH3UnidirectionalEdge('bar', 'foo'), null, 'Got null for invalid hexagons');
+    assert.throws(
+        () => h3.cellsToDirectedEdge(origin, 'foo'),
+        {code: E_NOT_NEIGHBORS},
+        'Throws for invalid destination'
+    );
+
+    assert.throws(
+        () => h3.cellsToDirectedEdge('bar', origin),
+        {code: E_NOT_NEIGHBORS},
+        'Throws for invalid origin'
+    );
 
     assert.end();
 });
 
-test('getOriginH3IndexFromUnidirectionalEdge', assert => {
+test('getDirectedEdgeOrigin', assert => {
     const origin = '891ea6d6533ffff';
     const edge = '1591ea6d6533ffff';
 
-    assert.equal(
-        h3.getOriginH3IndexFromUnidirectionalEdge(edge),
-        origin,
-        'Got expected origin for edge'
+    assert.equal(h3.getDirectedEdgeOrigin(edge), origin, 'Got expected origin for edge');
+
+    assert.throws(
+        () => h3.getDirectedEdgeOrigin(origin),
+        {code: E_DIR_EDGE_INVALID},
+        'Throws for non-edge hexagon'
     );
 
-    assert.equal(
-        h3.getOriginH3IndexFromUnidirectionalEdge(origin),
-        null,
-        'Got null for non-edge hexagon'
+    assert.throws(
+        () => h3.getDirectedEdgeOrigin(null),
+        {code: E_DIR_EDGE_INVALID},
+        'Throws for non-hexagon'
     );
-
-    assert.equal(h3.getOriginH3IndexFromUnidirectionalEdge(null), null, 'Got null for non-hexagon');
 
     assert.end();
 });
 
-test('getDestinationH3IndexFromUnidirectionalEdge', assert => {
+test('getDirectedEdgeDestination', assert => {
     const destination = '891ea6d65afffff';
     const edge = '1591ea6d6533ffff';
 
-    assert.equal(
-        h3.getDestinationH3IndexFromUnidirectionalEdge(edge),
-        destination,
-        'Got expected origin for edge'
+    assert.equal(h3.getDirectedEdgeDestination(edge), destination, 'Got expected origin for edge');
+
+    assert.throws(
+        () => h3.getDirectedEdgeDestination(destination),
+        {code: E_DIR_EDGE_INVALID},
+        'Throws for non-edge hexagon'
     );
 
-    assert.equal(
-        h3.getDestinationH3IndexFromUnidirectionalEdge(destination),
-        null,
-        'Got null for non-edge hexagon'
-    );
-
-    assert.equal(
-        h3.getDestinationH3IndexFromUnidirectionalEdge(null),
-        null,
-        'Got null for non-hexagon'
+    assert.throws(
+        () => h3.getDirectedEdgeDestination(null),
+        {code: E_DIR_EDGE_INVALID},
+        'Throws for non-hexagon'
     );
 
     assert.end();
 });
 
-test('h3UnidirectionalEdgeIsValid', assert => {
+test('isValidDirectedEdge', assert => {
     const origin = '891ea6d6533ffff';
     const destination = '891ea6d65afffff';
 
-    assert.equal(h3.h3UnidirectionalEdgeIsValid('1591ea6d6533ffff'), true, 'Edge index is valid');
+    assert.equal(h3.isValidDirectedEdge('1591ea6d6533ffff'), true, 'Edge index is valid');
     assert.equal(
-        h3.h3UnidirectionalEdgeIsValid(h3.getH3UnidirectionalEdge(origin, destination)),
+        h3.isValidDirectedEdge(h3.cellsToDirectedEdge(origin, destination)),
         true,
         'Output of getH3UnidirectionalEdge is valid'
     );
 
     ['lolwut', undefined, null, {}, 42].forEach(badInput => {
-        assert.equal(h3.h3UnidirectionalEdgeIsValid(badInput), false, `${badInput} is not valid`);
+        assert.equal(h3.isValidDirectedEdge(badInput), false, `${badInput} is not valid`);
     });
 
     assert.end();
 });
 
-test('getH3IndexesFromUnidirectionalEdge', assert => {
+test('directedEdgeToCells', assert => {
     const origin = '891ea6d6533ffff';
     const destination = '891ea6d65afffff';
     const edge = '1591ea6d6533ffff';
 
     assert.deepEqual(
-        h3.getH3IndexesFromUnidirectionalEdge(edge),
+        h3.directedEdgeToCells(edge),
         [origin, destination],
         'Got expected origin, destination from edge'
     );
 
     assert.deepEqual(
-        h3.getH3IndexesFromUnidirectionalEdge(h3.getH3UnidirectionalEdge(origin, destination)),
+        h3.directedEdgeToCells(h3.cellsToDirectedEdge(origin, destination)),
         [origin, destination],
         'Got expected origin, destination from getH3UnidirectionalEdge output'
     );
@@ -1241,42 +1374,42 @@ test('getH3IndexesFromUnidirectionalEdge', assert => {
     assert.end();
 });
 
-test('getH3UnidirectionalEdgesFromHexagon', assert => {
+test('originToDirectedEdges', assert => {
     const origin = '8928308280fffff';
-    const edges = h3.getH3UnidirectionalEdgesFromHexagon(origin);
+    const edges = h3.originToDirectedEdges(origin);
 
     assert.equal(edges.length, 6, 'got expected edge count');
 
-    const neighbors = h3.hexRing(origin, 1);
+    const neighbors = h3.gridRingUnsafe(origin, 1);
     neighbors.forEach(neighbor => {
-        const edge = h3.getH3UnidirectionalEdge(origin, neighbor);
+        const edge = h3.cellsToDirectedEdge(origin, neighbor);
         assert.ok(edges.indexOf(edge) > -1, 'found edge to neighbor');
     });
 
     assert.end();
 });
 
-test('getH3UnidirectionalEdgesFromHexagon - pentagon', assert => {
+test('originToDirectedEdges - pentagon', assert => {
     const origin = '81623ffffffffff';
-    const edges = h3.getH3UnidirectionalEdgesFromHexagon(origin);
+    const edges = h3.originToDirectedEdges(origin);
 
     assert.equal(edges.length, 5, 'got expected edge count');
 
-    const neighbors = h3.kRing(origin, 1).filter(hex => hex !== origin);
+    const neighbors = h3.gridDisk(origin, 1).filter(hex => hex !== origin);
     neighbors.forEach(neighbor => {
-        const edge = h3.getH3UnidirectionalEdge(origin, neighbor);
+        const edge = h3.cellsToDirectedEdge(origin, neighbor);
         assert.ok(edges.indexOf(edge) > -1, 'found edge to neighbor');
     });
 
     assert.end();
 });
 
-test('getH3UnidirectionalEdgeBoundary', assert => {
+test('directedEdgeToBoundary', assert => {
     const origin = '85283473fffffff';
-    const edges = h3.getH3UnidirectionalEdgesFromHexagon(origin);
+    const edges = h3.originToDirectedEdges(origin);
 
     // GeoBoundary of the origin
-    const originBoundary = h3.h3ToGeoBoundary(origin);
+    const originBoundary = h3.cellToBoundary(origin);
 
     const expectedEdges = [
         [originBoundary[3], originBoundary[4]],
@@ -1288,7 +1421,7 @@ test('getH3UnidirectionalEdgeBoundary', assert => {
     ];
 
     edges.forEach((edge, i) => {
-        const latlngs = h3.getH3UnidirectionalEdgeBoundary(edge);
+        const latlngs = h3.directedEdgeToBoundary(edge);
         assert.deepEqual(
             toLowPrecision(latlngs),
             toLowPrecision(expectedEdges[i]),
@@ -1299,12 +1432,12 @@ test('getH3UnidirectionalEdgeBoundary', assert => {
     assert.end();
 });
 
-test('getH3UnidirectionalEdgeBoundary - 10-vertex pentagon', assert => {
+test('directedEdgeToBoundary - 10-vertex pentagon', assert => {
     const origin = '81623ffffffffff';
-    const edges = h3.getH3UnidirectionalEdgesFromHexagon(origin);
+    const edges = h3.originToDirectedEdges(origin);
 
     // GeoBoundary of the origin
-    const originBoundary = h3.h3ToGeoBoundary(origin);
+    const originBoundary = h3.cellToBoundary(origin);
 
     const expectedEdges = [
         [originBoundary[2], originBoundary[3], originBoundary[4]],
@@ -1315,7 +1448,7 @@ test('getH3UnidirectionalEdgeBoundary - 10-vertex pentagon', assert => {
     ];
 
     edges.forEach((edge, i) => {
-        const latlngs = h3.getH3UnidirectionalEdgeBoundary(edge);
+        const latlngs = h3.directedEdgeToBoundary(edge);
         assert.deepEqual(
             toLowPrecision(latlngs),
             toLowPrecision(expectedEdges[i]),
@@ -1326,13 +1459,13 @@ test('getH3UnidirectionalEdgeBoundary - 10-vertex pentagon', assert => {
     assert.end();
 });
 
-test('h3Distance', assert => {
-    const origin = h3.geoToH3(37.5, -122, 9);
+test('gridDistance', assert => {
+    const origin = h3.latLngToCell(37.5, -122, 9);
     for (let radius = 0; radius < 4; radius++) {
-        const others = h3.hexRing(origin, radius);
+        const others = h3.gridRingUnsafe(origin, radius);
         for (let i = 0; i < others.length; i++) {
             assert.equals(
-                h3.h3Distance(origin, others[i]),
+                h3.gridDistance(origin, others[i]),
                 radius,
                 `Got distance ${radius} for (${origin}, ${others[i]})`
             );
@@ -1341,59 +1474,59 @@ test('h3Distance', assert => {
     assert.end();
 });
 
-test('h3Distance - failure', assert => {
-    const origin = h3.geoToH3(37.5, -122, 9);
-    const origin10 = h3.geoToH3(37.5, -122, 10);
+test('gridDistance - failure', assert => {
+    const origin = h3.latLngToCell(37.5, -122, 9);
+    const origin10 = h3.latLngToCell(37.5, -122, 10);
     const edge = '1591ea6d6533ffff';
-    const distantHex = h3.geoToH3(-37.5, 122, 9);
+    const distantHex = h3.latLngToCell(-37.5, 122, 9);
 
-    assert.equals(
-        h3.h3Distance(origin, origin10),
-        -1,
-        'Returned -1 for distance between different resolutions'
+    assert.throws(
+        () => h3.gridDistance(origin, origin10),
+        {code: E_RES_MISMATCH},
+        'Throws for distance between different resolutions'
     );
-    assert.equals(
-        h3.h3Distance(origin, edge),
-        -1,
-        'Returned -1 for distance between hexagon and edge'
+    assert.throws(
+        () => h3.gridDistance(origin, edge),
+        {code: E_FAILED},
+        'Throws for distance between hexagon and edge'
     );
-    assert.equals(
-        h3.h3Distance(origin, distantHex),
-        -1,
-        'Returned -1 for distance between distant hexagons'
+    assert.throws(
+        () => h3.gridDistance(origin, distantHex),
+        {code: E_FAILED},
+        'Throws for distance between distant hexagons'
     );
     assert.end();
 });
 
-test('h3Line', assert => {
+test('gridPathCells', assert => {
     for (let res = 0; res < 12; res++) {
-        const origin = h3.geoToH3(37.5, -122, res);
-        const destination = h3.geoToH3(25, -120, res);
-        const line = h3.h3Line(origin, destination);
-        const distance = h3.h3Distance(origin, destination);
+        const origin = h3.latLngToCell(37.5, -122, res);
+        const destination = h3.latLngToCell(25, -120, res);
+        const line = h3.gridPathCells(origin, destination);
+        const distance = h3.gridDistance(origin, destination);
         assert.equals(line.length, distance + 1, `distance matches expected: ${distance + 1}`);
         // property-based test for the line
         assert.ok(
-            line.every((h3Index, i) => i === 0 || h3.h3IndexesAreNeighbors(h3Index, line[i - 1])),
+            line.every((h3Index, i) => i === 0 || h3.areNeighborCells(h3Index, line[i - 1])),
             'every index in the line is a neighbor of the previous'
         );
     }
     assert.end();
 });
 
-test('h3Line - failure', assert => {
-    const origin = h3.geoToH3(37.5, -122, 9);
-    const origin10 = h3.geoToH3(37.5, -122, 10);
+test('gridPathCells - failure', assert => {
+    const origin = h3.latLngToCell(37.5, -122, 9);
+    const origin10 = h3.latLngToCell(37.5, -122, 10);
 
     assert.throws(
-        () => h3.h3Line(origin, origin10),
-        /Line cannot be calculated/,
+        () => h3.gridPathCells(origin, origin10),
+        {code: E_RES_MISMATCH},
         'got expected error for different resolutions'
     );
     assert.end();
 });
 
-test('experimentalH3ToLocalIj / experimentalLocalIjToH3', assert => {
+test('cellToLocalIj / localIjToCell', assert => {
     const origin = '8828308281fffff';
     [
         [origin, {i: 392, j: 336}],
@@ -1405,12 +1538,12 @@ test('experimentalH3ToLocalIj / experimentalLocalIjToH3', assert => {
         ['8828308289fffff', {i: 393, j: 336}]
     ].forEach(([h3Index, coords]) => {
         assert.deepEqual(
-            h3.experimentalH3ToLocalIj(origin, h3Index),
+            h3.cellToLocalIj(origin, h3Index),
             coords,
             `Got expected coordinates for ${h3Index}`
         );
         assert.deepEqual(
-            h3.experimentalLocalIjToH3(origin, coords),
+            h3.localIjToCell(origin, coords),
             h3Index,
             `Got expected H3 index for ${JSON.stringify(coords)}`
         );
@@ -1418,7 +1551,7 @@ test('experimentalH3ToLocalIj / experimentalLocalIjToH3', assert => {
     assert.end();
 });
 
-test('experimentalH3ToLocalIj / experimentalLocalIjToH3 - Pentagon', assert => {
+test('cellToLocalIj / localIjToCell - Pentagon', assert => {
     const origin = '811c3ffffffffff';
     [
         [origin, {i: 0, j: 0}],
@@ -1426,12 +1559,12 @@ test('experimentalH3ToLocalIj / experimentalLocalIjToH3 - Pentagon', assert => {
         ['811cfffffffffff', {i: -1, j: 0}]
     ].forEach(([h3Index, coords]) => {
         assert.deepEqual(
-            h3.experimentalH3ToLocalIj(origin, h3Index),
+            h3.cellToLocalIj(origin, h3Index),
             coords,
             `Got expected coordinates for ${h3Index}`
         );
         assert.deepEqual(
-            h3.experimentalLocalIjToH3(origin, coords),
+            h3.localIjToCell(origin, coords),
             h3Index,
             `Got expected H3 index for ${JSON.stringify(coords)}`
         );
@@ -1439,60 +1572,60 @@ test('experimentalH3ToLocalIj / experimentalLocalIjToH3 - Pentagon', assert => {
     assert.end();
 });
 
-test('experimentalH3ToLocalIj - errors', assert => {
+test('cellToLocalIj - errors', assert => {
     assert.throws(
-        () => h3.experimentalH3ToLocalIj('832830fffffffff', '822837fffffffff'),
-        /Incompatible/,
+        () => h3.cellToLocalIj('832830fffffffff', '822837fffffffff'),
+        {code: E_RES_MISMATCH},
         'Got expected error'
     );
     assert.throws(
-        () => h3.experimentalH3ToLocalIj('822a17fffffffff', '822837fffffffff'),
-        /too far/,
+        () => h3.cellToLocalIj('822a17fffffffff', '822837fffffffff'),
+        {code: E_FAILED},
         'Got expected error'
     );
     assert.throws(
-        () => h3.experimentalH3ToLocalIj('8828308281fffff', '8841492553fffff'),
-        /too far/,
+        () => h3.cellToLocalIj('8828308281fffff', '8841492553fffff'),
+        {code: E_FAILED},
         'Got expected error for opposite sides of the world'
     );
     assert.throws(
-        () => h3.experimentalH3ToLocalIj('81283ffffffffff', '811cbffffffffff'),
-        /pentagon distortion/,
+        () => h3.cellToLocalIj('81283ffffffffff', '811cbffffffffff'),
+        {code: E_FAILED},
         'Got expected error'
     );
     assert.throws(
-        () => h3.experimentalH3ToLocalIj('811d3ffffffffff', '8122bffffffffff'),
-        /pentagon distortion/,
+        () => h3.cellToLocalIj('811d3ffffffffff', '8122bffffffffff'),
+        {code: E_FAILED},
         'Got expected error'
     );
 
     assert.end();
 });
 
-test('experimentalLocalIjToH3 - errors', assert => {
+test('localIjToCell - errors', assert => {
     assert.throws(
-        () => h3.experimentalLocalIjToH3('8049fffffffffff', null),
+        () => h3.localIjToCell('8049fffffffffff', null),
         /Coordinates must be provided/,
         'Got expected error'
     );
     assert.throws(
-        () => h3.experimentalLocalIjToH3('8049fffffffffff', [1, 0]),
+        () => h3.localIjToCell('8049fffffffffff', [1, 0]),
         /Coordinates must be provided/,
         'Got expected error'
     );
     assert.throws(
-        () => h3.experimentalLocalIjToH3('8049fffffffffff', {i: 2, j: 0}),
-        /Index not defined/,
+        () => h3.localIjToCell('8049fffffffffff', {i: 2, j: 0}),
+        {code: E_FAILED},
         'Got expected error'
     );
 
     assert.end();
 });
 
-test('hexArea', assert => {
+test('getHexagonAreaAvg', assert => {
     let last = 1e14;
     for (let res = 0; res < 16; res++) {
-        const result = h3.hexArea(res, h3.UNITS.m2);
+        const result = h3.getHexagonAreaAvg(res, h3.UNITS.m2);
         assert.ok(typeof result === 'number', 'Got numeric response for m2');
         assert.ok(result < last, `result < last result: ${result}` + `, ${last}`);
         last = result;
@@ -1500,7 +1633,7 @@ test('hexArea', assert => {
 
     last = 1e7;
     for (let res = 0; res < 16; res++) {
-        const result = h3.hexArea(res, h3.UNITS.km2);
+        const result = h3.getHexagonAreaAvg(res, h3.UNITS.km2);
         assert.ok(typeof result === 'number', 'Got numeric response for km2');
         assert.ok(result < last, `result < last result: ${result}` + `, ${last}`);
         last = result;
@@ -1509,28 +1642,52 @@ test('hexArea', assert => {
     assert.end();
 });
 
-test('hexArea - bad units', assert => {
+test('getHexagonAreaAvg - bad units', assert => {
     const res = 9;
-    assert.throws(() => h3.hexArea(res), /Unknown/, 'throws on missing unit');
-    assert.throws(() => h3.hexArea(res, 'foo'), /Unknown/, 'throws on unknown unit');
-    assert.throws(() => h3.hexArea(res, 42), /Unknown/, 'throws on unknown unit');
-    assert.throws(() => h3.hexArea(res, h3.UNITS.km), /Unknown/, 'throws on invalid unit');
+    assert.throws(
+        () => h3.getHexagonAreaAvg(res),
+        {code: E_UNKNOWN_UNIT},
+        'throws on missing unit'
+    );
+    assert.throws(
+        () => h3.getHexagonAreaAvg(res, 'foo'),
+        {code: E_UNKNOWN_UNIT},
+        'throws on unknown unit'
+    );
+    assert.throws(
+        () => h3.getHexagonAreaAvg(res, 42),
+        {code: E_UNKNOWN_UNIT},
+        'throws on unknown unit'
+    );
+    assert.throws(
+        () => h3.getHexagonAreaAvg(res, h3.UNITS.km),
+        {code: E_UNKNOWN_UNIT},
+        'throws on invalid unit'
+    );
 
     assert.end();
 });
 
-test('hexArea - bad resolution', assert => {
-    assert.throws(() => h3.hexArea(42, h3.UNITS.m2), /Invalid/, 'throws on invalid resolution');
+test('getHexagonAreaAvg - bad resolution', assert => {
+    assert.throws(
+        () => h3.getHexagonAreaAvg(42, h3.UNITS.m2),
+        {code: E_RES_DOMAIN},
+        'throws on invalid resolution'
+    );
 
-    assert.throws(() => h3.hexArea(), /Invalid/, 'throws on invalid resolution');
+    assert.throws(
+        () => h3.getHexagonAreaAvg(),
+        {code: E_RES_DOMAIN},
+        'throws on invalid resolution'
+    );
 
     assert.end();
 });
 
-test('edgeLength', assert => {
+test('getHexagonEdgeLengthAvg', assert => {
     let last = 1e7;
     for (let res = 0; res < 16; res++) {
-        const result = h3.edgeLength(res, h3.UNITS.m);
+        const result = h3.getHexagonEdgeLengthAvg(res, h3.UNITS.m);
         assert.ok(typeof result === 'number', 'Got numeric response for m');
         assert.ok(result < last, `result < last result: ${result}` + `, ${last}`);
         last = result;
@@ -1538,7 +1695,7 @@ test('edgeLength', assert => {
 
     last = 1e4;
     for (let res = 0; res < 16; res++) {
-        const result = h3.edgeLength(res, h3.UNITS.km);
+        const result = h3.getHexagonEdgeLengthAvg(res, h3.UNITS.km);
         assert.ok(typeof result === 'number', 'Got numeric response for km');
         assert.ok(result < last, `result < last result: ${result}` + `, ${last}`);
         last = result;
@@ -1547,20 +1704,44 @@ test('edgeLength', assert => {
     assert.end();
 });
 
-test('edgeLength - bad units', assert => {
+test('getHexagonEdgeLengthAvg - bad units', assert => {
     const res = 9;
-    assert.throws(() => h3.edgeLength(res), /Unknown/, 'throws on missing unit');
-    assert.throws(() => h3.edgeLength(res, 'foo'), /Unknown/, 'throws on unknown unit');
-    assert.throws(() => h3.edgeLength(res, 42), /Unknown/, 'throws on unknown unit');
-    assert.throws(() => h3.edgeLength(res, h3.UNITS.km2), /Unknown/, 'throws on invalid unit');
+    assert.throws(
+        () => h3.getHexagonEdgeLengthAvg(res),
+        {code: E_UNKNOWN_UNIT},
+        'throws on missing unit'
+    );
+    assert.throws(
+        () => h3.getHexagonEdgeLengthAvg(res, 'foo'),
+        {code: E_UNKNOWN_UNIT},
+        'throws on unknown unit'
+    );
+    assert.throws(
+        () => h3.getHexagonEdgeLengthAvg(res, 42),
+        {code: E_UNKNOWN_UNIT},
+        'throws on unknown unit'
+    );
+    assert.throws(
+        () => h3.getHexagonEdgeLengthAvg(res, h3.UNITS.km2),
+        {code: E_UNKNOWN_UNIT},
+        'throws on invalid unit'
+    );
 
     assert.end();
 });
 
-test('edgeLength - bad resolution', assert => {
-    assert.throws(() => h3.edgeLength(42, h3.UNITS.m), /Invalid/, 'throws on invalid resolution');
+test('getHexagonEdgeLengthAvg - bad resolution', assert => {
+    assert.throws(
+        () => h3.getHexagonEdgeLengthAvg(42, h3.UNITS.m),
+        {code: E_RES_DOMAIN},
+        'throws on invalid resolution'
+    );
 
-    assert.throws(() => h3.edgeLength(), /Invalid/, 'throws on invalid resolution');
+    assert.throws(
+        () => h3.getHexagonEdgeLengthAvg(),
+        {code: E_RES_DOMAIN},
+        'throws on invalid resolution'
+    );
 
     assert.end();
 });
@@ -1587,7 +1768,7 @@ test('cellArea', assert => {
         6.662957600331753e-7
     ];
     for (let res = 0; res < 16; res++) {
-        const h3Index = h3.geoToH3(0, 0, res);
+        const h3Index = h3.latLngToCell(0, 0, res);
         const cellAreaKm2 = h3.cellArea(h3Index, h3.UNITS.km2);
         assert.ok(
             almostEqual(cellAreaKm2, expectedAreas[res]),
@@ -1598,7 +1779,7 @@ test('cellArea', assert => {
             // res 0 has high distortion of average area due to high pentagon proportion
             res === 0 ||
                 // This seems to be the lowest factor that works for other resolutions
-                almostEqual(cellAreaKm2, h3.hexArea(res, h3.UNITS.km2), 0.4),
+                almostEqual(cellAreaKm2, h3.getHexagonAreaAvg(res, h3.UNITS.km2), 0.4),
             `Area is close to average area at res ${res}, km2`
         );
         const cellAreaM2 = h3.cellArea(h3Index, h3.UNITS.m2);
@@ -1606,7 +1787,7 @@ test('cellArea', assert => {
             // res 0 has high distortion of average area due to high pentagon proportion
             res === 0 ||
                 // This seems to be the lowest factor that works for other resolutions
-                almostEqual(cellAreaM2, h3.hexArea(res, h3.UNITS.m2), 0.4),
+                almostEqual(cellAreaM2, h3.getHexagonAreaAvg(res, h3.UNITS.m2), 0.4),
             `Area is close to average area at res ${res}, m2`
         );
         assert.ok(cellAreaM2 > cellAreaKm2, 'm2 > Km2');
@@ -1616,19 +1797,27 @@ test('cellArea', assert => {
 });
 
 test('cellArea - bad units', assert => {
-    const h3Index = h3.geoToH3(0, 0, 9);
-    assert.throws(() => h3.cellArea(h3Index), /Unknown/, 'throws on missing unit');
-    assert.throws(() => h3.cellArea(h3Index, 'foo'), /Unknown/, 'throws on unknown unit');
-    assert.throws(() => h3.cellArea(h3Index, 42), /Unknown/, 'throws on unknown unit');
-    assert.throws(() => h3.cellArea(h3Index, h3.UNITS.km), /Unknown/, 'throws on invalid unit');
+    const h3Index = h3.latLngToCell(0, 0, 9);
+    assert.throws(() => h3.cellArea(h3Index), {code: E_UNKNOWN_UNIT}, 'throws on missing unit');
+    assert.throws(
+        () => h3.cellArea(h3Index, 'foo'),
+        {code: E_UNKNOWN_UNIT},
+        'throws on unknown unit'
+    );
+    assert.throws(() => h3.cellArea(h3Index, 42), {code: E_UNKNOWN_UNIT}, 'throws on unknown unit');
+    assert.throws(
+        () => h3.cellArea(h3Index, h3.UNITS.km),
+        {code: E_UNKNOWN_UNIT},
+        'throws on invalid unit'
+    );
 
     assert.end();
 });
 
 test('exactEdgeLength', assert => {
     for (let res = 0; res < 16; res++) {
-        const h3Index = h3.geoToH3(0, 0, res);
-        const edges = h3.getH3UnidirectionalEdgesFromHexagon(h3Index);
+        const h3Index = h3.latLngToCell(0, 0, res);
+        const edges = h3.originToDirectedEdges(h3Index);
         for (let i = 0; i < edges.length; i++) {
             const edge = edges[i];
             const lengthKm = h3.exactEdgeLength(edge, h3.UNITS.km);
@@ -1637,7 +1826,7 @@ test('exactEdgeLength', assert => {
                 // res 0 has high distortion of average edge length due to high pentagon proportion
                 res === 0 ||
                     // This seems to be the lowest factor that works for other resolutions
-                    almostEqual(lengthKm, h3.edgeLength(res, h3.UNITS.km), 0.2),
+                    almostEqual(lengthKm, h3.getHexagonEdgeLengthAvg(res, h3.UNITS.km), 0.2),
                 `Edge length is close to average edge length at res ${res}, km`
             );
             const lengthM = h3.exactEdgeLength(edge, h3.UNITS.m);
@@ -1645,7 +1834,7 @@ test('exactEdgeLength', assert => {
                 // res 0 has high distortion of average edge length due to high pentagon proportion
                 res === 0 ||
                     // This seems to be the lowest factor that works for other resolutions
-                    almostEqual(lengthM, h3.edgeLength(res, h3.UNITS.m), 0.2),
+                    almostEqual(lengthM, h3.getHexagonEdgeLengthAvg(res, h3.UNITS.m), 0.2),
                 `Edge length is close to average edge length at res ${res}, m`
             );
             assert.ok(lengthM > lengthKm, 'm > Km');
@@ -1655,87 +1844,127 @@ test('exactEdgeLength', assert => {
     assert.end();
 });
 
-test('edgeLength - bad units', assert => {
-    const h3Index = h3.geoToH3(0, 0, 9);
-    const edge = h3.getH3UnidirectionalEdgesFromHexagon(h3Index)[0];
-    assert.throws(() => h3.exactEdgeLength(edge), /Unknown/, 'throws on missing unit');
-    assert.throws(() => h3.exactEdgeLength(edge, 'foo'), /Unknown/, 'throws on unknown unit');
-    assert.throws(() => h3.exactEdgeLength(edge, 42), /Unknown/, 'throws on unknown unit');
-    assert.throws(() => h3.exactEdgeLength(edge, h3.UNITS.m2), /Unknown/, 'throws on invalid unit');
-
-    assert.end();
-});
-
-test('pointDist', assert => {
-    assert.ok(
-        almostEqual(h3.pointDist([-10, 0], [10, 0], h3.UNITS.rads), h3.degsToRads(20)),
-        'Got expected angular distance for latitude along the equator'
-    );
-    assert.ok(
-        almostEqual(h3.pointDist([0, -10], [0, 10], h3.UNITS.rads), h3.degsToRads(20)),
-        'Got expected angular distance for latitude along a meridian'
-    );
-    assert.equal(
-        h3.pointDist([23, 23], [23, 23], h3.UNITS.rads),
-        0,
-        'Got expected angular distance for same point'
-    );
-    // Just rough tests for the other units
-    const distKm = h3.pointDist([0, 0], [39, -122], h3.UNITS.km);
-    assert.ok(distKm > 12e3 && distKm < 13e3, 'has some reasonable distance in Km');
-    const distM = h3.pointDist([0, 0], [39, -122], h3.UNITS.m);
-    assert.ok(distM > 12e6 && distM < 13e6, 'has some reasonable distance in m');
-
-    assert.end();
-});
-
-test('pointDist - bad units', assert => {
-    assert.throws(() => h3.pointDist([0, 0], [0, 0]), /Unknown/, 'throws on missing unit');
-    assert.throws(() => h3.pointDist([0, 0], [0, 0], 'foo'), /Unknown/, 'throws on unknown unit');
-    assert.throws(() => h3.pointDist([0, 0], [0, 0], 42), /Unknown/, 'throws on unknown unit');
+test('exactEdgeLength - bad units', assert => {
+    const h3Index = h3.latLngToCell(0, 0, 9);
+    const edge = h3.originToDirectedEdges(h3Index)[0];
+    assert.throws(() => h3.exactEdgeLength(edge), {code: E_UNKNOWN_UNIT}, 'throws on missing unit');
     assert.throws(
-        () => h3.pointDist([0, 0], [0, 0], h3.UNITS.m2),
-        /Unknown/,
+        () => h3.exactEdgeLength(edge, 'foo'),
+        {code: E_UNKNOWN_UNIT},
+        'throws on unknown unit'
+    );
+    assert.throws(
+        () => h3.exactEdgeLength(edge, 42),
+        {code: E_UNKNOWN_UNIT},
+        'throws on unknown unit'
+    );
+    assert.throws(
+        () => h3.exactEdgeLength(edge, h3.UNITS.m2),
+        {code: E_UNKNOWN_UNIT},
         'throws on invalid unit'
     );
 
     assert.end();
 });
 
-test('numHexagons', assert => {
-    let last = 0;
+test('distance', assert => {
+    assert.ok(
+        almostEqual(h3.distance([-10, 0], [10, 0], h3.UNITS.rads), h3.degsToRads(20)),
+        'Got expected angular distance for latitude along the equator'
+    );
+    assert.ok(
+        almostEqual(h3.distance([0, -10], [0, 10], h3.UNITS.rads), h3.degsToRads(20)),
+        'Got expected angular distance for latitude along a meridian'
+    );
+    assert.equal(
+        h3.distance([23, 23], [23, 23], h3.UNITS.rads),
+        0,
+        'Got expected angular distance for same point'
+    );
+    // Just rough tests for the other units
+    const distKm = h3.distance([0, 0], [39, -122], h3.UNITS.km);
+    assert.ok(distKm > 12e3 && distKm < 13e3, 'has some reasonable distance in Km');
+    const distM = h3.distance([0, 0], [39, -122], h3.UNITS.m);
+    assert.ok(distM > 12e6 && distM < 13e6, 'has some reasonable distance in m');
+
+    assert.end();
+});
+
+test('distance - bad units', assert => {
+    assert.throws(
+        () => h3.distance([0, 0], [0, 0]),
+        {code: E_UNKNOWN_UNIT},
+        'throws on missing unit'
+    );
+    assert.throws(
+        () => h3.distance([0, 0], [0, 0], 'foo'),
+        {code: E_UNKNOWN_UNIT},
+        'throws on unknown unit'
+    );
+    assert.throws(
+        () => h3.distance([0, 0], [0, 0], 42),
+        {code: E_UNKNOWN_UNIT},
+        'throws on unknown unit'
+    );
+    assert.throws(
+        () => h3.distance([0, 0], [0, 0], h3.UNITS.m2),
+        {code: E_UNKNOWN_UNIT},
+        'throws on invalid unit'
+    );
+
+    assert.end();
+});
+
+// From https://h3geo.org/docs/core-library/restable
+const EXPECTED_NUM_CELLS = [
+    122,
+    842,
+    5882,
+    41162,
+    288122,
+    2016842,
+    14117882,
+    98825162,
+    691776122,
+    4842432842,
+    33897029882,
+    237279209162,
+    1660954464122,
+    11626681248842,
+    81386768741882,
+    569707381193162
+];
+
+test('getNumCells', assert => {
     for (let res = 0; res < 16; res++) {
-        const result = h3.numHexagons(res);
-        assert.ok(typeof result === 'number', `Got numeric response ${result}`);
-        assert.ok(result > last, `result > last result: ${result}` + `, ${last}`);
-        last = result;
+        assert.equal(h3.getNumCells(res), EXPECTED_NUM_CELLS[res]);
     }
     assert.end();
 });
 
-test('numHexagons - bad resolution', assert => {
-    assert.throws(() => h3.numHexagons(42), /Invalid/, 'throws on invalid resolution');
-    assert.throws(() => h3.numHexagons(), /Invalid/, 'throws on invalid resolution');
+test('getNumCells - bad resolution', assert => {
+    assert.throws(() => h3.getNumCells(42), {code: E_RES_DOMAIN}, 'throws on invalid resolution');
+    assert.throws(() => h3.getNumCells(), {code: E_RES_DOMAIN}, 'throws on invalid resolution');
 
     assert.end();
 });
 
-test('getRes0Indexes', assert => {
-    const indexes = h3.getRes0Indexes();
+test('getRes0Cells', assert => {
+    const indexes = h3.getRes0Cells();
     assert.equal(indexes.length, 122, 'Got expected count');
-    assert.ok(indexes.every(h3.h3IsValid), 'All indexes are valid');
+    assert.ok(indexes.every(h3.isValidCell), 'All indexes are valid');
 
     assert.end();
 });
 
-test('getPentagonIndexes', assert => {
+test('getPentagons', assert => {
     for (let res = 0; res < 15; res++) {
-        const indexes = h3.getPentagonIndexes(res);
+        const indexes = h3.getPentagons(res);
         assert.equal(indexes.length, 12, 'Got expected count');
-        assert.ok(indexes.every(h3.h3IsValid), 'All indexes are valid');
-        assert.ok(indexes.every(h3.h3IsPentagon), 'All indexes are pentagons');
+        assert.ok(indexes.every(h3.isValidCell), 'All indexes are valid');
+        assert.ok(indexes.every(h3.isPentagon), 'All indexes are pentagons');
         assert.ok(
-            indexes.every(idx => h3.h3GetResolution(idx) === res),
+            indexes.every(idx => h3.getResolution(idx) === res),
             'All indexes have the right resolution'
         );
         assert.equal(new Set(indexes).size, indexes.length, 'All indexes are unique');
@@ -1743,8 +1972,8 @@ test('getPentagonIndexes', assert => {
     assert.end();
 });
 
-test('getPentagonIndexes - invalid', assert => {
-    assert.throws(() => h3.getPentagonIndexes(), /Invalid/, 'throws on invalid resolution');
-    assert.throws(() => h3.getPentagonIndexes(42), /Invalid/, 'throws on invalid resolution');
+test('getPentagons - invalid', assert => {
+    assert.throws(() => h3.getPentagons(), {code: E_RES_DOMAIN}, 'throws on invalid resolution');
+    assert.throws(() => h3.getPentagons(42), {code: E_RES_DOMAIN}, 'throws on invalid resolution');
     assert.end();
 });

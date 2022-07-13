@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Uber Technologies, Inc.
+ * Copyright 2018, 2022 Uber Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +22,15 @@
 #ifndef SIZES_H
 #define SIZES_H
 
+#include <stdint.h>
+
 int sizeOfH3Index();
-int sizeOfGeoCoord();
-int sizeOfGeoBoundary();
-int sizeOfGeofence();
+int sizeOfLatLng();
+int sizeOfCellBoundary();
+int sizeOfGeoLoop();
 int sizeOfGeoPolygon();
 int sizeOfLinkedGeoPolygon();
 int sizeOfCoordIJ();
+double readInt64AsDoubleFromPointer(int64_t *input);
 
 #endif

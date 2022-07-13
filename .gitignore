@@ -7,3 +7,4 @@ dist/
 yarn-error.log
 .nyc_output/
 .DS_Store
+cmake/

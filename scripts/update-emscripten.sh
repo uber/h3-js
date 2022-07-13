@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright 2018-2019 Uber Technologies, Inc.
+# Copyright 2018-2019, 2022 Uber Technologies, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,6 +15,21 @@
 # limitations under the License.
 
 set -ex
+
+mkdir -p cmake
+pushd cmake
+if ! [ -e cmake-3.23.2-linux-x86_64.sh ]; then
+    wget -nv https://github.com/Kitware/CMake/releases/download/v3.23.2/cmake-3.23.2-linux-x86_64.sh
+fi
+echo "5cca63af386e5bd0bde67c87ffac915865abd7dcc48073528f58645abda8f695  cmake-3.23.2-linux-x86_64.sh" > cmake-3.23.2-SHA-256.txt
+sha256sum -c cmake-3.23.2-SHA-256.txt
+if ! [ -e ./bin/cmake ]; then
+    chmod a+x cmake-3.23.2-linux-x86_64.sh
+    ./cmake-3.23.2-linux-x86_64.sh --skip-license
+fi
+export PATH=$(pwd)/bin:$PATH
+cmake --version
+popd
 
 mkdir -p out
 pushd h3c

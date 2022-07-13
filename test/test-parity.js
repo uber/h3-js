@@ -25,7 +25,17 @@ const BINDING_FUNCTIONS = fs
     .split(/\s+/);
 
 // Exclude methods that don't make sense for the JS bindings
-const EXCLUDE_METHODS = ['h3ToString', 'stringToH3'];
+const EXCLUDE_METHODS = [
+    'h3ToString',
+    'stringToH3',
+    // TODO: Vertex functions are not yet supported in JS
+    'isValidVertex',
+    'vertexToLatLng',
+    'cellToVertexes',
+    'cellToVertex',
+    // TODO: Unnecessary when https://github.com/uber/h3/pull/622 is released
+    'distance'
+];
 
 test('implementsBindingFunctions', assert => {
     BINDING_FUNCTIONS.forEach(fn => {
