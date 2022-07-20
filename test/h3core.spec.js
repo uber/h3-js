@@ -1981,20 +1981,20 @@ test('getPentagons - invalid', assert => {
 test('cellToVertex - invalid', assert => {
     assert.throws(
         () => h3.cellToVertex('823d6ffffffffff', -1),
-        /\(2\)$/,
+        {code: E_DOMAIN},
         'negative vertex number throws'
     );
     assert.throws(
         () => h3.cellToVertex('823d6ffffffffff', 6),
-        /\(2\)$/,
+        {code: E_DOMAIN},
         'out of range vertex number throws'
     );
     assert.throws(
         () => h3.cellToVertex('823007fffffffff', 5),
-        /\(2\)$/,
+        {code: E_DOMAIN},
         'out of range vertex number for pentagon throws'
     );
-    assert.throws(() => h3.cellToVertex('ffffffffffffffff', 5), /\(1\)$/, 'invalid cell throws');
+    assert.throws(() => h3.cellToVertex('ffffffffffffffff', 5), {code: E_FAILED}, 'invalid cell throws');
     assert.end();
 });
 
@@ -2061,6 +2061,6 @@ test('vertexToLatLng', assert => {
 });
 
 test('vertexToLatLng - invalid', assert => {
-    assert.throws(() => h3.vertexToLatLng('ffffffffffffffff'), /\(5\)$/, 'invalid vertex throws');
+    assert.throws(() => h3.vertexToLatLng('ffffffffffffffff'), {code: E_CELL_INVALID}, 'invalid vertex throws');
     assert.end();
 });
