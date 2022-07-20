@@ -15,10 +15,11 @@
  */
 
 /**
- * Sizes exported for use in Emscripten. This file is copied into the
- * h3 src/h3lib/lib directory
+ * Sizes and C helpers exported for use in Emscripten. This file is copied into
+ * the h3 src/h3lib/lib directory
  */
 
+#include <stdint.h>
 #include "h3api.h"
 
 int sizeOfH3Index() {
@@ -47,4 +48,15 @@ int sizeOfLinkedGeoPolygon() {
 
 int sizeOfCoordIJ() {
     return sizeof(CoordIJ);
+}
+
+/**
+ * Helper: Get the value of a int64_t pointer as a double. JS can't handle the
+ * 64-bit int, but it can get the value in a double (precise if less than
+ * MAX_SAFE_INTEGER, approximate if over)
+ * @param {number} Pointer to int64 value
+ * @returns {number} Value cast to double, with potential for lost precision
+ */
+double readInt64AsDoubleFromPointer(int64_t *input) {
+    return (double)(*input);
 }

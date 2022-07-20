@@ -8,7 +8,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/uber/h3-js/badge.svg?branch=master)](https://coveralls.io/github/uber/h3-js?branch=master)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![npm version](https://badge.fury.io/js/h3-js.svg)](https://badge.fury.io/js/h3-js)
-[![H3 Version](https://img.shields.io/badge/h3_api-v3.7.1-blue.svg)](https://github.com/uber/h3/releases/tag/v3.7.1)
+[![H3 Version](https://img.shields.io/static/v1?label=h3%20api&message=v4.0.0-rc2&color=blue)](https://github.com/uber/h3/releases/tag/v4.0.0-rc2)
 
 The `h3-js` library provides a pure-JavaScript version of the [H3 Core Library](https://github.com/uber/h3), a hexagon-based geographic grid system. It can be used either in Node >= 6 or in the browser. The core library is transpiled from C using [emscripten](http://kripken.github.io/emscripten-site), offering full parity with the C API and highly efficient operations.
 
@@ -22,6 +22,11 @@ For more information on H3 and for the full API documentation, please see the [H
     npm install h3-js
 
 ## Usage
+
+> :construction: **Note:** The following usage docs apply to **H3 v4**, which is currently still in the Release Candidate stage.
+>
+> - For v3 docs, [see the latest v3.x.x release](https://github.com/uber/h3-js/blob/v3.7.2/README.md).
+> - For breaking changes in v4, [see the CHANGELOG](./CHANGELOG.md). In particular, most [function names have changed](https://h3geo.org/docs/next/library/migration-3.x/functions).
 
 The library uses ES6 modules. Bundles for Node and the browser are built to the `dist` folder.
 
@@ -125,7 +130,7 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
     * [.gridPathCells(origin, destination)](#module_h3.gridPathCells) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.cellToLocalIj(origin, destination)](#module_h3.cellToLocalIj) ⇒ <code>CoordIJ</code>
     * [.localIjToCell(origin, coords)](#module_h3.localIjToCell) ⇒ <code>H3Index</code>
-    * [.distance(latlng1, latlng2, unit)](#module_h3.distance) ⇒ <code>number</code>
+    * [.distance(latLng1, latLng2, unit)](#module_h3.distance) ⇒ <code>number</code>
     * [.cellArea(h3Index, unit)](#module_h3.cellArea) ⇒ <code>number</code>
     * [.exactEdgeLength(edge, unit)](#module_h3.exactEdgeLength) ⇒ <code>number</code>
     * [.getHexagonAreaAvg(res, unit)](#module_h3.getHexagonAreaAvg) ⇒ <code>number</code>
@@ -700,7 +705,7 @@ to be compatible across different versions of H3.
 
 <a name="module_h3.distance"></a>
 
-### h3.distance(latlng1, latlng2, unit) ⇒ <code>number</code>
+### h3.distance(latLng1, latLng2, unit) ⇒ <code>number</code>
 Great circle distance between two geo points. This is not specific to H3,
 but is implemented in the library and provided here as a convenience.
 
@@ -712,9 +717,9 @@ but is implemented in the library and provided here as a convenience.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| latlng1 | <code>Array.&lt;number&gt;</code> | Origin coordinate as [lat, lng] |
-| latlng2 | <code>Array.&lt;number&gt;</code> | Destination coordinate as [lat, lng] |
-| unit | <code>string</code> | Distance unit (either UNITS.m or UNITS.km) |
+| latLng1 | <code>Array.&lt;number&gt;</code> | Origin coordinate as [lat, lng] |
+| latLng2 | <code>Array.&lt;number&gt;</code> | Destination coordinate as [lat, lng] |
+| unit | <code>string</code> | Distance unit (either UNITS.m, UNITS.km, or UNITS.rads) |
 
 
 * * *
@@ -733,7 +738,7 @@ Exact area of a given cell
 | Param | Type | Description |
 | --- | --- | --- |
 | h3Index | <code>H3Index</code> | H3 index of the hexagon to measure |
-| unit | <code>string</code> | Distance unit (either UNITS.m2 or UNITS.km2) |
+| unit | <code>string</code> | Distance unit (either UNITS.m2, UNITS.km2, or UNITS.rads2) |
 
 
 * * *
