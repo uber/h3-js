@@ -1994,7 +1994,11 @@ test('cellToVertex - invalid', assert => {
         {code: E_DOMAIN},
         'out of range vertex number for pentagon throws'
     );
-    assert.throws(() => h3.cellToVertex('ffffffffffffffff', 5), {code: E_FAILED}, 'invalid cell throws');
+    assert.throws(
+        () => h3.cellToVertex('ffffffffffffffff', 5),
+        {code: E_FAILED},
+        'invalid cell throws'
+    );
     assert.end();
 });
 
@@ -2061,6 +2065,10 @@ test('vertexToLatLng', assert => {
 });
 
 test('vertexToLatLng - invalid', assert => {
-    assert.throws(() => h3.vertexToLatLng('ffffffffffffffff'), {code: E_CELL_INVALID}, 'invalid vertex throws');
+    assert.throws(
+        () => h3.vertexToLatLng('ffffffffffffffff'),
+        {code: E_CELL_INVALID},
+        'invalid vertex throws'
+    );
     assert.end();
 });
