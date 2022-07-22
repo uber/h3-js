@@ -1977,3 +1977,98 @@ test('getPentagons - invalid', assert => {
     assert.throws(() => h3.getPentagons(42), {code: E_RES_DOMAIN}, 'throws on invalid resolution');
     assert.end();
 });
+
+test('cellToVertex - invalid', assert => {
+    assert.throws(
+        () => h3.cellToVertex('823d6ffffffffff', -1),
+        {code: E_DOMAIN},
+        'negative vertex number throws'
+    );
+    assert.throws(
+        () => h3.cellToVertex('823d6ffffffffff', 6),
+        {code: E_DOMAIN},
+        'out of range vertex number throws'
+    );
+    assert.throws(
+        () => h3.cellToVertex('823007fffffffff', 5),
+        {code: E_DOMAIN},
+        'out of range vertex number for pentagon throws'
+    );
+    assert.throws(
+        () => h3.cellToVertex('ffffffffffffffff', 5),
+        {code: E_FAILED},
+        'invalid cell throws'
+    );
+    assert.end();
+});
+
+test('isValidVertex', assert => {
+    assert.equal(h3.isValidVertex('FFFFFFFFFFFFFFFF'), false, 'all 1 is not a vertex');
+    assert.equal(h3.isValidVertex('0'), false, 'all 0 is not a vertex');
+    assert.equal(h3.isValidVertex('823d6ffffffffff'), false, 'cell is not a vertex');
+    assert.equal(h3.isValidVertex('2222597fffffffff'), true, 'vertex index is a vertex');
+    assert.end();
+});
+
+test('cellToVertexes', assert => {
+    const origin = '823d6ffffffffff';
+    const verts = h3.cellToVertexes(origin);
+    assert.equal(verts.length, 6, 'vertexes have expected length');
+    for (let i = 0; i < 6; i++) {
+        const vert = h3.cellToVertex(origin, i);
+        assert.ok(verts.includes(vert), 'cellToVertexes is exhaustive');
+        assert.ok(h3.isValidVertex(vert), 'cellToVertexes returns valid vertexes');
+    }
+    assert.end();
+});
+
+test('cellToVertexes pentagon', assert => {
+    const origin = '823007fffffffff';
+    const verts = h3.cellToVertexes(origin);
+    assert.equal(verts.length, 5, 'vertexes have expected length');
+    for (let i = 0; i < 5; i++) {
+        const vert = h3.cellToVertex(origin, i);
+        assert.ok(verts.includes(vert), 'cellToVertexes is exhaustive');
+        assert.ok(h3.isValidVertex(vert), 'cellToVertexes returns valid vertexes');
+    }
+    assert.end();
+});
+
+test('cellToVertex', assert => {
+    const origin = '823d6ffffffffff';
+    const verts = new Set();
+    for (let i = 0; i < 6; i++) {
+        const vert = h3.cellToVertex(origin, i);
+        assert.ok(h3.isValidVertex(vert));
+        verts.add(vert);
+    }
+    assert.equal(verts.size, 6, 'vertexes are unique');
+    assert.end();
+});
+
+test('vertexToLatLng', assert => {
+    const origin = '823d6ffffffffff';
+    const bounds = h3.cellToBoundary(origin);
+    for (let i = 0; i < 6; i++) {
+        const vert = h3.cellToVertex(origin, i);
+        const latlng = h3.vertexToLatLng(vert);
+        let found = false;
+        for (let j = 0; j < bounds.length; j++) {
+            if (almostEqual(latlng[0], bounds[j][0]) && almostEqual(latlng[1], bounds[j][1])) {
+                found = true;
+                break;
+            }
+        }
+        assert.ok(found, 'vertex latlng is present in cell bounds');
+    }
+    assert.end();
+});
+
+test('vertexToLatLng - invalid', assert => {
+    assert.throws(
+        () => h3.vertexToLatLng('ffffffffffffffff'),
+        {code: E_CELL_INVALID},
+        'invalid vertex throws'
+    );
+    assert.end();
+});
