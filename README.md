@@ -8,7 +8,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/uber/h3-js/badge.svg?branch=master)](https://coveralls.io/github/uber/h3-js?branch=master)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![npm version](https://badge.fury.io/js/h3-js.svg)](https://badge.fury.io/js/h3-js)
-[![H3 Version](https://img.shields.io/static/v1?label=h3%20api&message=v4.0.0-rc2&color=blue)](https://github.com/uber/h3/releases/tag/v4.0.0-rc2)
+[![H3 Version](https://img.shields.io/static/v1?label=h3%20api&message=v4.0.0-rc4&color=blue)](https://github.com/uber/h3/releases/tag/v4.0.0-rc4)
 
 The `h3-js` library provides a pure-JavaScript version of the [H3 Core Library](https://github.com/uber/h3), a hexagon-based geographic grid system. It can be used either in Node >= 6 or in the browser. The core library is transpiled from C using [emscripten](http://kripken.github.io/emscripten-site), offering full parity with the C API and highly efficient operations.
 
@@ -130,7 +130,7 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
     * [.gridPathCells(origin, destination)](#module_h3.gridPathCells) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.cellToLocalIj(origin, destination)](#module_h3.cellToLocalIj) ⇒ <code>CoordIJ</code>
     * [.localIjToCell(origin, coords)](#module_h3.localIjToCell) ⇒ <code>H3Index</code>
-    * [.distance(latLng1, latLng2, unit)](#module_h3.distance) ⇒ <code>number</code>
+    * [.greatCircleDistance(latLng1, latLng2, unit)](#module_h3.greatCircleDistance) ⇒ <code>number</code>
     * [.cellArea(h3Index, unit)](#module_h3.cellArea) ⇒ <code>number</code>
     * [.exactEdgeLength(edge, unit)](#module_h3.exactEdgeLength) ⇒ <code>number</code>
     * [.getHexagonAreaAvg(res, unit)](#module_h3.getHexagonAreaAvg) ⇒ <code>number</code>
@@ -703,9 +703,9 @@ to be compatible across different versions of H3.
 
 * * *
 
-<a name="module_h3.distance"></a>
+<a name="module_h3.greatCircleDistance"></a>
 
-### h3.distance(latLng1, latLng2, unit) ⇒ <code>number</code>
+### h3.greatCircleDistance(latLng1, latLng2, unit) ⇒ <code>number</code>
 Great circle distance between two geo points. This is not specific to H3,
 but is implemented in the library and provided here as a convenience.
 
