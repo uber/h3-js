@@ -1867,47 +1867,47 @@ test('exactEdgeLength - bad units', assert => {
     assert.end();
 });
 
-test('distance', assert => {
+test('greatCircleDistance', assert => {
     assert.ok(
-        almostEqual(h3.distance([-10, 0], [10, 0], h3.UNITS.rads), h3.degsToRads(20)),
+        almostEqual(h3.greatCircleDistance([-10, 0], [10, 0], h3.UNITS.rads), h3.degsToRads(20)),
         'Got expected angular distance for latitude along the equator'
     );
     assert.ok(
-        almostEqual(h3.distance([0, -10], [0, 10], h3.UNITS.rads), h3.degsToRads(20)),
+        almostEqual(h3.greatCircleDistance([0, -10], [0, 10], h3.UNITS.rads), h3.degsToRads(20)),
         'Got expected angular distance for latitude along a meridian'
     );
     assert.equal(
-        h3.distance([23, 23], [23, 23], h3.UNITS.rads),
+        h3.greatCircleDistance([23, 23], [23, 23], h3.UNITS.rads),
         0,
         'Got expected angular distance for same point'
     );
     // Just rough tests for the other units
-    const distKm = h3.distance([0, 0], [39, -122], h3.UNITS.km);
+    const distKm = h3.greatCircleDistance([0, 0], [39, -122], h3.UNITS.km);
     assert.ok(distKm > 12e3 && distKm < 13e3, 'has some reasonable distance in Km');
-    const distM = h3.distance([0, 0], [39, -122], h3.UNITS.m);
+    const distM = h3.greatCircleDistance([0, 0], [39, -122], h3.UNITS.m);
     assert.ok(distM > 12e6 && distM < 13e6, 'has some reasonable distance in m');
 
     assert.end();
 });
 
-test('distance - bad units', assert => {
+test('greatCircleDistance - bad units', assert => {
     assert.throws(
-        () => h3.distance([0, 0], [0, 0]),
+        () => h3.greatCircleDistance([0, 0], [0, 0]),
         {code: E_UNKNOWN_UNIT},
         'throws on missing unit'
     );
     assert.throws(
-        () => h3.distance([0, 0], [0, 0], 'foo'),
+        () => h3.greatCircleDistance([0, 0], [0, 0], 'foo'),
         {code: E_UNKNOWN_UNIT},
         'throws on unknown unit'
     );
     assert.throws(
-        () => h3.distance([0, 0], [0, 0], 42),
+        () => h3.greatCircleDistance([0, 0], [0, 0], 42),
         {code: E_UNKNOWN_UNIT},
         'throws on unknown unit'
     );
     assert.throws(
-        () => h3.distance([0, 0], [0, 0], h3.UNITS.m2),
+        () => h3.greatCircleDistance([0, 0], [0, 0], h3.UNITS.m2),
         {code: E_UNKNOWN_UNIT},
         'throws on invalid unit'
     );
