@@ -1,6 +1,6 @@
 {
   "name": "h3-js",
-  "version": "3.7.2",
+  "version": "4.0.0-rc1",
   "description": "Pure-Javascript version of the H3 library, a hexagon-based geographic grid system",
   "author": "Nick Rabinowitz <nickr@uber.com>",
   "contributors": [
