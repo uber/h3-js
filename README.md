@@ -234,6 +234,10 @@ Get the number of the base cell for a given H3 index
 Get the indices of all icosahedron faces intersected by a given H3 index
 
 **Returns**: <code>Array.&lt;number&gt;</code> - Indices (0-19) of all intersected faces  
+**Throws**:
+
+- <code>H3Error</code> Error if input is invalid
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -262,6 +266,10 @@ Returns the resolution of an H3 index
 Get the hexagon containing a lat,lon point
 
 **Returns**: <code>H3Index</code> - H3 index  
+**Throws**:
+
+- <code>H3Error</code> Error if input is invalid
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -278,6 +286,10 @@ Get the hexagon containing a lat,lon point
 Get the lat,lon center of a given hexagon
 
 **Returns**: <code>Array.&lt;number&gt;</code> - Point as a [lat, lng] pair  
+**Throws**:
+
+- <code>H3Error</code> Error if input is invalid
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -294,6 +306,10 @@ points. For pentagons and hexagons on the edge of an icosahedron face, this
 function may return up to 10 vertices.
 
 **Returns**: <code>Array.&lt;Array.&lt;number&gt;&gt;</code> - Array of [lat, lng] pairs  
+**Throws**:
+
+- <code>H3Error</code> Error if input is invalid
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -309,6 +325,10 @@ function may return up to 10 vertices.
 Get the parent of the given hexagon at a particular resolution
 
 **Returns**: <code>H3Index</code> - H3 index of parent, or null for invalid input  
+**Throws**:
+
+- <code>H3Error</code> Error if input is invalid
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -324,6 +344,10 @@ Get the parent of the given hexagon at a particular resolution
 Get the children/descendents of the given hexagon at a particular resolution
 
 **Returns**: <code>Array.&lt;H3Index&gt;</code> - H3 indexes of children, or empty array for invalid input  
+**Throws**:
+
+- <code>H3Error</code> Error if resolution is invalid or output is too large for JS
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -339,6 +363,10 @@ Get the children/descendents of the given hexagon at a particular resolution
 Get the center child of the given hexagon at a particular resolution
 
 **Returns**: <code>H3Index</code> - H3 index of child, or null for invalid input  
+**Throws**:
+
+- <code>H3Error</code> Error if resolution is invalid
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -354,6 +382,10 @@ Get the center child of the given hexagon at a particular resolution
 Get all hexagons in a k-ring around a given center. The order of the hexagons is undefined.
 
 **Returns**: <code>Array.&lt;H3Index&gt;</code> - H3 indexes for all hexagons in ring  
+**Throws**:
+
+- <code>H3Error</code> Error if input is invalid or output is too large for JS
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -370,6 +402,10 @@ Get all hexagons in a k-ring around a given center, in an array of arrays
 ordered by distance from the origin. The order of the hexagons within each ring is undefined.
 
 **Returns**: <code>Array.&lt;Array.&lt;H3Index&gt;&gt;</code> - Array of arrays with H3 indexes for all hexagons each ring  
+**Throws**:
+
+- <code>H3Error</code> Error if input is invalid or output is too large for JS
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -389,6 +425,7 @@ Unlike kRing, this function will throw an error if there is a pentagon anywhere 
 **Throws**:
 
 - <code>Error</code> If the algorithm could not calculate the ring
+- <code>H3Error</code> Error if input is invalid
 
 
 | Param | Type | Description |
@@ -409,6 +446,10 @@ The first loop is the perimeter of the polygon, and subsequent loops are
 expected to be holes.
 
 **Returns**: <code>Array.&lt;H3Index&gt;</code> - H3 indexes for all hexagons in polygon  
+**Throws**:
+
+- <code>H3Error</code> Error if input is invalid or output is too large for JS
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -433,6 +474,10 @@ is undefined if duplicates or multiple resolutions are present, and the
 algorithm may produce unexpected or invalid polygons.
 
 **Returns**: <code>Array.&lt;Array.&lt;Array.&lt;Array.&lt;number&gt;&gt;&gt;&gt;</code> - MultiPolygon-style output.  
+**Throws**:
+
+- <code>H3Error</code> Error if input is invalid
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -451,7 +496,7 @@ multiple levels that represents the same area.
 **Returns**: <code>Array.&lt;H3Index&gt;</code> - Compacted H3 indexes  
 **Throws**:
 
-- <code>Error</code> If the input is invalid (e.g. duplicate hexagons)
+- <code>H3Error</code> Error if the input is invalid (e.g. duplicate hexagons)
 
 
 | Param | Type | Description |
@@ -469,7 +514,7 @@ Uncompact a compacted set of hexagons to hexagons of the same resolution
 **Returns**: <code>Array.&lt;H3Index&gt;</code> - The uncompacted H3 indexes  
 **Throws**:
 
-- <code>Error</code> If the input is invalid (e.g. invalid resolution)
+- <code>H3Error</code> Error if the input is invalid (e.g. invalid resolution)
 
 
 | Param | Type | Description |
@@ -486,6 +531,10 @@ Uncompact a compacted set of hexagons to hexagons of the same resolution
 Whether two H3 indexes are neighbors (share an edge)
 
 **Returns**: <code>boolean</code> - Whether the hexagons share an edge  
+**Throws**:
+
+- <code>H3Error</code> Error if the input is invalid
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -501,6 +550,10 @@ Whether two H3 indexes are neighbors (share an edge)
 Get an H3 index representing a unidirectional edge for a given origin and destination
 
 **Returns**: <code>H3Index</code> - H3 index of the edge, or null if no edge is shared  
+**Throws**:
+
+- <code>H3Error</code> Error if the input is invalid
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -516,6 +569,10 @@ Get an H3 index representing a unidirectional edge for a given origin and destin
 Get the origin hexagon from an H3 index representing a unidirectional edge
 
 **Returns**: <code>H3Index</code> - H3 index of the edge origin  
+**Throws**:
+
+- <code>H3Error</code> Error if the input is invalid
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -530,6 +587,10 @@ Get the origin hexagon from an H3 index representing a unidirectional edge
 Get the destination hexagon from an H3 index representing a unidirectional edge
 
 **Returns**: <code>H3Index</code> - H3 index of the edge destination  
+**Throws**:
+
+- <code>H3Error</code> Error if the input is invalid
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -558,6 +619,10 @@ Whether the input is a valid unidirectional edge
 Get the [origin, destination] pair represented by a unidirectional edge
 
 **Returns**: <code>Array.&lt;H3Index&gt;</code> - [origin, destination] pair as H3 indexes  
+**Throws**:
+
+- <code>H3Error</code> Error if the input is invalid
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -573,6 +638,10 @@ Get all of the unidirectional edges with the given H3 index as the origin (i.e. 
 every neighbor)
 
 **Returns**: <code>Array.&lt;H3Index&gt;</code> - List of unidirectional edges  
+**Throws**:
+
+- <code>H3Error</code> Error if the input is invalid
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -588,6 +657,10 @@ Get the vertices of a given edge as an array of [lat, lng] points. Note that for
 cross the edge of an icosahedron face, this may return 3 coordinates.
 
 **Returns**: <code>Array.&lt;Array.&lt;number&gt;&gt;</code> - Array of geo coordinate pairs  
+**Throws**:
+
+- <code>H3Error</code> Error if the input is invalid
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -604,8 +677,11 @@ Get the grid distance between two hex indexes. This function may fail
 to find the distance between two indexes if they are very far apart or
 on opposite sides of a pentagon.
 
-**Returns**: <code>number</code> - Distance between hexagons, or a negative
-                              number if the distance could not be computed  
+**Returns**: <code>number</code> - Distance between hexagons  
+**Throws**:
+
+- <code>H3Error</code> Error if input is invalid or the distance could not be calculated
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -636,7 +712,7 @@ Notes:
 **Returns**: <code>Array.&lt;H3Index&gt;</code> - H3 indexes connecting origin and destination  
 **Throws**:
 
-- <code>Error</code> If the line cannot be calculated
+- <code>H3Error</code> Error if input is invalid or the line cannot be calculated
 
 
 | Param | Type | Description |
@@ -664,7 +740,7 @@ to be compatible across different versions of H3.
 **Returns**: <code>CoordIJ</code> - Coordinates as an `{i, j}` pair  
 **Throws**:
 
-- <code>Error</code> If the IJ coordinates cannot be calculated
+- <code>H3Error</code> If the IJ coordinates cannot be calculated
 
 
 | Param | Type | Description |
@@ -692,7 +768,7 @@ to be compatible across different versions of H3.
 **Returns**: <code>H3Index</code> - H3 index at the relative coordinates  
 **Throws**:
 
-- <code>Error</code> If the H3 index cannot be calculated
+- <code>H3Error</code> If the H3 index cannot be calculated
 
 
 | Param | Type | Description |
@@ -712,7 +788,7 @@ but is implemented in the library and provided here as a convenience.
 **Returns**: <code>number</code> - Great circle distance  
 **Throws**:
 
-- <code>Error</code> If the unit is invalid
+- <code>H3Error</code> If the unit is invalid
 
 
 | Param | Type | Description |
@@ -732,7 +808,7 @@ Exact area of a given cell
 **Returns**: <code>number</code> - Cell area  
 **Throws**:
 
-- <code>Error</code> If the unit is invalid
+- <code>H3Error</code> If the input is invalid
 
 
 | Param | Type | Description |
@@ -751,7 +827,7 @@ Exact length of a given unidirectional edge
 **Returns**: <code>number</code> - Cell area  
 **Throws**:
 
-- <code>Error</code> If the unit is invalid
+- <code>H3Error</code> If the input is invalid
 
 
 | Param | Type | Description |
@@ -770,7 +846,7 @@ Average hexagon area at a given resolution
 **Returns**: <code>number</code> - Average area  
 **Throws**:
 
-- <code>Error</code> If the unit is invalid
+- <code>H3Error</code> If the input is invalid
 
 
 | Param | Type | Description |
@@ -789,7 +865,7 @@ Average hexagon edge length at a given resolution
 **Returns**: <code>number</code> - Average edge length  
 **Throws**:
 
-- <code>Error</code> If the unit is invalid
+- <code>H3Error</code> If the input is invalid
 
 
 | Param | Type | Description |
@@ -806,6 +882,10 @@ Average hexagon edge length at a given resolution
 Find the index for a vertex of a cell.
 
 **Returns**: <code>H3Index</code> - Vertex index  
+**Throws**:
+
+- <code>H3Error</code> If the input is invalid
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -821,6 +901,10 @@ Find the index for a vertex of a cell.
 Find the indexes for all vertexes of a cell.
 
 **Returns**: <code>Array.&lt;H3Index&gt;</code> - All vertex indexes of this cell  
+**Throws**:
+
+- <code>H3Error</code> If the input is invalid
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -835,6 +919,10 @@ Find the indexes for all vertexes of a cell.
 Get the lat, lng of a given vertex
 
 **Returns**: <code>Array.&lt;number&gt;</code> - Latitude, longitude coordinates of the vertex  
+**Throws**:
+
+- <code>H3Error</code> If the input is invalid
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -865,6 +953,10 @@ resolution 8 the exact count cannot be represented in a JavaScript 32-bit number
 so consumers should use caution when applying further operations to the output.
 
 **Returns**: <code>number</code> - Count  
+**Throws**:
+
+- <code>H3Error</code> If the resolution is invalid
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -890,6 +982,10 @@ over H3 indexes at any resolution.
 Get the twelve pentagon indexes at a given resolution.
 
 **Returns**: <code>Array.&lt;H3Index&gt;</code> - All H3 pentagon indexes at res  
+**Throws**:
+
+- <code>H3Error</code> If the resolution is invalid
+
 
 | Param | Type | Description |
 | --- | --- | --- |
