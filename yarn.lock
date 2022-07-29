@@ -7307,7 +7307,7 @@ trim-right@^1.0.1:
   resolved "https://registry.yarnpkg.com/trim-right/-/trim-right-1.0.1.tgz#cb2e1203067e0c8de1f614094b9fe45704ea6003"
   integrity sha1-yy4SAwZ+DI3h9hQJS5/kVwTqYAM=
 
-tsd-jsdoc@^2.3.1:
+tsd-jsdoc@^2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/tsd-jsdoc/-/tsd-jsdoc-2.5.0.tgz#0677aa952e1a8e3ebbb5bcf7d6e2f0301d71e151"
   integrity sha512-80fcJLAiUeerg4xPftp+iEEKWUjJjHk9AvcHwJqA8Zw0R4oASdu3kT/plE/Zj19QUTz8KupyOX25zStlNJjS9g==

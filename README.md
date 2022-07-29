@@ -147,6 +147,7 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
     * [.H3Index](#module_h3.H3Index) : <code>string</code>
     * [.H3IndexInput](#module_h3.H3IndexInput) : <code>string</code> \| <code>Array.&lt;number&gt;</code>
     * [.CoordIJ](#module_h3.CoordIJ) : <code>Object</code>
+    * [.H3Error](#module_h3.H3Error) ⇐ <code>Error</code>
 
 
 * * *
@@ -236,7 +237,7 @@ Get the indices of all icosahedron faces intersected by a given H3 index
 **Returns**: <code>Array.&lt;number&gt;</code> - Indices (0-19) of all intersected faces  
 **Throws**:
 
-- <code>H3Error</code> Error if input is invalid
+- <code>H3Error</code> If input is invalid
 
 
 | Param | Type | Description |
@@ -268,7 +269,7 @@ Get the hexagon containing a lat,lon point
 **Returns**: <code>H3Index</code> - H3 index  
 **Throws**:
 
-- <code>H3Error</code> Error if input is invalid
+- <code>H3Error</code> If input is invalid
 
 
 | Param | Type | Description |
@@ -288,7 +289,7 @@ Get the lat,lon center of a given hexagon
 **Returns**: <code>Array.&lt;number&gt;</code> - Point as a [lat, lng] pair  
 **Throws**:
 
-- <code>H3Error</code> Error if input is invalid
+- <code>H3Error</code> If input is invalid
 
 
 | Param | Type | Description |
@@ -308,7 +309,7 @@ function may return up to 10 vertices.
 **Returns**: <code>Array.&lt;Array.&lt;number&gt;&gt;</code> - Array of [lat, lng] pairs  
 **Throws**:
 
-- <code>H3Error</code> Error if input is invalid
+- <code>H3Error</code> If input is invalid
 
 
 | Param | Type | Description |
@@ -327,7 +328,7 @@ Get the parent of the given hexagon at a particular resolution
 **Returns**: <code>H3Index</code> - H3 index of parent, or null for invalid input  
 **Throws**:
 
-- <code>H3Error</code> Error if input is invalid
+- <code>H3Error</code> If input is invalid
 
 
 | Param | Type | Description |
@@ -346,7 +347,7 @@ Get the children/descendents of the given hexagon at a particular resolution
 **Returns**: <code>Array.&lt;H3Index&gt;</code> - H3 indexes of children, or empty array for invalid input  
 **Throws**:
 
-- <code>H3Error</code> Error if resolution is invalid or output is too large for JS
+- <code>H3Error</code> If resolution is invalid or output is too large for JS
 
 
 | Param | Type | Description |
@@ -365,7 +366,7 @@ Get the center child of the given hexagon at a particular resolution
 **Returns**: <code>H3Index</code> - H3 index of child, or null for invalid input  
 **Throws**:
 
-- <code>H3Error</code> Error if resolution is invalid
+- <code>H3Error</code> If resolution is invalid
 
 
 | Param | Type | Description |
@@ -384,7 +385,7 @@ Get all hexagons in a k-ring around a given center. The order of the hexagons is
 **Returns**: <code>Array.&lt;H3Index&gt;</code> - H3 indexes for all hexagons in ring  
 **Throws**:
 
-- <code>H3Error</code> Error if input is invalid or output is too large for JS
+- <code>H3Error</code> If input is invalid or output is too large for JS
 
 
 | Param | Type | Description |
@@ -404,7 +405,7 @@ ordered by distance from the origin. The order of the hexagons within each ring 
 **Returns**: <code>Array.&lt;Array.&lt;H3Index&gt;&gt;</code> - Array of arrays with H3 indexes for all hexagons each ring  
 **Throws**:
 
-- <code>H3Error</code> Error if input is invalid or output is too large for JS
+- <code>H3Error</code> If input is invalid or output is too large for JS
 
 
 | Param | Type | Description |
@@ -425,7 +426,7 @@ Unlike kRing, this function will throw an error if there is a pentagon anywhere 
 **Throws**:
 
 - <code>Error</code> If the algorithm could not calculate the ring
-- <code>H3Error</code> Error if input is invalid
+- <code>H3Error</code> If input is invalid
 
 
 | Param | Type | Description |
@@ -448,7 +449,7 @@ expected to be holes.
 **Returns**: <code>Array.&lt;H3Index&gt;</code> - H3 indexes for all hexagons in polygon  
 **Throws**:
 
-- <code>H3Error</code> Error if input is invalid or output is too large for JS
+- <code>H3Error</code> If input is invalid or output is too large for JS
 
 
 | Param | Type | Description |
@@ -476,7 +477,7 @@ algorithm may produce unexpected or invalid polygons.
 **Returns**: <code>Array.&lt;Array.&lt;Array.&lt;Array.&lt;number&gt;&gt;&gt;&gt;</code> - MultiPolygon-style output.  
 **Throws**:
 
-- <code>H3Error</code> Error if input is invalid
+- <code>H3Error</code> If input is invalid
 
 
 | Param | Type | Description |
@@ -496,7 +497,7 @@ multiple levels that represents the same area.
 **Returns**: <code>Array.&lt;H3Index&gt;</code> - Compacted H3 indexes  
 **Throws**:
 
-- <code>H3Error</code> Error if the input is invalid (e.g. duplicate hexagons)
+- <code>H3Error</code> If the input is invalid (e.g. duplicate hexagons)
 
 
 | Param | Type | Description |
@@ -514,7 +515,7 @@ Uncompact a compacted set of hexagons to hexagons of the same resolution
 **Returns**: <code>Array.&lt;H3Index&gt;</code> - The uncompacted H3 indexes  
 **Throws**:
 
-- <code>H3Error</code> Error if the input is invalid (e.g. invalid resolution)
+- <code>H3Error</code> If the input is invalid (e.g. invalid resolution)
 
 
 | Param | Type | Description |
@@ -533,7 +534,7 @@ Whether two H3 indexes are neighbors (share an edge)
 **Returns**: <code>boolean</code> - Whether the hexagons share an edge  
 **Throws**:
 
-- <code>H3Error</code> Error if the input is invalid
+- <code>H3Error</code> If the input is invalid
 
 
 | Param | Type | Description |
@@ -552,7 +553,7 @@ Get an H3 index representing a unidirectional edge for a given origin and destin
 **Returns**: <code>H3Index</code> - H3 index of the edge, or null if no edge is shared  
 **Throws**:
 
-- <code>H3Error</code> Error if the input is invalid
+- <code>H3Error</code> If the input is invalid
 
 
 | Param | Type | Description |
@@ -571,7 +572,7 @@ Get the origin hexagon from an H3 index representing a unidirectional edge
 **Returns**: <code>H3Index</code> - H3 index of the edge origin  
 **Throws**:
 
-- <code>H3Error</code> Error if the input is invalid
+- <code>H3Error</code> If the input is invalid
 
 
 | Param | Type | Description |
@@ -589,7 +590,7 @@ Get the destination hexagon from an H3 index representing a unidirectional edge
 **Returns**: <code>H3Index</code> - H3 index of the edge destination  
 **Throws**:
 
-- <code>H3Error</code> Error if the input is invalid
+- <code>H3Error</code> If the input is invalid
 
 
 | Param | Type | Description |
@@ -621,7 +622,7 @@ Get the [origin, destination] pair represented by a unidirectional edge
 **Returns**: <code>Array.&lt;H3Index&gt;</code> - [origin, destination] pair as H3 indexes  
 **Throws**:
 
-- <code>H3Error</code> Error if the input is invalid
+- <code>H3Error</code> If the input is invalid
 
 
 | Param | Type | Description |
@@ -640,7 +641,7 @@ every neighbor)
 **Returns**: <code>Array.&lt;H3Index&gt;</code> - List of unidirectional edges  
 **Throws**:
 
-- <code>H3Error</code> Error if the input is invalid
+- <code>H3Error</code> If the input is invalid
 
 
 | Param | Type | Description |
@@ -659,7 +660,7 @@ cross the edge of an icosahedron face, this may return 3 coordinates.
 **Returns**: <code>Array.&lt;Array.&lt;number&gt;&gt;</code> - Array of geo coordinate pairs  
 **Throws**:
 
-- <code>H3Error</code> Error if the input is invalid
+- <code>H3Error</code> If the input is invalid
 
 
 | Param | Type | Description |
@@ -680,7 +681,7 @@ on opposite sides of a pentagon.
 **Returns**: <code>number</code> - Distance between hexagons  
 **Throws**:
 
-- <code>H3Error</code> Error if input is invalid or the distance could not be calculated
+- <code>H3Error</code> If input is invalid or the distance could not be calculated
 
 
 | Param | Type | Description |
@@ -712,7 +713,7 @@ Notes:
 **Returns**: <code>Array.&lt;H3Index&gt;</code> - H3 indexes connecting origin and destination  
 **Throws**:
 
-- <code>H3Error</code> Error if input is invalid or the line cannot be calculated
+- <code>H3Error</code> If input is invalid or the line cannot be calculated
 
 
 | Param | Type | Description |
@@ -1050,6 +1051,23 @@ Coordinates as an `{i, j}` pair
 | --- | --- |
 | i | <code>number</code> | 
 | j | <code>number</code> | 
+
+
+* * *
+
+<a name="module_h3.H3Error"></a>
+
+### h3.H3Error ⇐ <code>Error</code>
+Custom JS Error with an attached error code. Error codes come from the
+core H3 library and can be found [in the H3 docs](https://h3geo.org/docs/next/library/errors#table-of-error-codes).
+
+**Extends**: <code>Error</code>  
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| message | <code>string</code> | 
+| code | <code>number</code> | 
 
 
 * * *

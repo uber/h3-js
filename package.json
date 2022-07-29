@@ -28,7 +28,7 @@
   "scripts": {
     "build-update-h3": "bash scripts/update-h3.sh",
     "build-emscripten": "yarn build-update-h3 && yarn docker-emscripten",
-    "build-docs": "jsdoc2md --no-cache --global-index-format grouped --partial doc-files/scope.hbs --helper ./doc-files/insert-version.js --separators --template doc-files/README.tmpl.md lib/h3core.js > README.md",
+    "build-docs": "jsdoc2md --no-cache --global-index-format grouped --partial doc-files/scope.hbs --helper ./doc-files/insert-version.js --separators --template doc-files/README.tmpl.md lib/h3core.js lib/errors.js > README.md",
     "build-tsd": "jsdoc -t node_modules/tsd-jsdoc/dist -d console lib/h3core.js | sed 's/\"h3\"/\"h3-js\"/g' > dist/types.d.ts",
     "bundle-umd": "microbundle --name h3 --format=umd",
     "bundle-cjs": "microbundle --format=cjs --no-compress",
@@ -80,7 +80,7 @@
     "prettier": "^1.12.1",
     "rollup": "^1.7.0",
     "tape": "^5.5.3",
-    "tsd-jsdoc": "^2.3.1",
+    "tsd-jsdoc": "^2.5.0",
     "typescript": "^3.6.3"
   },
   "resolutions": {
