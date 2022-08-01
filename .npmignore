@@ -8,3 +8,7 @@ build/
 test/
 *.sublime-project
 *.sublime-workspace
+cmake/
+doc-files/
+scripts/
+out/

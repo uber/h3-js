@@ -53,7 +53,7 @@ emcc -O3 -I ../include *.c -DH3_HAVE_VLA --memory-init-file 0 \
     -s FILESYSTEM=0 -s NODEJS_CATCH_EXIT=0 -s NODEJS_CATCH_REJECTION=0 \
     -s TOTAL_MEMORY=33554432 -s ALLOW_MEMORY_GROWTH=1 -s WARN_UNALIGNED=1 \
     -s EXPORTED_FUNCTIONS=$bound_functions \
-    -s EXTRA_EXPORTED_RUNTIME_METHODS='["cwrap", "getValue", "setValue", "getTempRet0"]' \
+    -s EXTRA_EXPORTED_RUNTIME_METHODS='["cwrap", "getValue", "setValue"]' \
     "$@"
 cp *.js ../../../../out
 popd
