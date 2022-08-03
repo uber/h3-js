@@ -4,13 +4,22 @@ All notable changes to this project will be documented in this file. This librar
 
 ## [Unreleased]
 
-## [4.0.0-rc1] - 2022-07-28
+## [4.0.0] - 2022-08-16
+### Breaking Changes
+- Updated the core library to `v4.0.0`. This update renames the majority of the H3 functions. You can see a [list of changed function names](https://h3geo.org/docs/next/library/migration-3.x/functions) in the core library documentation. For the most part, upgrading to v4 for Javascript consumers should be a straightforward search & replace between the old names and the new. (#141, #139)
+- Added more cases in which JS errors may be thrown. In H3 v3, many functions would fail silently with invalid input, returning `null` or similar signal values. In H3 v4, we will throw descriptive errors for most instances of bad input. (#139)
+
 ### Added
 - Added vertex mode functions (#138)
+
+## [4.0.0-rc1] - 2022-07-28
 ### Breaking Changes
 - Updated the core library to `v4.0.0-rc4`. (#141)
 - Updated the core library to `v4.0.0-rc2`. This update renames the majority of the H3 functions. You can see a [list of changed function names](https://h3geo.org/docs/next/library/migration-3.x/functions) in the core library documentation. For the most part, upgrading to v4 for Javascript consumers should be a straightforward search & replace between the old names and the new. (#139)
 - Added more cases in which JS errors may be thrown. In H3 v3, many functions would fail silently with invalid input, returning `null` or similar signal values. In H3 v4, we will throw descriptive errors for most instances of bad input. (#139)
+
+### Added
+- Added vertex mode functions (#138)
 
 ## [3.7.2] - 2021-04-29
 ### Fixed
