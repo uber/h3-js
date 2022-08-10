@@ -99,6 +99,8 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
 
 * [h3](#module_h3)
     * [.UNITS](#module_h3.UNITS) : <code>Object</code>
+    * [.h3IndexToSplitLong(h3Index)](#module_h3.h3IndexToSplitLong) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.splitLongToH3Index(lower, upper)](#module_h3.splitLongToH3Index) ⇒ <code>H3Index</code>
     * [.isValidCell(h3Index)](#module_h3.isValidCell) ⇒ <code>boolean</code>
     * [.isPentagon(h3Index)](#module_h3.isPentagon) ⇒ <code>boolean</code>
     * [.isResClassIII(h3Index)](#module_h3.isResClassIII) ⇒ <code>boolean</code>
@@ -167,6 +169,35 @@ Length/Area units
 | km2 | <code>string</code> | 
 | rads | <code>string</code> | 
 | rads2 | <code>string</code> | 
+
+
+* * *
+
+<a name="module_h3.h3IndexToSplitLong"></a>
+
+### h3.h3IndexToSplitLong(h3Index) ⇒ <code>Array.&lt;number&gt;</code>
+Convert an H3 index (64-bit hexidecimal string) into a "split long" - a pair of 32-bit ints
+
+**Returns**: <code>Array.&lt;number&gt;</code> - A two-element array with 32 lower bits and 32 upper bits  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| h3Index | <code>H3IndexInput</code> | H3 index to check |
+
+
+* * *
+
+<a name="module_h3.splitLongToH3Index"></a>
+
+### h3.splitLongToH3Index(lower, upper) ⇒ <code>H3Index</code>
+Get a H3 index string from a split long (pair of 32-bit ints)
+
+**Returns**: <code>H3Index</code> - H3 index  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| lower | <code>number</code> | Lower 32 bits |
+| upper | <code>number</code> | Upper 32 bits |
 
 
 * * *
@@ -1072,6 +1103,24 @@ core H3 library and can be found [in the H3 docs](https://h3geo.org/docs/next/li
 
 * * *
 
+
+## Legacy API
+
+H3 v4 renamed the majority of the functions in the library. To help ease migration from H3 v3 to H3v4, we offer a legacy API wrapper at `h3-js/legacy`, which exports the v4 functions with the v3 names. Users are welcome to use the legacy API wrapper as a transitional support, but are encouraged to upgrade to the H3 v4 API as soon as possible.
+
+Installation:
+
+```
+npm install h3-js
+```
+
+Usage:
+
+```
+import {geoToH3} from 'h3-js/legacy';
+
+const h3Index = geoToH3(37.3615593, -122.0553238, 7);
+```
 
 ## Development
 
