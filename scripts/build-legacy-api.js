@@ -14,4 +14,23 @@
  * limitations under the License.
  */
 
-import './dist/legacy-types';
+/**
+ * @fileoverview
+ * Create the module for the legacy v3 API and write to dist.
+ */
+
+const fs = require('fs');
+const path = require('path');
+const mapping = require('../lib/legacy-mapping');
+
+const content = `
+const h3v4 = require('./h3-js');
+
+module.exports = {
+${Object.entries(mapping)
+    .map(([oldName, newName]) => `${oldName}: h3v4.${newName}`)
+    .join(',\n')}
+};
+`;
+
+fs.writeFileSync(path.join(__dirname, '../dist/legacy.js'), content, 'utf-8');

@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
+/**
+ * @fileoverview
+ * Create Typescript types for the legacy v3 API and write to dist. Depends
+ * on the current v4 types already being generated in dist.
+ */
+
 const fs = require('fs');
 const path = require('path');
 const mapping = require('../lib/legacy-mapping');
 
-let typeContent = fs.readFileSync(path.join(__dirname, '../dist/types.d.ts'), 'utf-8');
+let content = fs.readFileSync(path.join(__dirname, '../dist/types.d.ts'), 'utf-8');
 
 for (const [oldName, newName] of Object.entries(mapping)) {
     const regex = new RegExp(`\\b${newName}\\b`, 'g');
-    typeContent = typeContent.replace(regex, oldName);
+    content = content.replace(regex, oldName);
 }
 
-fs.writeFileSync(path.join(__dirname, '../dist/legacy.d.ts'), typeContent, 'utf-8');
+fs.writeFileSync(path.join(__dirname, '../dist/legacy-types.d.ts'), content, 'utf-8');
