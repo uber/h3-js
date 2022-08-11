@@ -62,7 +62,7 @@
     "cover-view": "yarn rollup-test && nyc --clean --reporter=html node dist/test.js && open coverage/index.html",
     "benchmark-node": "yarn rollup-benchmark-node && node dist/benchmark.node.js",
     "benchmark-browser": "yarn rollup-benchmark-browser && budo dist/benchmark.browser.js --open --title 'h3-js benchmarks'",
-    "prepublishOnly": "yarn dist",
+    "prepublishOnly": "yarn dist && git diff --exit-code",
     "prettier": "prettier --write --config .prettierrc 'lib/**/*.js' 'build/**/*.js' 'test/**/*.js'"
   },
   "browser": {
