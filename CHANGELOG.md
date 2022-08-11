@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file. This library adheres to a versioning policy described in [the README](./README.md#versioning). The public API of this library consists of the functions exported in [h3core.js](./lib/h3core.js).
 
 ## [Unreleased]
+
+## [4.0.0-rc2] - 2022-08-10
 ### Added
 - Added legacy API wrapper with Typescript types (#146)
 
