@@ -134,7 +134,7 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
     * [.localIjToCell(origin, coords)](#module_h3.localIjToCell) ⇒ <code>H3Index</code>
     * [.greatCircleDistance(latLng1, latLng2, unit)](#module_h3.greatCircleDistance) ⇒ <code>number</code>
     * [.cellArea(h3Index, unit)](#module_h3.cellArea) ⇒ <code>number</code>
-    * [.exactEdgeLength(edge, unit)](#module_h3.exactEdgeLength) ⇒ <code>number</code>
+    * [.edgeLength(edge, unit)](#module_h3.edgeLength) ⇒ <code>number</code>
     * [.getHexagonAreaAvg(res, unit)](#module_h3.getHexagonAreaAvg) ⇒ <code>number</code>
     * [.getHexagonEdgeLengthAvg(res, unit)](#module_h3.getHexagonEdgeLengthAvg) ⇒ <code>number</code>
     * [.cellToVertex(h3Index, vertexNum)](#module_h3.cellToVertex) ⇒ <code>H3Index</code>
@@ -851,10 +851,10 @@ Exact area of a given cell
 
 * * *
 
-<a name="module_h3.exactEdgeLength"></a>
+<a name="module_h3.edgeLength"></a>
 
-### h3.exactEdgeLength(edge, unit) ⇒ <code>number</code>
-Exact length of a given unidirectional edge
+### h3.edgeLength(edge, unit) ⇒ <code>number</code>
+Calculate length of a given unidirectional edge
 
 **Returns**: <code>number</code> - Cell area  
 **Throws**:

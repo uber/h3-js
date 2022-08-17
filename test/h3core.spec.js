@@ -1814,13 +1814,13 @@ test('cellArea - bad units', assert => {
     assert.end();
 });
 
-test('exactEdgeLength', assert => {
+test('edgeLength', assert => {
     for (let res = 0; res < 16; res++) {
         const h3Index = h3.latLngToCell(0, 0, res);
         const edges = h3.originToDirectedEdges(h3Index);
         for (let i = 0; i < edges.length; i++) {
             const edge = edges[i];
-            const lengthKm = h3.exactEdgeLength(edge, h3.UNITS.km);
+            const lengthKm = h3.edgeLength(edge, h3.UNITS.km);
             assert.ok(lengthKm > 0, 'Has some length');
             assert.ok(
                 // res 0 has high distortion of average edge length due to high pentagon proportion
@@ -1829,7 +1829,7 @@ test('exactEdgeLength', assert => {
                     almostEqual(lengthKm, h3.getHexagonEdgeLengthAvg(res, h3.UNITS.km), 0.2),
                 `Edge length is close to average edge length at res ${res}, km`
             );
-            const lengthM = h3.exactEdgeLength(edge, h3.UNITS.m);
+            const lengthM = h3.edgeLength(edge, h3.UNITS.m);
             assert.ok(
                 // res 0 has high distortion of average edge length due to high pentagon proportion
                 res === 0 ||
@@ -1838,28 +1838,24 @@ test('exactEdgeLength', assert => {
                 `Edge length is close to average edge length at res ${res}, m`
             );
             assert.ok(lengthM > lengthKm, 'm > Km');
-            assert.ok(lengthKm > h3.exactEdgeLength(edge, h3.UNITS.rads), 'Km > rads');
+            assert.ok(lengthKm > h3.edgeLength(edge, h3.UNITS.rads), 'Km > rads');
         }
     }
     assert.end();
 });
 
-test('exactEdgeLength - bad units', assert => {
+test('edgeLength - bad units', assert => {
     const h3Index = h3.latLngToCell(0, 0, 9);
     const edge = h3.originToDirectedEdges(h3Index)[0];
-    assert.throws(() => h3.exactEdgeLength(edge), {code: E_UNKNOWN_UNIT}, 'throws on missing unit');
+    assert.throws(() => h3.edgeLength(edge), {code: E_UNKNOWN_UNIT}, 'throws on missing unit');
     assert.throws(
-        () => h3.exactEdgeLength(edge, 'foo'),
+        () => h3.edgeLength(edge, 'foo'),
         {code: E_UNKNOWN_UNIT},
         'throws on unknown unit'
     );
+    assert.throws(() => h3.edgeLength(edge, 42), {code: E_UNKNOWN_UNIT}, 'throws on unknown unit');
     assert.throws(
-        () => h3.exactEdgeLength(edge, 42),
-        {code: E_UNKNOWN_UNIT},
-        'throws on unknown unit'
-    );
-    assert.throws(
-        () => h3.exactEdgeLength(edge, h3.UNITS.m2),
+        () => h3.edgeLength(edge, h3.UNITS.m2),
         {code: E_UNKNOWN_UNIT},
         'throws on invalid unit'
     );
