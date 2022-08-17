@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file. This library adheres to a versioning policy described in [the README](./README.md#versioning). The public API of this library consists of the functions exported in [h3core.js](./lib/h3core.js).
 
 ## [Unreleased]
+### Breaking changes
+- Updated the core library to `v4.0.0-rc5`.
 
 ## [4.0.0-rc3] - 2022-08-11
 ### Fixed
