@@ -98,7 +98,7 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
 ## h3
 
 * [h3](#module_h3)
-    * [.UNITS](#module_h3.UNITS) : <code>Object</code>
+    * [.UNITS](#module_h3.UNITS)
     * [.h3IndexToSplitLong(h3Index)](#module_h3.h3IndexToSplitLong) ⇒ <code>Array.&lt;number&gt;</code>
     * [.splitLongToH3Index(lower, upper)](#module_h3.splitLongToH3Index) ⇒ <code>H3Index</code>
     * [.isValidCell(h3Index)](#module_h3.isValidCell) ⇒ <code>boolean</code>
@@ -148,15 +148,15 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
     * [.radsToDegs(rad)](#module_h3.radsToDegs) ⇒ <code>number</code>
     * [.H3Index](#module_h3.H3Index) : <code>string</code>
     * [.H3IndexInput](#module_h3.H3IndexInput) : <code>string</code> \| <code>Array.&lt;number&gt;</code>
-    * [.CoordIJ](#module_h3.CoordIJ) : <code>Object</code>
-    * [.H3Error](#module_h3.H3Error) ⇐ <code>Error</code>
+    * [.CoordIJ](#module_h3.CoordIJ)
+    * [.H3Error](#module_h3.H3Error)
 
 
 * * *
 
 <a name="module_h3.UNITS"></a>
 
-### h3.UNITS : <code>Object</code>
+### h3.UNITS
 Length/Area units
 
 **Properties**
@@ -1073,7 +1073,7 @@ or two 32-bit integers in little endian order in an array.
 
 <a name="module_h3.CoordIJ"></a>
 
-### h3.CoordIJ : <code>Object</code>
+### h3.CoordIJ
 Coordinates as an `{i, j}` pair
 
 **Properties**
@@ -1088,11 +1088,10 @@ Coordinates as an `{i, j}` pair
 
 <a name="module_h3.H3Error"></a>
 
-### h3.H3Error ⇐ <code>Error</code>
-Custom JS Error with an attached error code. Error codes come from the
+### h3.H3Error
+Custom JS Error instance with an attached error code. Error codes come from the
 core H3 library and can be found [in the H3 docs](https://h3geo.org/docs/next/library/errors#table-of-error-codes).
 
-**Extends**: <code>Error</code>  
 **Properties**
 
 | Name | Type |
