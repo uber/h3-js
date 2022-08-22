@@ -31,7 +31,7 @@
     "build-legacy": "node scripts/build-legacy-api.js",
     "build-docs": "jsdoc2md --no-cache --global-index-format grouped --partial doc-files/scope.hbs --helper ./doc-files/insert-version.js --separators --template doc-files/README.tmpl.md lib/h3core.js lib/errors.js > README.md",
     "build-tsd-core": "tsc lib/h3core.js --noResolve --skipLibCheck --allowJs --declaration --emitDeclarationOnly --outFile dist/types.d.ts && yarn build-tsd-core-postprocess",
-    "build-tsd-core-postprocess": "sed -i '' 's/module \"h3core\"/module \"h3-js\"/g' dist/types.d.ts && sed -E -i '' 's/(CoordPair|SplitLong) = number\\[\\]/\\1 = [number,number]/g' dist/types.d.ts",
+    "build-tsd-core-postprocess": "sed -i '' -e 's/module \"h3core\"/module \"h3-js\"/g' dist/types.d.ts && sed -E -i '' -e 's/(CoordPair|SplitLong) = number\\[\\]/\\1 = [number,number]/g' dist/types.d.ts",
     "build-tsd-legacy": "node scripts/build-legacy-types.js",
     "build-tsd": "yarn build-tsd-core && yarn build-tsd-legacy",
     "bundle-umd": "microbundle --name h3 --format=umd",
