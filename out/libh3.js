@@ -1,3 +1,4 @@
+// @ts-nocheck
 
 var libh3 = (
 function(libh3) {
