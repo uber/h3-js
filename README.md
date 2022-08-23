@@ -26,7 +26,7 @@ For more information on H3 and for the full API documentation, please see the [H
 > :tada: **Note:** The following usage docs apply to **H3 v4**, which was released on August 23, 2022.
 >
 > - For v3 docs, [see the latest v3.x.x release](https://github.com/uber/h3-js/blob/v3.7.2/README.md).
-> - For breaking changes in v4, [see the CHANGELOG](./CHANGELOG.md). In particular, most [function names have changed](https://h3geo.org/docs/next/library/migration-3.x/functions).
+> - For breaking changes in v4, [see the CHANGELOG](./CHANGELOG.md). In particular, most [function names have changed](https://h3geo.org/docs/library/migration-3.x/functions).
 
 The library uses ES6 modules. Bundles for Node and the browser are built to the `dist` folder.
 
@@ -1092,7 +1092,7 @@ Coordinates as an `{i, j}` pair
 
 ### h3.H3Error
 Custom JS Error instance with an attached error code. Error codes come from the
-core H3 library and can be found [in the H3 docs](https://h3geo.org/docs/next/library/errors#table-of-error-codes).
+core H3 library and can be found [in the H3 docs](https://h3geo.org/docs/library/errors#table-of-error-codes).
 
 **Properties**
 
