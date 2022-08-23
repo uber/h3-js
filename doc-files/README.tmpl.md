@@ -8,7 +8,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/uber/h3-js/badge.svg?branch=master)](https://coveralls.io/github/uber/h3-js?branch=master)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![npm version](https://badge.fury.io/js/h3-js.svg)](https://badge.fury.io/js/h3-js)
-[![H3 Version](https://img.shields.io/static/v1?label=h3%20api&message=v4.0.0-rc4&color=blue)](https://github.com/uber/h3/releases/tag/v4.0.0-rc4)
+[![H3 Version](https://img.shields.io/static/v1?label=h3%20api&message=v4.0.0&color=blue)](https://github.com/uber/h3/releases/tag/v4.0.0)
 
 The `h3-js` library provides a pure-JavaScript version of the [H3 Core Library](https://github.com/uber/h3), a hexagon-based geographic grid system. It can be used either in Node >= 6 or in the browser. The core library is transpiled from C using [emscripten](http://kripken.github.io/emscripten-site), offering full parity with the C API and highly efficient operations.
 
@@ -23,10 +23,10 @@ For more information on H3 and for the full API documentation, please see the [H
 
 ## Usage
 
-> :construction: **Note:** The following usage docs apply to **H3 v4**, which is currently still in the Release Candidate stage.
+> :tada: **Note:** The following usage docs apply to **H3 v4**, which was released on August 23, 2022.
 >
 > - For v3 docs, [see the latest v3.x.x release](https://github.com/uber/h3-js/blob/v3.7.2/README.md).
-> - For breaking changes in v4, [see the CHANGELOG](./CHANGELOG.md). In particular, most [function names have changed](https://h3geo.org/docs/next/library/migration-3.x/functions).
+> - For breaking changes in v4, [see the CHANGELOG](./CHANGELOG.md). In particular, most [function names have changed](https://h3geo.org/docs/library/migration-3.x/functions).
 
 The library uses ES6 modules. Bundles for Node and the browser are built to the `dist` folder.
 
