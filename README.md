@@ -23,7 +23,7 @@ For more information on H3 and for the full API documentation, please see the [H
 
 ## Usage
 
-> :construction: **Note:** The following usage docs apply to **H3 v4**, which is currently still in the Release Candidate stage.
+> :tada: **Note:** The following usage docs apply to **H3 v4**, which was released on August 23, 2022.
 >
 > - For v3 docs, [see the latest v3.x.x release](https://github.com/uber/h3-js/blob/v3.7.2/README.md).
 > - For breaking changes in v4, [see the CHANGELOG](./CHANGELOG.md). In particular, most [function names have changed](https://h3geo.org/docs/next/library/migration-3.x/functions).
