@@ -12,7 +12,7 @@ greatCircleDistance
 getHexagonAreaAvg
 cellArea
 getHexagonEdgeLengthAvg
-exactEdgeLength
+edgeLength
 getNumCells
 getRes0Cells
 getPentagons

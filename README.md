@@ -98,7 +98,9 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
 ## h3
 
 * [h3](#module_h3)
-    * [.UNITS](#module_h3.UNITS) : <code>Object</code>
+    * [.UNITS](#module_h3.UNITS)
+    * [.h3IndexToSplitLong(h3Index)](#module_h3.h3IndexToSplitLong) ⇒ <code>SplitLong</code>
+    * [.splitLongToH3Index(lower, upper)](#module_h3.splitLongToH3Index) ⇒ <code>H3Index</code>
     * [.isValidCell(h3Index)](#module_h3.isValidCell) ⇒ <code>boolean</code>
     * [.isPentagon(h3Index)](#module_h3.isPentagon) ⇒ <code>boolean</code>
     * [.isResClassIII(h3Index)](#module_h3.isResClassIII) ⇒ <code>boolean</code>
@@ -106,8 +108,8 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
     * [.getIcosahedronFaces(h3Index)](#module_h3.getIcosahedronFaces) ⇒ <code>Array.&lt;number&gt;</code>
     * [.getResolution(h3Index)](#module_h3.getResolution) ⇒ <code>number</code>
     * [.latLngToCell(lat, lng, res)](#module_h3.latLngToCell) ⇒ <code>H3Index</code>
-    * [.cellToLatLng(h3Index)](#module_h3.cellToLatLng) ⇒ <code>Array.&lt;number&gt;</code>
-    * [.cellToBoundary(h3Index, [formatAsGeoJson])](#module_h3.cellToBoundary) ⇒ <code>Array.&lt;Array.&lt;number&gt;&gt;</code>
+    * [.cellToLatLng(h3Index)](#module_h3.cellToLatLng) ⇒ <code>CoordPair</code>
+    * [.cellToBoundary(h3Index, [formatAsGeoJson])](#module_h3.cellToBoundary) ⇒ <code>Array.&lt;CoordPair&gt;</code>
     * [.cellToParent(h3Index, res)](#module_h3.cellToParent) ⇒ <code>H3Index</code>
     * [.cellToChildren(h3Index, res)](#module_h3.cellToChildren) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.cellToCenterChild(h3Index, res)](#module_h3.cellToCenterChild) ⇒ <code>H3Index</code>
@@ -115,7 +117,7 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
     * [.gridDiskDistances(h3Index, ringSize)](#module_h3.gridDiskDistances) ⇒ <code>Array.&lt;Array.&lt;H3Index&gt;&gt;</code>
     * [.gridRingUnsafe(h3Index, ringSize)](#module_h3.gridRingUnsafe) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.polygonToCells(coordinates, res, [isGeoJson])](#module_h3.polygonToCells) ⇒ <code>Array.&lt;H3Index&gt;</code>
-    * [.cellsToMultiPolygon(h3Indexes, [formatAsGeoJson])](#module_h3.cellsToMultiPolygon) ⇒ <code>Array.&lt;Array.&lt;Array.&lt;Array.&lt;number&gt;&gt;&gt;&gt;</code>
+    * [.cellsToMultiPolygon(h3Indexes, [formatAsGeoJson])](#module_h3.cellsToMultiPolygon) ⇒ <code>Array.&lt;Array.&lt;Array.&lt;CoordPair&gt;&gt;&gt;</code>
     * [.compactCells(h3Set)](#module_h3.compactCells) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.uncompactCells(compactedSet, res)](#module_h3.uncompactCells) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.areNeighborCells(origin, destination)](#module_h3.areNeighborCells) ⇒ <code>boolean</code>
@@ -125,19 +127,19 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
     * [.isValidDirectedEdge(edgeIndex)](#module_h3.isValidDirectedEdge) ⇒ <code>boolean</code>
     * [.directedEdgeToCells(edgeIndex)](#module_h3.directedEdgeToCells) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.originToDirectedEdges(h3Index)](#module_h3.originToDirectedEdges) ⇒ <code>Array.&lt;H3Index&gt;</code>
-    * [.directedEdgeToBoundary(edgeIndex, [formatAsGeoJson])](#module_h3.directedEdgeToBoundary) ⇒ <code>Array.&lt;Array.&lt;number&gt;&gt;</code>
+    * [.directedEdgeToBoundary(edgeIndex, [formatAsGeoJson])](#module_h3.directedEdgeToBoundary) ⇒ <code>Array.&lt;CoordPair&gt;</code>
     * [.gridDistance(origin, destination)](#module_h3.gridDistance) ⇒ <code>number</code>
     * [.gridPathCells(origin, destination)](#module_h3.gridPathCells) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.cellToLocalIj(origin, destination)](#module_h3.cellToLocalIj) ⇒ <code>CoordIJ</code>
     * [.localIjToCell(origin, coords)](#module_h3.localIjToCell) ⇒ <code>H3Index</code>
     * [.greatCircleDistance(latLng1, latLng2, unit)](#module_h3.greatCircleDistance) ⇒ <code>number</code>
     * [.cellArea(h3Index, unit)](#module_h3.cellArea) ⇒ <code>number</code>
-    * [.exactEdgeLength(edge, unit)](#module_h3.exactEdgeLength) ⇒ <code>number</code>
+    * [.edgeLength(edge, unit)](#module_h3.edgeLength) ⇒ <code>number</code>
     * [.getHexagonAreaAvg(res, unit)](#module_h3.getHexagonAreaAvg) ⇒ <code>number</code>
     * [.getHexagonEdgeLengthAvg(res, unit)](#module_h3.getHexagonEdgeLengthAvg) ⇒ <code>number</code>
     * [.cellToVertex(h3Index, vertexNum)](#module_h3.cellToVertex) ⇒ <code>H3Index</code>
     * [.cellToVertexes(h3Index)](#module_h3.cellToVertexes) ⇒ <code>Array.&lt;H3Index&gt;</code>
-    * [.vertexToLatLng(h3Index)](#module_h3.vertexToLatLng) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.vertexToLatLng(h3Index)](#module_h3.vertexToLatLng) ⇒ <code>CoordPair</code>
     * [.isValidVertex(h3Index)](#module_h3.isValidVertex) ⇒ <code>boolean</code>
     * [.getNumCells(res)](#module_h3.getNumCells) ⇒ <code>number</code>
     * [.getRes0Cells()](#module_h3.getRes0Cells) ⇒ <code>Array.&lt;H3Index&gt;</code>
@@ -146,15 +148,17 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
     * [.radsToDegs(rad)](#module_h3.radsToDegs) ⇒ <code>number</code>
     * [.H3Index](#module_h3.H3Index) : <code>string</code>
     * [.H3IndexInput](#module_h3.H3IndexInput) : <code>string</code> \| <code>Array.&lt;number&gt;</code>
-    * [.CoordIJ](#module_h3.CoordIJ) : <code>Object</code>
-    * [.H3Error](#module_h3.H3Error) ⇐ <code>Error</code>
+    * [.CoordIJ](#module_h3.CoordIJ)
+    * [.H3Error](#module_h3.H3Error)
+    * [.CoordPair](#module_h3.CoordPair) : <code>Array.&lt;number&gt;</code>
+    * [.SplitLong](#module_h3.SplitLong) : <code>Array.&lt;number&gt;</code>
 
 
 * * *
 
 <a name="module_h3.UNITS"></a>
 
-### h3.UNITS : <code>Object</code>
+### h3.UNITS
 Length/Area units
 
 **Properties**
@@ -167,6 +171,35 @@ Length/Area units
 | km2 | <code>string</code> | 
 | rads | <code>string</code> | 
 | rads2 | <code>string</code> | 
+
+
+* * *
+
+<a name="module_h3.h3IndexToSplitLong"></a>
+
+### h3.h3IndexToSplitLong(h3Index) ⇒ <code>SplitLong</code>
+Convert an H3 index (64-bit hexidecimal string) into a "split long" - a pair of 32-bit ints
+
+**Returns**: <code>SplitLong</code> - A two-element array with 32 lower bits and 32 upper bits  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| h3Index | <code>H3IndexInput</code> | H3 index to check |
+
+
+* * *
+
+<a name="module_h3.splitLongToH3Index"></a>
+
+### h3.splitLongToH3Index(lower, upper) ⇒ <code>H3Index</code>
+Get a H3 index string from a split long (pair of 32-bit ints)
+
+**Returns**: <code>H3Index</code> - H3 index  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| lower | <code>number</code> | Lower 32 bits |
+| upper | <code>number</code> | Upper 32 bits |
 
 
 * * *
@@ -283,10 +316,10 @@ Get the hexagon containing a lat,lon point
 
 <a name="module_h3.cellToLatLng"></a>
 
-### h3.cellToLatLng(h3Index) ⇒ <code>Array.&lt;number&gt;</code>
+### h3.cellToLatLng(h3Index) ⇒ <code>CoordPair</code>
 Get the lat,lon center of a given hexagon
 
-**Returns**: <code>Array.&lt;number&gt;</code> - Point as a [lat, lng] pair  
+**Returns**: <code>CoordPair</code> - Point as a [lat, lng] pair  
 **Throws**:
 
 - <code>H3Error</code> If input is invalid
@@ -301,12 +334,12 @@ Get the lat,lon center of a given hexagon
 
 <a name="module_h3.cellToBoundary"></a>
 
-### h3.cellToBoundary(h3Index, [formatAsGeoJson]) ⇒ <code>Array.&lt;Array.&lt;number&gt;&gt;</code>
+### h3.cellToBoundary(h3Index, [formatAsGeoJson]) ⇒ <code>Array.&lt;CoordPair&gt;</code>
 Get the vertices of a given hexagon (or pentagon), as an array of [lat, lng]
 points. For pentagons and hexagons on the edge of an icosahedron face, this
 function may return up to 10 vertices.
 
-**Returns**: <code>Array.&lt;Array.&lt;number&gt;&gt;</code> - Array of [lat, lng] pairs  
+**Returns**: <code>Array.&lt;CoordPair&gt;</code> - Array of [lat, lng] pairs  
 **Throws**:
 
 - <code>H3Error</code> If input is invalid
@@ -463,7 +496,7 @@ expected to be holes.
 
 <a name="module_h3.cellsToMultiPolygon"></a>
 
-### h3.cellsToMultiPolygon(h3Indexes, [formatAsGeoJson]) ⇒ <code>Array.&lt;Array.&lt;Array.&lt;Array.&lt;number&gt;&gt;&gt;&gt;</code>
+### h3.cellsToMultiPolygon(h3Indexes, [formatAsGeoJson]) ⇒ <code>Array.&lt;Array.&lt;Array.&lt;CoordPair&gt;&gt;&gt;</code>
 Get the outlines of a set of H3 hexagons, returned in GeoJSON MultiPolygon
 format (an array of polygons, each with an array of loops, each an array of
 coordinates). Coordinates are returned as [lat, lng] pairs unless GeoJSON
@@ -474,7 +507,7 @@ set have the same resolution and that the set contains no duplicates. Behavior
 is undefined if duplicates or multiple resolutions are present, and the
 algorithm may produce unexpected or invalid polygons.
 
-**Returns**: <code>Array.&lt;Array.&lt;Array.&lt;Array.&lt;number&gt;&gt;&gt;&gt;</code> - MultiPolygon-style output.  
+**Returns**: <code>Array.&lt;Array.&lt;Array.&lt;CoordPair&gt;&gt;&gt;</code> - MultiPolygon-style output.  
 **Throws**:
 
 - <code>H3Error</code> If input is invalid
@@ -483,7 +516,7 @@ algorithm may produce unexpected or invalid polygons.
 | Param | Type | Description |
 | --- | --- | --- |
 | h3Indexes | <code>Array.&lt;H3IndexInput&gt;</code> | H3 indexes to get outlines for |
-| [formatAsGeoJson] | <code>boolean</code> | Whether to provide GeoJSON output:                                    [lng, lat], closed loops |
+| [formatAsGeoJson] | <code>boolean</code> | Whether to provide GeoJSON output: [lng, lat], closed loops |
 
 
 * * *
@@ -653,11 +686,11 @@ every neighbor)
 
 <a name="module_h3.directedEdgeToBoundary"></a>
 
-### h3.directedEdgeToBoundary(edgeIndex, [formatAsGeoJson]) ⇒ <code>Array.&lt;Array.&lt;number&gt;&gt;</code>
+### h3.directedEdgeToBoundary(edgeIndex, [formatAsGeoJson]) ⇒ <code>Array.&lt;CoordPair&gt;</code>
 Get the vertices of a given edge as an array of [lat, lng] points. Note that for edges that
 cross the edge of an icosahedron face, this may return 3 coordinates.
 
-**Returns**: <code>Array.&lt;Array.&lt;number&gt;&gt;</code> - Array of geo coordinate pairs  
+**Returns**: <code>Array.&lt;CoordPair&gt;</code> - Array of geo coordinate pairs  
 **Throws**:
 
 - <code>H3Error</code> If the input is invalid
@@ -820,10 +853,10 @@ Exact area of a given cell
 
 * * *
 
-<a name="module_h3.exactEdgeLength"></a>
+<a name="module_h3.edgeLength"></a>
 
-### h3.exactEdgeLength(edge, unit) ⇒ <code>number</code>
-Exact length of a given unidirectional edge
+### h3.edgeLength(edge, unit) ⇒ <code>number</code>
+Calculate length of a given unidirectional edge
 
 **Returns**: <code>number</code> - Cell area  
 **Throws**:
@@ -916,10 +949,10 @@ Find the indexes for all vertexes of a cell.
 
 <a name="module_h3.vertexToLatLng"></a>
 
-### h3.vertexToLatLng(h3Index) ⇒ <code>Array.&lt;number&gt;</code>
+### h3.vertexToLatLng(h3Index) ⇒ <code>CoordPair</code>
 Get the lat, lng of a given vertex
 
-**Returns**: <code>Array.&lt;number&gt;</code> - Latitude, longitude coordinates of the vertex  
+**Returns**: <code>CoordPair</code> - Latitude, longitude coordinates of the vertex  
 **Throws**:
 
 - <code>H3Error</code> If the input is invalid
@@ -1042,7 +1075,7 @@ or two 32-bit integers in little endian order in an array.
 
 <a name="module_h3.CoordIJ"></a>
 
-### h3.CoordIJ : <code>Object</code>
+### h3.CoordIJ
 Coordinates as an `{i, j}` pair
 
 **Properties**
@@ -1057,11 +1090,10 @@ Coordinates as an `{i, j}` pair
 
 <a name="module_h3.H3Error"></a>
 
-### h3.H3Error ⇐ <code>Error</code>
-Custom JS Error with an attached error code. Error codes come from the
+### h3.H3Error
+Custom JS Error instance with an attached error code. Error codes come from the
 core H3 library and can be found [in the H3 docs](https://h3geo.org/docs/next/library/errors#table-of-error-codes).
 
-**Extends**: <code>Error</code>  
 **Properties**
 
 | Name | Type |
@@ -1072,6 +1104,42 @@ core H3 library and can be found [in the H3 docs](https://h3geo.org/docs/next/li
 
 * * *
 
+<a name="module_h3.CoordPair"></a>
+
+### h3.CoordPair : <code>Array.&lt;number&gt;</code>
+Pair of lat,lng coordinates (or lng,lat if GeoJSON output is specified)
+
+
+* * *
+
+<a name="module_h3.SplitLong"></a>
+
+### h3.SplitLong : <code>Array.&lt;number&gt;</code>
+Pair of lower,upper 32-bit ints representing a 64-bit value
+
+
+* * *
+
+
+## Legacy API
+
+H3 v4 renamed the majority of the functions in the library. To help ease migration from H3 v3 to H3 v4, we offer a legacy API wrapper at `h3-js/legacy`, which exports the v4 functions with the v3 names. Users are welcome to use the legacy API wrapper as a transitional support, but are encouraged to upgrade to the H3 v4 API as soon as possible.
+
+Note that the legacy API is _not_ 100% backwards compatible - it's a thin wrapper on top of the v4 functions, so in cases where behavior has changed, the v4 behavior will be used. In particular, many of the v4 functions will throw errors for invalid input, where v3 functions would return null.
+
+Installation:
+
+```
+npm install h3-js
+```
+
+Usage:
+
+```
+import {geoToH3} from 'h3-js/legacy';
+
+const h3Index = geoToH3(37.3615593, -122.0553238, 7);
+```
 
 ## Development
 

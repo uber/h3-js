@@ -55,6 +55,10 @@ emcc -O3 -I ../include *.c -DH3_HAVE_VLA --memory-init-file 0 \
     -s EXPORTED_FUNCTIONS=$bound_functions \
     -s EXTRA_EXPORTED_RUNTIME_METHODS='["cwrap", "getValue", "setValue"]' \
     "$@"
-cp *.js ../../../../out
+
+for file in *.js ; do
+  cat ../../../../build/pre.js "$file" > ../../../../out/"$file"
+done
+
 popd
 popd

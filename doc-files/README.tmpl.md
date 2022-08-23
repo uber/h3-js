@@ -95,6 +95,26 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
 
 {{>main}}
 
+## Legacy API
+
+H3 v4 renamed the majority of the functions in the library. To help ease migration from H3 v3 to H3 v4, we offer a legacy API wrapper at `h3-js/legacy`, which exports the v4 functions with the v3 names. Users are welcome to use the legacy API wrapper as a transitional support, but are encouraged to upgrade to the H3 v4 API as soon as possible.
+
+Note that the legacy API is _not_ 100% backwards compatible - it's a thin wrapper on top of the v4 functions, so in cases where behavior has changed, the v4 behavior will be used. In particular, many of the v4 functions will throw errors for invalid input, where v3 functions would return null.
+
+Installation:
+
+```
+npm install h3-js
+```
+
+Usage:
+
+```
+import {geoToH3} from 'h3-js/legacy';
+
+const h3Index = geoToH3(37.3615593, -122.0553238, 7);
+```
+
 ## Development
 
 The `h3-js` library uses `yarn` as the preferred package manager. To install the dev dependencies, just run:

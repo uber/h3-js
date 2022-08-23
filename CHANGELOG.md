@@ -6,11 +6,31 @@ All notable changes to this project will be documented in this file. This librar
 
 ## [4.0.0] - 2022-08-16
 ### Breaking Changes
-- Updated the core library to `v4.0.0`. This update renames the majority of the H3 functions. You can see a [list of changed function names](https://h3geo.org/docs/next/library/migration-3.x/functions) in the core library documentation. For the most part, upgrading to v4 for Javascript consumers should be a straightforward search & replace between the old names and the new. (#144, #141, #139)
+- Updated the core library to `v4.0.0`. This update renames the majority of the H3 functions. You can see a [list of changed function names](https://h3geo.org/docs/next/library/migration-3.x/functions) in the core library documentation. For the most part, upgrading to v4 for Javascript consumers should be a straightforward search & replace between the old names and the new. (#151, #144, #141, #139)
 - Added more cases in which JS errors may be thrown. In H3 v3, many functions would fail silently with invalid input, returning `null` or similar signal values. In H3 v4, we will throw descriptive errors for most instances of bad input. (#139)
 
+### Changed
+- Add Typescript typechecking, generate types with tsc (#153)
+
+### Fixed
+- Fail package publish if there are library changes (#148)
+
 ### Added
-- Added vertex mode functions (#138)
+- Added legacy API wrapper with Typescript types (#146)
+
+## [4.0.0-rc4] - 2022-08-22
+### Breaking changes
+- Updated the core library to `v4.0.0-rc5`. (#151)
+### Changed
+- Add Typescript typechecking, generate types with tsc (#153)
+
+## [4.0.0-rc3] - 2022-08-11
+### Fixed
+- Fail package publish if there are library changes (#148)
+
+## [4.0.0-rc2] - 2022-08-11
+### Added
+- Added legacy API wrapper with Typescript types (#146)
 
 ## [4.0.0-rc1] - 2022-07-28
 ### Breaking Changes
