@@ -6,9 +6,9 @@ All notable changes to this project will be documented in this file. This librar
 
 ## [4.0.1] - 2022-09-19
 ### Changed
-- Updated the core library to `v4.0.1` (TBD)
+- Updated the core library to `v4.0.1` (#161)
 ### Fixed
-- Fixed error when compacting with res 0 cells (TBD)
+- Fixed error when compacting with res 0 cells (#161)
 
 ## [4.0.0] - 2022-08-23
 ### Breaking Changes
