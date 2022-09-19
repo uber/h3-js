@@ -987,6 +987,16 @@ test('compactCells - Empty', assert => {
     assert.end();
 });
 
+test('compactCells - Res 0 edge case, issue #159', assert => {
+    // k-ring around a res 0 pentagon
+    const cells = h3.gridDisk('820807fffffffff', 4);
+
+    const compacted = h3.compactCells(cells);
+    assert.equal(compacted.length, 11, 'got an appropriate number of hexagons back');
+
+    assert.end();
+});
+
 test('uncompactCells - Empty', assert => {
     assert.deepEqual(
         h3.uncompactCells(undefined, 9),
