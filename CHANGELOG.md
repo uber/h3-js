@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file. This librar
 
 ## [Unreleased]
 
+## [4.0.1] - 2022-09-19
+### Changed
+- Updated the core library to `v4.0.1` (#161)
+### Fixed
+- Fixed error when compacting with res 0 cells (#161)
+
 ## [4.0.0] - 2022-08-23
 ### Breaking Changes
 - Updated the core library to `v4.0.0`. This update renames the majority of the H3 functions. You can see a [list of changed function names](https://h3geo.org/docs/library/migration-3.x/functions) in the core library documentation. For the most part, upgrading to v4 for Javascript consumers should be a straightforward search & replace between the old names and the new. (#151, #144, #141, #139)
