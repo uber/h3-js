@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file. This library adheres to a versioning policy described in [the README](./README.md#versioning). The public API of this library consists of the functions exported in [h3core.js](./lib/h3core.js).
 
 ## [Unreleased]
+### Fixed
+- Patch libh3 bundles to check for `typeof document != "undefined"` before accessing `document`. This allows h3-js to be used in a Web Worker and React Native
 
 ## [4.0.1] - 2022-09-19
 ### Changed
