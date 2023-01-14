@@ -18,33 +18,17 @@ import test from 'tape';
 import fs from 'fs';
 import path from 'path';
 
-const BUNDLES = fs
-    .readdirSync(path.join(__dirname, '../dist'), 'utf-8')
-    .filter(fileName => fileName.endsWith('.js'));
-const BROWSER_BUNDLES = fs
-    .readdirSync(path.join(__dirname, '../dist/browser'), 'utf-8')
-    .filter(fileName => fileName.endsWith('.js'));
+const LIBH3_PATH = path.join(__dirname, '../out/libh3.js');
 
 const ORIGINAL_DOCUMENT_REGEX = /if\(document.currentScript\)/;
+const PATCHED_DOCUMENT_REGEX = /if\(typeof document!=="undefined" && document.currentScript\)/;
 
-function validateBundle(assert, filePath) {
+test('validateLIBH3HasDocumentUndefinedFix', assert => {
     // Validate that the bundle does not contain a bug that prevents h3-js to be imported into webworkers and react native.
     // Problem was fixed in a later version of emscripten however there are significant performance regressions when upgrading.
     // See #163 and #117 for more details.
-    const fileContents = fs.readFileSync(filePath, {encoding: 'utf8', flag: 'r'});
+    const fileContents = fs.readFileSync(LIBH3_PATH, {encoding: 'utf8', flag: 'r'});
     assert.doesNotMatch(fileContents, ORIGINAL_DOCUMENT_REGEX, 'bundle was not patched');
-}
-
-test('validateNodeBundlesHaveDocumentUndefinedFix', assert => {
-    BUNDLES.forEach(file => {
-        validateBundle(assert, path.join(__dirname, '../dist', file));
-    });
-    assert.end();
-});
-
-test('validateBrowserBundlesHaveDocumentUndefinedFix', assert => {
-    BROWSER_BUNDLES.forEach(file => {
-        validateBundle(assert, path.join(__dirname, '../dist/browser', file));
-    });
+    assert.match(fileContents, PATCHED_DOCUMENT_REGEX, 'bundle was not patched');
     assert.end();
 });
