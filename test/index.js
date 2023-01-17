@@ -17,3 +17,4 @@
 import './h3core.spec';
 import './errors.spec';
 import './test-parity';
+import './test-build';

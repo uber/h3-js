@@ -57,7 +57,11 @@ emcc -O3 -I ../include *.c -DH3_HAVE_VLA --memory-init-file 0 \
     "$@"
 
 for file in *.js ; do
-  cat ../../../../build/pre.js "$file" > ../../../../out/"$file"
+  # Patch libh3 bundle to contain a fix to allow h3-js to be imported in a web worker and react-native
+  # See #117 and #163 for more details.
+  cat ../../../../build/pre.js "$file" \
+  | sed 's/if(document.currentScript)/if(typeof document!=="undefined" \&\& document.currentScript)/g' \
+  > ../../../../out/"$file"
 done
 
 popd
