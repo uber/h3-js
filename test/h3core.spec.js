@@ -1227,6 +1227,21 @@ test('cellToChildPos', assert => {
     assert.end();
 });
 
+test('cellToChildPos - error', assert => {
+    const h3Index = '88283080ddfffff';
+    assert.throws(
+        () => h3.cellToChildPos(h3Index, 12),
+        {code: E_RES_MISMATCH},
+        'Finer resolution throws'
+    );
+    assert.throws(
+        () => h3.cellToChildPos(h3Index, -1),
+        {code: E_RES_DOMAIN},
+        'Invalid resolution throws'
+    );
+    assert.end();
+});
+
 test('childPosToCell', assert => {
     const h3Index = '88283080ddfffff';
     assert.equal(h3.childPosToCell(0, h3Index, 8), h3Index, 'Got expected value for same res');
@@ -1239,6 +1254,26 @@ test('childPosToCell', assert => {
         h3.childPosToCell(41, h3.cellToParent(h3Index, 6), 8),
         h3Index,
         'Got expected value for 2nd-level parent'
+    );
+    assert.end();
+});
+
+test('childPosToCell - error', assert => {
+    const h3Index = '88283080ddfffff';
+    assert.throws(
+        () => h3.childPosToCell(6, h3Index, 5),
+        {code: E_RES_MISMATCH},
+        'Coarser resolution throws'
+    );
+    assert.throws(
+        () => h3.childPosToCell(6, h3Index, -1),
+        {code: E_RES_DOMAIN},
+        'Invalid resolution throws'
+    );
+    assert.throws(
+        () => h3.childPosToCell(42, h3Index, 9),
+        {code: E_DOMAIN},
+        'Child pos out of range throws'
     );
     assert.end();
 });

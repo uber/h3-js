@@ -8,7 +8,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/uber/h3-js/badge.svg?branch=master)](https://coveralls.io/github/uber/h3-js?branch=master)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![npm version](https://badge.fury.io/js/h3-js.svg)](https://badge.fury.io/js/h3-js)
-[![H3 Version](https://img.shields.io/static/v1?label=h3%20api&message=v4.0.0&color=blue)](https://github.com/uber/h3/releases/tag/v4.0.1)
+[![H3 Version](https://img.shields.io/static/v1?label=h3%20api&message=v4.1.0&color=blue)](https://github.com/uber/h3/releases/tag/v4.1.0)
 
 The `h3-js` library provides a pure-JavaScript version of the [H3 Core Library](https://github.com/uber/h3), a hexagon-based geographic grid system. It can be used either in Node >= 6 or in the browser. The core library is transpiled from C using [emscripten](http://kripken.github.io/emscripten-site), offering full parity with the C API and highly efficient operations.
 
@@ -113,6 +113,8 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
     * [.cellToParent(h3Index, res)](#module_h3.cellToParent) ⇒ <code>H3Index</code>
     * [.cellToChildren(h3Index, res)](#module_h3.cellToChildren) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.cellToCenterChild(h3Index, res)](#module_h3.cellToCenterChild) ⇒ <code>H3Index</code>
+    * [.cellToChildPos(h3Index, parentRes)](#module_h3.cellToChildPos) ⇒ <code>number</code>
+    * [.childPosToCell(childPos, h3Index, childRes)](#module_h3.childPosToCell) ⇒ <code>H3Index</code>
     * [.gridDisk(h3Index, ringSize)](#module_h3.gridDisk) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.gridDiskDistances(h3Index, ringSize)](#module_h3.gridDiskDistances) ⇒ <code>Array.&lt;Array.&lt;H3Index&gt;&gt;</code>
     * [.gridRingUnsafe(h3Index, ringSize)](#module_h3.gridRingUnsafe) ⇒ <code>Array.&lt;H3Index&gt;</code>
@@ -405,7 +407,48 @@ Get the center child of the given hexagon at a particular resolution
 | Param | Type | Description |
 | --- | --- | --- |
 | h3Index | <code>H3IndexInput</code> | H3 index to get center child for |
-| res | <code>number</code> | Resolution of hexagon to return |
+| res | <code>number</code> | Resolution of cell to return |
+
+
+* * *
+
+<a name="module_h3.cellToChildPos"></a>
+
+### h3.cellToChildPos(h3Index, parentRes) ⇒ <code>number</code>
+Get the position of the cell within an ordered list of all children of the
+cell's parent at the specified resolution.
+
+**Returns**: <code>number</code> - Position of child within parent at parentRes  
+**Throws**:
+
+- <code>H3Error</code> If cell or parentRes are invalid
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| h3Index | <code>H3IndexInput</code> | H3 index to get child pos for |
+| parentRes | <code>number</code> | Resolution of reference parent |
+
+
+* * *
+
+<a name="module_h3.childPosToCell"></a>
+
+### h3.childPosToCell(childPos, h3Index, childRes) ⇒ <code>H3Index</code>
+Get the child cell at a given position within an ordered list of all children
+at the specified resolution
+
+**Returns**: <code>H3Index</code> - H3 index of child  
+**Throws**:
+
+- <code>H3Error</code> If input is invalid
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| childPos | <code>number</code> | Position of the child cell to get |
+| h3Index | <code>H3IndexInput</code> | H3 index of the parent cell |
+| childRes | <code>number</code> | Resolution of child cell to return |
 
 
 * * *
