@@ -1243,6 +1243,28 @@ test('childPosToCell', assert => {
     assert.end();
 });
 
+test('cellToChildPos / childPosToCell round-trip', assert => {
+    // These are somewhat arbitrary, but cover a few different parts of the globe
+    const testLatLngs = [
+        [37.81331899988944, -122.409290778685],
+        [64.2868041, 8.7824902],
+        [5.8815246, 54.3336044],
+        [-41.4486737, 143.918175]
+    ];
+
+    for (const [lat, lng] of testLatLngs) {
+        for (let res = 0; res < 16; res++) {
+            const child = h3.latLngToCell(lat, lng, res);
+            const parent = h3.cellToParent(child, 0);
+            const pos = h3.cellToChildPos(child, 0);
+            const cell = h3.childPosToCell(pos, parent, res);
+            assert.equal(cell, child, `round-trip produced the same cell for res ${res}`);
+        }
+    }
+
+    assert.end();
+});
+
 test('areNeighborCells', assert => {
     const origin = '891ea6d6533ffff';
     const adjacent = '891ea6d65afffff';
