@@ -24,6 +24,8 @@ isValidCell
 cellToParent
 cellToChildren
 cellToCenterChild
+cellToChildPos
+childPosToCell
 compactCells
 uncompactCells
 isResClassIII

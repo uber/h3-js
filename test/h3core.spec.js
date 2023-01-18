@@ -1219,6 +1219,30 @@ test('cellToCenterChild - Invalid', assert => {
     assert.end();
 });
 
+test('cellToChildPos', assert => {
+    const h3Index = '88283080ddfffff';
+    assert.equal(h3.cellToChildPos(h3Index, 8), 0, 'Got expected value for same res');
+    assert.equal(h3.cellToChildPos(h3Index, 7), 6, 'Got expected value for 1st-level parent');
+    assert.equal(h3.cellToChildPos(h3Index, 6), 41, 'Got expected value for 2nd-level parent');
+    assert.end();
+});
+
+test('childPosToCell', assert => {
+    const h3Index = '88283080ddfffff';
+    assert.equal(h3.childPosToCell(0, h3Index, 8), h3Index, 'Got expected value for same res');
+    assert.equal(
+        h3.childPosToCell(6, h3.cellToParent(h3Index, 7), 8),
+        h3Index,
+        'Got expected value for 1st-level parent'
+    );
+    assert.equal(
+        h3.childPosToCell(41, h3.cellToParent(h3Index, 6), 8),
+        h3Index,
+        'Got expected value for 2nd-level parent'
+    );
+    assert.end();
+});
+
 test('areNeighborCells', assert => {
     const origin = '891ea6d6533ffff';
     const adjacent = '891ea6d65afffff';
