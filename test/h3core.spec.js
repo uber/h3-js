@@ -1219,6 +1219,133 @@ test('cellToCenterChild - Invalid', assert => {
     assert.end();
 });
 
+test('cellToChildPos', assert => {
+    const h3Index = '88283080ddfffff';
+    assert.equal(h3.cellToChildPos(h3Index, 8), 0, 'Got expected value for same res');
+    assert.equal(h3.cellToChildPos(h3Index, 7), 6, 'Got expected value for 1st-level parent');
+    assert.equal(h3.cellToChildPos(h3Index, 6), 41, 'Got expected value for 2nd-level parent');
+    assert.end();
+});
+
+test('cellToChildPos - error', assert => {
+    const h3Index = '88283080ddfffff';
+    assert.throws(
+        () => h3.cellToChildPos(h3Index, 12),
+        {code: E_RES_MISMATCH},
+        'Finer resolution throws'
+    );
+    assert.throws(
+        () => h3.cellToChildPos(h3Index, -1),
+        {code: E_RES_DOMAIN},
+        'Invalid resolution throws'
+    );
+    assert.end();
+});
+
+test('childPosToCell', assert => {
+    const h3Index = '88283080ddfffff';
+    assert.equal(h3.childPosToCell(0, h3Index, 8), h3Index, 'Got expected value for same res');
+    assert.equal(
+        h3.childPosToCell(6, h3.cellToParent(h3Index, 7), 8),
+        h3Index,
+        'Got expected value for 1st-level parent'
+    );
+    assert.equal(
+        h3.childPosToCell(41, h3.cellToParent(h3Index, 6), 8),
+        h3Index,
+        'Got expected value for 2nd-level parent'
+    );
+    assert.end();
+});
+
+test('childPosToCell - error', assert => {
+    const h3Index = '88283080ddfffff';
+    assert.throws(
+        () => h3.childPosToCell(6, h3Index, 5),
+        {code: E_RES_MISMATCH},
+        'Coarser resolution throws'
+    );
+    assert.throws(
+        () => h3.childPosToCell(6, h3Index, -1),
+        {code: E_RES_DOMAIN},
+        'Invalid resolution throws'
+    );
+    assert.throws(
+        () => h3.childPosToCell(42, h3Index, 9),
+        {code: E_DOMAIN},
+        'Child pos out of range throws'
+    );
+    assert.end();
+});
+
+test('cellToChildPos / childPosToCell round-trip', assert => {
+    // These are somewhat arbitrary, but cover a few different parts of the globe
+    const testLatLngs = [
+        [37.81331899988944, -122.409290778685],
+        [64.2868041, 8.7824902],
+        [5.8815246, 54.3336044],
+        [-41.4486737, 143.918175]
+    ];
+
+    for (const [lat, lng] of testLatLngs) {
+        for (let res = 0; res < 16; res++) {
+            const child = h3.latLngToCell(lat, lng, res);
+            const parent = h3.cellToParent(child, 0);
+            const pos = h3.cellToChildPos(child, 0);
+            const cell = h3.childPosToCell(pos, parent, res);
+            assert.equal(cell, child, `round-trip produced the same cell for res ${res}`);
+        }
+    }
+
+    assert.end();
+});
+
+test('childPosToCell / cellToChildrenSize', assert => {
+    // one hexagon, one pentagon
+    const baseCells = ['80bffffffffffff', '80a7fffffffffff'];
+
+    for (const h3Index of baseCells) {
+        for (let res = 0; res < 16; res++) {
+            const count = h3.cellToChildrenSize(h3Index, res);
+            assert.ok(
+                Math.pow(6, res) <= count && count <= Math.pow(7, res),
+                'count has the right order of magnitude'
+            );
+            const child = h3.childPosToCell(count - 1, h3Index, res);
+            const pos = h3.cellToChildPos(child, 0);
+            assert.equal(pos, count - 1, 'got expected round-trip');
+
+            assert.throws(
+                () => h3.childPosToCell(count, h3Index, res),
+                {code: E_DOMAIN},
+                'One more is out of range'
+            );
+        }
+    }
+
+    assert.end();
+});
+
+test('cellToChildrenSize - errors', assert => {
+    const h3Index = '88283080ddfffff';
+    assert.throws(
+        () => h3.cellToChildrenSize(h3Index, 5),
+        {code: E_RES_DOMAIN},
+        'Coarser resolution throws'
+    );
+    assert.throws(
+        () => h3.cellToChildrenSize(h3Index, -1),
+        {code: E_RES_DOMAIN},
+        'Invalid resolution throws'
+    );
+    assert.throws(
+        () => h3.cellToChildrenSize('foo', 9),
+        {code: E_CELL_INVALID},
+        'Invalid cell throws'
+    );
+    assert.end();
+});
+
 test('areNeighborCells', assert => {
     const origin = '891ea6d6533ffff';
     const adjacent = '891ea6d65afffff';

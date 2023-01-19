@@ -62,6 +62,22 @@ export default function makeBenchmarks() {
         h3core.getIcosahedronFaces(h3Index);
     });
 
+    suite.add('cellToChildren', () => {
+        h3core.cellToChildren(h3Index, 14);
+    });
+
+    suite.add('cellToParent', () => {
+        h3core.cellToParent(h3Index, 0);
+    });
+
+    suite.add('cellToChildPos', () => {
+        h3core.cellToChildPos(h3Index, 0);
+    });
+
+    suite.add('childPosToCell', () => {
+        h3core.childPosToCell(16800, h3Index, 14);
+    });
+
     suite.add('gridDisk', () => {
         h3core.gridDisk(h3Index, 1);
     });
