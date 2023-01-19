@@ -347,7 +347,7 @@ function may return up to 10 vertices.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| h3Index | <code>H3Index</code> | H3 index |
+| h3Index | <code>H3IndexInput</code> | H3 index |
 | [formatAsGeoJson] | <code>boolean</code> | Whether to provide GeoJSON output: [lng, lat], closed loops |
 
 
@@ -847,7 +847,7 @@ Exact area of a given cell
 
 | Param | Type | Description |
 | --- | --- | --- |
-| h3Index | <code>H3Index</code> | H3 index of the hexagon to measure |
+| h3Index | <code>H3IndexInput</code> | H3 index of the hexagon to measure |
 | unit | <code>string</code> | Distance unit (either UNITS.m2, UNITS.km2, or UNITS.rads2) |
 
 
@@ -866,7 +866,7 @@ Calculate length of a given unidirectional edge
 
 | Param | Type | Description |
 | --- | --- | --- |
-| edge | <code>H3Index</code> | H3 index of the edge to measure |
+| edge | <code>H3IndexInput</code> | H3 index of the edge to measure |
 | unit | <code>string</code> | Distance unit (either UNITS.m, UNITS.km, or UNITS.rads) |
 
 
