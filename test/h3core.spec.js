@@ -1300,6 +1300,52 @@ test('cellToChildPos / childPosToCell round-trip', assert => {
     assert.end();
 });
 
+test('childPosToCell / cellToChildrenSize', assert => {
+    // one hexagon, one pentagon
+    const baseCells = ['80bffffffffffff', '80a7fffffffffff'];
+
+    for (const h3Index of baseCells) {
+        for (let res = 0; res < 16; res++) {
+            const count = h3.cellToChildrenSize(h3Index, res);
+            assert.ok(
+                Math.pow(6, res) <= count && count <= Math.pow(7, res),
+                'count has the right order of magnitude'
+            );
+            const child = h3.childPosToCell(count - 1, h3Index, res);
+            const pos = h3.cellToChildPos(child, 0);
+            assert.equal(pos, count - 1, 'got expected round-trip');
+
+            assert.throws(
+                () => h3.childPosToCell(count, h3Index, res),
+                {code: E_DOMAIN},
+                'One more is out of range'
+            );
+        }
+    }
+
+    assert.end();
+});
+
+test('cellToChildrenSize - errors', assert => {
+    const h3Index = '88283080ddfffff';
+    assert.throws(
+        () => h3.cellToChildrenSize(h3Index, 5),
+        {code: E_RES_DOMAIN},
+        'Coarser resolution throws'
+    );
+    assert.throws(
+        () => h3.cellToChildrenSize(h3Index, -1),
+        {code: E_RES_DOMAIN},
+        'Invalid resolution throws'
+    );
+    assert.throws(
+        () => h3.cellToChildrenSize('foo', 9),
+        {code: E_CELL_INVALID},
+        'Invalid cell throws'
+    );
+    assert.end();
+});
+
 test('areNeighborCells', assert => {
     const origin = '891ea6d6533ffff';
     const adjacent = '891ea6d65afffff';

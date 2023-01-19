@@ -3,9 +3,13 @@
 All notable changes to this project will be documented in this file. This library adheres to a versioning policy described in [the README](./README.md#versioning). The public API of this library consists of the functions exported in [h3core.js](./lib/h3core.js).
 
 ## [Unreleased]
+### Added
+- `cellToChildPos` and `childPosToCell` functions. (#170)
+### Changed
+- Updated the core library to `v4.1.0` (#170)
 ### Fixed
-- Patch libh3 bundles to check for `typeof document != "undefined"` before accessing `document`. This allows h3-js to be used in a Web Worker and React Native
-- Fix H3Index type hints for `cellToBoundary`, `cellArea`, `edgeLength`
+- Patch libh3 bundles to check for `typeof document != "undefined"` before accessing `document`. This allows h3-js to be used in a Web Worker and React Native (#169)
+- Fix H3Index type hints for `cellToBoundary`, `cellArea`, `edgeLength` (#171)
 
 ## [4.0.1] - 2022-09-19
 ### Changed
