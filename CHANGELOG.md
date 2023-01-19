@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This librar
 ## [Unreleased]
 ### Fixed
 - Patch libh3 bundles to check for `typeof document != "undefined"` before accessing `document`. This allows h3-js to be used in a Web Worker and React Native
+- Fix H3Index type hints for `cellToBoundary`, `cellArea`, `edgeLength`
 
 ## [4.0.1] - 2022-09-19
 ### Changed
