@@ -112,6 +112,7 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
     * [.cellToBoundary(h3Index, [formatAsGeoJson])](#module_h3.cellToBoundary) ⇒ <code>Array.&lt;CoordPair&gt;</code>
     * [.cellToParent(h3Index, res)](#module_h3.cellToParent) ⇒ <code>H3Index</code>
     * [.cellToChildren(h3Index, res)](#module_h3.cellToChildren) ⇒ <code>Array.&lt;H3Index&gt;</code>
+    * [.cellToChildrenSize(h3Index, res)](#module_h3.cellToChildrenSize) ⇒ <code>number</code>
     * [.cellToCenterChild(h3Index, res)](#module_h3.cellToCenterChild) ⇒ <code>H3Index</code>
     * [.cellToChildPos(h3Index, parentRes)](#module_h3.cellToChildPos) ⇒ <code>number</code>
     * [.childPosToCell(childPos, h3Index, childRes)](#module_h3.childPosToCell) ⇒ <code>H3Index</code>
@@ -389,6 +390,25 @@ Get the children/descendents of the given hexagon at a particular resolution
 | --- | --- | --- |
 | h3Index | <code>H3IndexInput</code> | H3 index to get children for |
 | res | <code>number</code> | Resolution of hexagons to return |
+
+
+* * *
+
+<a name="module_h3.cellToChildrenSize"></a>
+
+### h3.cellToChildrenSize(h3Index, res) ⇒ <code>number</code>
+Get the number of children for a cell at a given resolution
+
+**Returns**: <code>number</code> - Number of children at res for the given cell  
+**Throws**:
+
+- <code>H3Error</code> If cell or parentRes are invalid
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| h3Index | <code>H3IndexInput</code> | H3 index to get child count for |
+| res | <code>number</code> | Child resolution |
 
 
 * * *

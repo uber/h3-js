@@ -4,9 +4,11 @@ All notable changes to this project will be documented in this file. This librar
 
 ## [Unreleased]
 ### Added
-- `cellToChildPos` and `childPosToCell` functions. (#170)
+- Add `cellToChildPos`, `childPosToCell`, and `cellToChildrenSize` functions. (#170)
+
 ### Changed
 - Updated the core library to `v4.1.0` (#170)
+
 ### Fixed
 - Patch libh3 bundles to check for `typeof document != "undefined"` before accessing `document`. This allows h3-js to be used in a Web Worker and React Native (#169)
 - Fix H3Index type hints for `cellToBoundary`, `cellArea`, `edgeLength` (#171)
