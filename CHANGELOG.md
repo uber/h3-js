@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file. This library adheres to a versioning policy described in [the README](./README.md#versioning). The public API of this library consists of the functions exported in [h3core.js](./lib/h3core.js).
 
 ## [Unreleased]
+- *None*
+
+## [4.1.0] - 2023-01-19
 ### Added
 - Add `cellToChildPos`, `childPosToCell`, and `cellToChildrenSize` functions. (#170)
 
