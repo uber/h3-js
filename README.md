@@ -516,7 +516,7 @@ ordered by distance from the origin. The order of the hexagons within each ring 
 
 ### h3.gridRingUnsafe(h3Index, ringSize) ⇒ <code>Array.&lt;H3Index&gt;</code>
 Get all hexagons in a hollow hexagonal ring centered at origin with sides of a given length.
-Unlike kRing, this function will throw an error if there is a pentagon anywhere in the ring.
+Unlike gridDisk, this function will throw an error if there is a pentagon anywhere in the ring.
 
 **Returns**: <code>Array.&lt;H3Index&gt;</code> - H3 indexes for all hexagons in ring  
 **Throws**:
