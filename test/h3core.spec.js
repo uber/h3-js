@@ -821,6 +821,63 @@ test('polygonToCellsExperimental', assert => {
     assert.end();
 });
 
+test('polygonToCellsExperimental - full', assert => {
+    const hexagons = h3.polygonToCellsExperimental(
+        [
+            [
+                [37.813318999983238, -122.4089866999972145],
+                [37.7866302000007224, -122.3805436999997056],
+                [37.7198061999978478, -122.3544736999993603],
+                [37.7076131999975672, -122.5123436999983966],
+                [37.7835871999971715, -122.5247187000021967],
+                [37.8151571999998453, -122.4798767000009008]
+            ]
+        ],
+        9,
+        h3.POLYGON_TO_CELLS_FLAGS.containmentFull
+    );
+    assert.equal(hexagons.length, 1175, 'got an appropriate number of hexagons back');
+    assert.end();
+});
+
+test('polygonToCellsExperimental - overlapping', assert => {
+    const hexagons = h3.polygonToCellsExperimental(
+        [
+            [
+                [37.813318999983238, -122.4089866999972145],
+                [37.7866302000007224, -122.3805436999997056],
+                [37.7198061999978478, -122.3544736999993603],
+                [37.7076131999975672, -122.5123436999983966],
+                [37.7835871999971715, -122.5247187000021967],
+                [37.8151571999998453, -122.4798767000009008]
+            ]
+        ],
+        9,
+        h3.POLYGON_TO_CELLS_FLAGS.containmentOverlapping
+    );
+    assert.equal(hexagons.length, 1334, 'got an appropriate number of hexagons back');
+    assert.end();
+});
+
+test('polygonToCellsExperimental - overlapping bbox', assert => {
+    const hexagons = h3.polygonToCellsExperimental(
+        [
+            [
+                [37.813318999983238, -122.4089866999972145],
+                [37.7866302000007224, -122.3805436999997056],
+                [37.7198061999978478, -122.3544736999993603],
+                [37.7076131999975672, -122.5123436999983966],
+                [37.7835871999971715, -122.5247187000021967],
+                [37.8151571999998453, -122.4798767000009008]
+            ]
+        ],
+        9,
+        h3.POLYGON_TO_CELLS_FLAGS.containmentOverlappingBbox
+    );
+    assert.equal(hexagons.length, 1416, 'got an appropriate number of hexagons back');
+    assert.end();
+});
+
 test('polygonToCellsExperimental - GeoJson', assert => {
     const hexagons = h3.polygonToCellsExperimental(
         [
