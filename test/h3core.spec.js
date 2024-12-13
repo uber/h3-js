@@ -949,13 +949,21 @@ test('polygonToCellsExperimental - Single Loop Transmeridian', assert => {
 });
 
 test('polygonToCellsExperimental - Empty', assert => {
-    const hexagons = h3.polygonToCellsExperimental([], 9, h3.POLYGON_TO_CELLS_FLAGS.containmentCenter);
+    const hexagons = h3.polygonToCellsExperimental(
+        [],
+        9,
+        h3.POLYGON_TO_CELLS_FLAGS.containmentCenter
+    );
     assert.equal(hexagons.length, 0, 'got no hexagons back');
     assert.end();
 });
 
 test('polygonToCellsExperimental - Empty Loop', assert => {
-    const hexagons = h3.polygonToCellsExperimental([[]], 9, h3.POLYGON_TO_CELLS_FLAGS.containmentCenter);
+    const hexagons = h3.polygonToCellsExperimental(
+        [[]],
+        9,
+        h3.POLYGON_TO_CELLS_FLAGS.containmentCenter
+    );
     assert.equal(hexagons.length, 0, 'got no hexagons back');
     assert.end();
 });
