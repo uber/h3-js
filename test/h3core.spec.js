@@ -28,7 +28,8 @@ import {
     E_NOT_NEIGHBORS,
     E_RES_MISMATCH,
     E_UNKNOWN_UNIT,
-    E_ARRAY_LENGTH
+    E_ARRAY_LENGTH,
+    E_OPTION_INVALID
 } from '../lib/errors';
 
 const GEO_PRECISION = 12;
@@ -79,6 +80,17 @@ function assertMultiPolygon(assert, input, expected, isGeoJSON) {
     for (let i = 0; i < input.length; i++) {
         assertPolygon(assert, input[i], expected[i], isGeoJSON);
     }
+}
+
+// Helper - make a polygon from a unit circle with an arbitrary number of vertices
+function makePolygon(numVerts, radius = 1) {
+    const interval = (2 * Math.PI) / numVerts;
+    const polygon = [];
+    for (let i = 0; i < numVerts; i++) {
+        const theta = interval * i;
+        polygon.push([radius * Math.cos(theta), radius * Math.sin(theta)]);
+    }
+    return polygon;
 }
 
 test('isValidCell', assert => {
@@ -755,17 +767,6 @@ test('polygonToCells - BBox corners (#67)', assert => {
     assert.end();
 });
 
-// Helper - make a polygon from a unit circle with an arbitrary number of vertices
-function makePolygon(numVerts, radius = 1) {
-    const interval = (2 * Math.PI) / numVerts;
-    const polygon = [];
-    for (let i = 0; i < numVerts; i++) {
-        const theta = interval * i;
-        polygon.push([radius * Math.cos(theta), radius * Math.sin(theta)]);
-    }
-    return polygon;
-}
-
 test('polygonToCells - memory management bug (#103)', assert => {
     // Note that when this memory mangement issue occurs, it makes a number of *other* tests fail.
     // Unfortunately this test itself doesn't seem to fail, though the original pair of polygons
@@ -797,6 +798,289 @@ test('polygonToCells - memory management bug (#103, holes)', assert => {
         len1,
         len2,
         'polygonToCells with many vertexes should not mess up later polyfills'
+    );
+    assert.end();
+});
+
+test('polygonToCellsExperimental', assert => {
+    const hexagons = h3.polygonToCellsExperimental(
+        [
+            [
+                [37.813318999983238, -122.4089866999972145],
+                [37.7866302000007224, -122.3805436999997056],
+                [37.7198061999978478, -122.3544736999993603],
+                [37.7076131999975672, -122.5123436999983966],
+                [37.7835871999971715, -122.5247187000021967],
+                [37.8151571999998453, -122.4798767000009008]
+            ]
+        ],
+        9,
+        h3.POLYGON_TO_CELLS_FLAGS.containmentCenter
+    );
+    assert.equal(hexagons.length, 1253, 'got an appropriate number of hexagons back');
+    assert.end();
+});
+
+test('polygonToCellsExperimental - GeoJson', assert => {
+    const hexagons = h3.polygonToCellsExperimental(
+        [
+            [
+                [-122.4089866999972145, 37.813318999983238],
+                [-122.3805436999997056, 37.7866302000007224],
+                [-122.3544736999993603, 37.7198061999978478],
+                [-122.5123436999983966, 37.7076131999975672],
+                [-122.5247187000021967, 37.7835871999971715],
+                [-122.4798767000009008, 37.8151571999998453]
+            ]
+        ],
+        9,
+        h3.POLYGON_TO_CELLS_FLAGS.containmentCenter,
+        true
+    );
+    assert.equal(hexagons.length, 1253, 'got an appropriate number of hexagons back');
+    assert.end();
+});
+
+test('polygonToCellsExperimental - Single Loop', assert => {
+    const hexagons = h3.polygonToCellsExperimental(
+        [
+            [37.813318999983238, -122.4089866999972145],
+            [37.7866302000007224, -122.3805436999997056],
+            [37.7198061999978478, -122.3544736999993603],
+            [37.7076131999975672, -122.5123436999983966],
+            [37.7835871999971715, -122.5247187000021967],
+            [37.8151571999998453, -122.4798767000009008]
+        ],
+        9,
+        h3.POLYGON_TO_CELLS_FLAGS.containmentCenter
+    );
+    assert.equal(hexagons.length, 1253, 'got an appropriate number of hexagons back');
+    assert.end();
+});
+
+test('polygonToCellsExperimental - Single Loop GeoJson', assert => {
+    const hexagons = h3.polygonToCellsExperimental(
+        [
+            [-122.4089866999972145, 37.813318999983238],
+            [-122.3805436999997056, 37.7866302000007224],
+            [-122.3544736999993603, 37.7198061999978478],
+            [-122.5123436999983966, 37.7076131999975672],
+            [-122.5247187000021967, 37.7835871999971715],
+            [-122.4798767000009008, 37.8151571999998453]
+        ],
+        9,
+        h3.POLYGON_TO_CELLS_FLAGS.containmentCenter,
+        true
+    );
+    assert.equal(hexagons.length, 1253, 'got an appropriate number of hexagons back');
+    assert.end();
+});
+
+test('polygonToCellsExperimental - Single Loop Transmeridian', assert => {
+    const hexagons = h3.polygonToCellsExperimental(
+        [
+            [0.5729577951308232, -179.4270422048692],
+            [0.5729577951308232, 179.4270422048692],
+            [-0.5729577951308232, 179.4270422048692],
+            [-0.5729577951308232, -179.4270422048692]
+        ],
+        7,
+        h3.POLYGON_TO_CELLS_FLAGS.containmentCenter
+    );
+    assert.equal(hexagons.length, 4238, 'got an appropriate number of hexagons back');
+    assert.end();
+});
+
+test('polygonToCellsExperimental - Empty', assert => {
+    const hexagons = h3.polygonToCells([], 9, h3.POLYGON_TO_CELLS_FLAGS.containmentCenter);
+    assert.equal(hexagons.length, 0, 'got no hexagons back');
+    assert.end();
+});
+
+test('polygonToCellsExperimental - Empty Loop', assert => {
+    const hexagons = h3.polygonToCells([[]], 9, h3.POLYGON_TO_CELLS_FLAGS.containmentCenter);
+    assert.equal(hexagons.length, 0, 'got no hexagons back');
+    assert.end();
+});
+
+test('polygonToCellsExperimental - Bad Input', assert => {
+    assert.throws(() => h3.polygonToCellsExperimental([]), {code: E_RES_DOMAIN});
+    assert.throws(() => h3.polygonToCellsExperimental([], 42), {code: E_RES_DOMAIN});
+    assert.throws(() => h3.polygonToCellsExperimental([], null), {code: E_RES_DOMAIN});
+    assert.throws(() => h3.polygonToCellsExperimental([], 1), {code: E_OPTION_INVALID});
+    assert.throws(() => h3.polygonToCellsExperimental([], 1, 'aaa flag'), {code: E_OPTION_INVALID});
+    // These throw simple JS errors, probably fine for now
+    assert.throws(() => h3.polygonToCellsExperimental(null, 9));
+    assert.throws(() => h3.polygonToCellsExperimental(undefined, 9));
+    assert.throws(() => h3.polygonToCellsExperimental({}, 9));
+    assert.end();
+});
+
+test('polygonToCellsExperimental - out of bounds', assert => {
+    const polygon = [
+        [85, 85],
+        [85, -85],
+        [-85, -85],
+        [-85, 85],
+        [85, 85]
+    ];
+    assert.throws(
+        () =>
+            h3.polygonToCellsExperimental(polygon, 15, h3.POLYGON_TO_CELLS_FLAGS.containmentCenter),
+        {code: E_ARRAY_LENGTH},
+        'throws if expected output is too large'
+    );
+    assert.end();
+});
+
+test('polygonToCellsExperimental - With Hole', assert => {
+    const hexagons = h3.polygonToCellsExperimental(
+        [
+            [
+                [37.813318999983238, -122.4089866999972145],
+                [37.7866302000007224, -122.3805436999997056],
+                [37.7198061999978478, -122.3544736999993603],
+                [37.7076131999975672, -122.5123436999983966],
+                [37.7835871999971715, -122.5247187000021967],
+                [37.8151571999998453, -122.4798767000009008]
+            ],
+            [
+                [37.7869802, -122.4471197],
+                [37.7664102, -122.4590777],
+                [37.7710682, -122.4137097]
+            ]
+        ],
+        9,
+        h3.POLYGON_TO_CELLS_FLAGS.containmentCenter
+    );
+    assert.equal(hexagons.length, 1214, 'got an appropriate number of hexagons back');
+    assert.end();
+});
+
+test('polygonToCellsExperimental - With Hole GeoJson', assert => {
+    const hexagons = h3.polygonToCellsExperimental(
+        [
+            [
+                [-122.4089866999972145, 37.813318999983238],
+                [-122.3805436999997056, 37.7866302000007224],
+                [-122.3544736999993603, 37.7198061999978478],
+                [-122.5123436999983966, 37.7076131999975672],
+                [-122.5247187000021967, 37.7835871999971715],
+                [-122.4798767000009008, 37.8151571999998453]
+            ],
+            [
+                [-122.4471197, 37.7869802],
+                [-122.4590777, 37.7664102],
+                [-122.4137097, 37.7710682]
+            ]
+        ],
+        9,
+        h3.POLYGON_TO_CELLS_FLAGS.containmentCenter,
+        true
+    );
+    assert.equal(hexagons.length, 1214, 'got an appropriate number of hexagons back');
+    assert.end();
+});
+
+test('polygonToCellsExperimental - With Two Holes', assert => {
+    const hexagons = h3.polygonToCellsExperimental(
+        [
+            [
+                [37.813318999983238, -122.4089866999972145],
+                [37.7866302000007224, -122.3805436999997056],
+                [37.7198061999978478, -122.3544736999993603],
+                [37.7076131999975672, -122.5123436999983966],
+                [37.7835871999971715, -122.5247187000021967],
+                [37.8151571999998453, -122.4798767000009008]
+            ],
+            [
+                [37.7869802, -122.4471197],
+                [37.7664102, -122.4590777],
+                [37.7710682, -122.4137097]
+            ],
+            [
+                [37.747976, -122.490025],
+                [37.73155, -122.503758],
+                [37.72544, -122.452603]
+            ]
+        ],
+        9,
+        h3.POLYGON_TO_CELLS_FLAGS.containmentCenter
+    );
+    assert.equal(hexagons.length, 1172, 'got an appropriate number of hexagons back');
+    assert.end();
+});
+
+test('polygonToCellsExperimental - BBox corners (#67)', assert => {
+    const {north, south, east, west} = {
+        east: -56.25,
+        north: -33.13755119234615,
+        south: -34.30714385628804,
+        west: -57.65625
+    };
+    const vertices = [
+        [north, east],
+        [north, west],
+        [south, west],
+        [south, east]
+    ];
+    const hexagons = h3.polygonToCellsExperimental(
+        vertices,
+        7,
+        h3.POLYGON_TO_CELLS_FLAGS.containmentCenter
+    );
+
+    assert.equal(hexagons.length, 4499, 'got the expected number of hexagons back');
+    assert.end();
+});
+
+test('polygonToCells - memory management bug (#103)', assert => {
+    // Note that when this memory mangement issue occurs, it makes a number of *other* tests fail.
+    // Unfortunately this test itself doesn't seem to fail, though the original pair of polygons
+    // in #103 failed deterministically with this length check.
+    const simplePolygon = makePolygon(4);
+    const complexPolygon = makePolygon(1260);
+
+    const len1 = h3.polygonToCellsExperimental(
+        simplePolygon,
+        3,
+        h3.POLYGON_TO_CELLS_FLAGS.containmentCenter
+    ).length;
+    h3.polygonToCellsExperimental(complexPolygon, 3, h3.POLYGON_TO_CELLS_FLAGS.containmentCenter);
+    const len2 = h3.polygonToCellsExperimental(
+        simplePolygon,
+        3,
+        h3.POLYGON_TO_CELLS_FLAGS.containmentCenter
+    ).length;
+
+    assert.equal(
+        len1,
+        len2,
+        'polygonToCellsExperimental with many vertexes should not mess up later polyfills'
+    );
+    assert.end();
+});
+
+test('polygonToCellsExperimental - memory management bug (#103, holes)', assert => {
+    const simplePolygon = makePolygon(4);
+    const complexPolygon = [simplePolygon, makePolygon(1260, 0.5), makePolygon(2000, 0.5)];
+
+    const len1 = h3.polygonToCellsExperimental(
+        simplePolygon,
+        3,
+        h3.POLYGON_TO_CELLS_FLAGS.containmentCenter
+    ).length;
+    h3.polygonToCellsExperimental(complexPolygon, 3, h3.POLYGON_TO_CELLS_FLAGS.containmentCenter);
+    const len2 = h3.polygonToCellsExperimental(
+        simplePolygon,
+        3,
+        h3.POLYGON_TO_CELLS_FLAGS.containmentCenter
+    ).length;
+
+    assert.equal(
+        len1,
+        len2,
+        'polygonToCellsExperimental with many vertexes should not mess up later polyfills'
     );
     assert.end();
 });

@@ -4,7 +4,8 @@
   "description": "Pure-Javascript version of the H3 library, a hexagon-based geographic grid system",
   "author": "Nick Rabinowitz <nickr@uber.com>",
   "contributors": [
-    "David Ellis <isv.damocles@gmail.com>"
+    "David Ellis <isv.damocles@gmail.com>",
+    "Isaac Brodsky <isaac@isaacbrodsky.com>"
   ],
   "license": "Apache-2.0",
   "repository": {

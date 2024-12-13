@@ -25,7 +25,7 @@ const BINDING_FUNCTIONS = fs
     .split(/\s+/);
 
 // Exclude methods that don't make sense for the JS bindings
-const EXCLUDE_METHODS = ['h3ToString', 'stringToH3'];
+const EXCLUDE_METHODS = ['h3ToString', 'stringToH3', 'describeH3Error'];
 
 test('implementsBindingFunctions', assert => {
     BINDING_FUNCTIONS.forEach(fn => {
