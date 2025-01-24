@@ -1,3 +1,4 @@
+describeH3Error
 latLngToCell
 cellToLatLng
 cellToBoundary
@@ -5,6 +6,7 @@ gridDisk
 gridDiskDistances
 gridRingUnsafe
 polygonToCells
+polygonToCellsExperimental
 cellsToMultiPolygon
 degsToRads
 radsToDegs

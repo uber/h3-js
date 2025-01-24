@@ -99,6 +99,7 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
 
 * [h3](#module_h3)
     * [.UNITS](#module_h3.UNITS)
+    * [.POLYGON_TO_CELLS_FLAGS](#module_h3.POLYGON_TO_CELLS_FLAGS)
     * [.h3IndexToSplitLong(h3Index)](#module_h3.h3IndexToSplitLong) ⇒ <code>SplitLong</code>
     * [.splitLongToH3Index(lower, upper)](#module_h3.splitLongToH3Index) ⇒ <code>H3Index</code>
     * [.isValidCell(h3Index)](#module_h3.isValidCell) ⇒ <code>boolean</code>
@@ -120,6 +121,7 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
     * [.gridDiskDistances(h3Index, ringSize)](#module_h3.gridDiskDistances) ⇒ <code>Array.&lt;Array.&lt;H3Index&gt;&gt;</code>
     * [.gridRingUnsafe(h3Index, ringSize)](#module_h3.gridRingUnsafe) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.polygonToCells(coordinates, res, [isGeoJson])](#module_h3.polygonToCells) ⇒ <code>Array.&lt;H3Index&gt;</code>
+    * [.polygonToCellsExperimental(coordinates, res, flags, [isGeoJson])](#module_h3.polygonToCellsExperimental) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.cellsToMultiPolygon(h3Indexes, [formatAsGeoJson])](#module_h3.cellsToMultiPolygon) ⇒ <code>Array.&lt;Array.&lt;Array.&lt;CoordPair&gt;&gt;&gt;</code>
     * [.compactCells(h3Set)](#module_h3.compactCells) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.uncompactCells(compactedSet, res)](#module_h3.uncompactCells) ⇒ <code>Array.&lt;H3Index&gt;</code>
@@ -174,6 +176,23 @@ Length/Area units
 | km2 | <code>string</code> | 
 | rads | <code>string</code> | 
 | rads2 | <code>string</code> | 
+
+
+* * *
+
+<a name="module_h3.POLYGON_TO_CELLS_FLAGS"></a>
+
+### h3.POLYGON\_TO\_CELLS\_FLAGS
+Mode flags for polygonToCells
+
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| containmentCenter | <code>string</code> | 
+| containmentFull | <code>string</code> | 
+| containmentOverlapping | <code>string</code> | 
+| containmentOverlappingBbox | <code>string</code> | 
 
 
 * * *
@@ -552,6 +571,31 @@ expected to be holes.
 | --- | --- | --- |
 | coordinates | <code>Array.&lt;Array.&lt;number&gt;&gt;</code> \| <code>Array.&lt;Array.&lt;Array.&lt;number&gt;&gt;&gt;</code> | Array of loops, or a single loop |
 | res | <code>number</code> | Resolution of hexagons to return |
+| [isGeoJson] | <code>boolean</code> | Whether to expect GeoJson-style [lng, lat]                                  pairs instead of [lat, lng] |
+
+
+* * *
+
+<a name="module_h3.polygonToCellsExperimental"></a>
+
+### h3.polygonToCellsExperimental(coordinates, res, flags, [isGeoJson]) ⇒ <code>Array.&lt;H3Index&gt;</code>
+Get all hexagons with centers contained in a given polygon. The polygon
+is specified with GeoJson semantics as an array of loops. Each loop is
+an array of [lat, lng] pairs (or [lng, lat] if isGeoJson is specified).
+The first loop is the perimeter of the polygon, and subsequent loops are
+expected to be holes.
+
+**Returns**: <code>Array.&lt;H3Index&gt;</code> - H3 indexes for all hexagons in polygon  
+**Throws**:
+
+- <code>H3Error</code> If input is invalid or output is too large for JS
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| coordinates | <code>Array.&lt;Array.&lt;number&gt;&gt;</code> \| <code>Array.&lt;Array.&lt;Array.&lt;number&gt;&gt;&gt;</code> | Array of loops, or a single loop |
+| res | <code>number</code> | Resolution of hexagons to return |
+| flags | <code>string</code> | Value from POLYGON_TO_CELLS_FLAGS |
 | [isGeoJson] | <code>boolean</code> | Whether to expect GeoJson-style [lng, lat]                                  pairs instead of [lat, lng] |
 
 
