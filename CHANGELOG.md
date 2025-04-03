@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file. This librar
 ### Changed
 - Updated the core library to `v4.2.1` (#202)
 ### Added
-- Add `polygonToCellsExperimental` function, supporting different containment modes. (#202)
+- Add `polygonToCellsExperimental` function, supporting different containment modes. (#198)
 
 ## [4.1.0] - 2023-01-19
 ### Added
