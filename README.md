@@ -119,6 +119,7 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
     * [.childPosToCell(childPos, h3Index, childRes)](#module_h3.childPosToCell) ⇒ <code>H3Index</code>
     * [.gridDisk(h3Index, ringSize)](#module_h3.gridDisk) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.gridDiskDistances(h3Index, ringSize)](#module_h3.gridDiskDistances) ⇒ <code>Array.&lt;Array.&lt;H3Index&gt;&gt;</code>
+    * [.gridRing(h3Index, ringSize)](#module_h3.gridRing) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.gridRingUnsafe(h3Index, ringSize)](#module_h3.gridRingUnsafe) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.polygonToCells(coordinates, res, [isGeoJson])](#module_h3.polygonToCells) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.polygonToCellsExperimental(coordinates, res, flags, [isGeoJson])](#module_h3.polygonToCellsExperimental) ⇒ <code>Array.&lt;H3Index&gt;</code>
@@ -527,6 +528,26 @@ ordered by distance from the origin. The order of the hexagons within each ring 
 | --- | --- | --- |
 | h3Index | <code>H3IndexInput</code> | H3 index of center hexagon |
 | ringSize | <code>number</code> | Radius of k-ring |
+
+
+* * *
+
+<a name="module_h3.gridRing"></a>
+
+### h3.gridRing(h3Index, ringSize) ⇒ <code>Array.&lt;H3Index&gt;</code>
+Get all hexagons in a hollow hexagonal ring centered at origin with sides of a given length.
+
+**Returns**: <code>Array.&lt;H3Index&gt;</code> - H3 indexes for all hexagons in ring  
+**Throws**:
+
+- <code>Error</code> If the algorithm could not calculate the ring
+- <code>H3Error</code> If input is invalid
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| h3Index | <code>H3IndexInput</code> | H3 index of center hexagon |
+| ringSize | <code>number</code> | Radius of ring |
 
 
 * * *
