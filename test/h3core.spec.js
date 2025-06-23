@@ -484,6 +484,90 @@ test('gridDiskDistances - out of bounds', assert => {
     assert.end();
 });
 
+test('gridRing', assert => {
+    const hexagons = h3.gridRing('8928308280fffff', 1);
+    assert.equal(6, hexagons.length, 'got the expected number of hexagons for ring 1');
+
+    [
+        '8928308280bffff',
+        '89283082807ffff',
+        '89283082877ffff',
+        '89283082803ffff',
+        '89283082873ffff',
+        '8928308283bffff'
+    ].forEach(hexagonAddress => {
+        assert.ok(hexagons.indexOf(hexagonAddress) > -1, 'found an expected hexagon');
+    });
+    assert.end();
+});
+
+test('gridRing - ring 2', assert => {
+    const hexagons = h3.gridRing('8928308280fffff', 2);
+    assert.equal(12, hexagons.length, 'got the expected number of hexagons for ring 1');
+
+    [
+        '89283082813ffff',
+        '89283082817ffff',
+        '8928308281bffff',
+        '89283082863ffff',
+        '89283082823ffff',
+        '8928308287bffff',
+        '89283082833ffff',
+        '8928308282bffff',
+        '89283082857ffff',
+        '892830828abffff',
+        '89283082847ffff',
+        '89283082867ffff'
+    ].forEach(hexagonAddress => {
+        assert.ok(hexagons.indexOf(hexagonAddress) > -1, 'found an expected hexagon');
+    });
+    assert.end();
+});
+
+test('gridRing - ring 0', assert => {
+    const hexagons = h3.gridRing('8928308280fffff', 0);
+    assert.deepEqual(hexagons, ['8928308280fffff'], 'Got origin in ring 0');
+    assert.end();
+});
+
+test('gridRing - pentagon', assert => {
+    const hexagons = h3.gridRing('821c07fffffffff', 2);
+    assert.equal(10, hexagons.length, 'got the expected number of hexagons for ring 2');
+
+    [
+        '821d5ffffffffff',
+        '821d1ffffffffff',
+        '821daffffffffff',
+        '821ca7fffffffff',
+        '821d8ffffffffff',
+        '821cf7fffffffff',
+        '821d57fffffffff',
+        '821ce7fffffffff',
+        '821caffffffffff',
+        '821d0ffffffffff'
+    ].forEach(hexagonAddress => {
+        assert.ok(hexagons.indexOf(hexagonAddress) > -1, 'found an expected hexagon');
+    });
+
+    const hexagons2 = h3.gridRing('821c07fffffffff', 1);
+    assert.equal(5, hexagons2.length, 'got the expected number of hexagons for ring 1');
+
+    [
+        '821c37fffffffff',
+        '821c17fffffffff',
+        '821c1ffffffffff',
+        '821c27fffffffff',
+        '821c2ffffffffff'
+    ].forEach(hexagonAddress => {
+        assert.ok(hexagons2.indexOf(hexagonAddress) > -1, 'found an expected hexagon');
+    });
+
+    const hexagons3 = h3.gridRing('821c07fffffffff', 5);
+    assert.equal(25, hexagons3.length, 'got the expected number of hexagons for ring 5');
+
+    assert.end();
+});
+
 test('gridRingUnsafe', assert => {
     const hexagons = h3.gridRingUnsafe('8928308280fffff', 1);
     assert.equal(6, hexagons.length, 'got the expected number of hexagons for ring 1');
