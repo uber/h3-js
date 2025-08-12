@@ -2,7 +2,7 @@
 
 <img align="right" src="https://uber.github.io/img/h3Logo-color.svg" alt="H3 Logo" width="200">
 
-# h3-js
+# h3-react-native
 
 [![Build Status](https://github.com/uber/h3-js/workflows/test/badge.svg)](https://github.com/uber/h3-js/actions)
 [![Coverage Status](https://coveralls.io/repos/github/uber/h3-js/badge.svg?branch=master)](https://coveralls.io/github/uber/h3-js?branch=master)
@@ -10,7 +10,7 @@
 [![npm version](https://badge.fury.io/js/h3-js.svg)](https://badge.fury.io/js/h3-js)
 [![H3 Version](https://img.shields.io/static/v1?label=h3%20api&message=v4.1.0&color=blue)](https://github.com/uber/h3/releases/tag/v4.1.0)
 
-The `h3-js` library provides a pure-JavaScript version of the [H3 Core Library](https://github.com/uber/h3), a hexagon-based geographic grid system. It can be used either in Node >= 6 or in the browser. The core library is transpiled from C using [emscripten](http://kripken.github.io/emscripten-site), offering full parity with the C API and highly efficient operations.
+The `h3-react-native` library provides a pure-JavaScript version of the [H3 Core Library](https://github.com/uber/h3), a hexagon-based geographic grid system. It can be used either in Node >= 6 or in the browser. The core library is transpiled from C using [emscripten](http://kripken.github.io/emscripten-site), offering full parity with the C API and highly efficient operations.
 
 For more information on H3 and for the full API documentation, please see the [H3 Documentation](https://h3geo.org).
 
@@ -19,7 +19,7 @@ For more information on H3 and for the full API documentation, please see the [H
 
 ## Install
 
-    npm install h3-js
+    npm install git+https://github.com/lephuochoai/h3-react-native.git
 
 ## Usage
 
