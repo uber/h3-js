@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. This library adheres to a versioning policy described in [the README](./README.md#versioning). The public API of this library consists of the functions exported in [h3core.js](./lib/h3core.js).
 
+## [4.3.0] - 2025-08-21
+### Changed
+- Updated the core library to `v4.3.0` (#206)
+### Added
+- Add `gridRing` function, to get all hexagons in a hollow hexagonal ring centered at some origin. (#206)
+
 ## [4.2.1] - 2025-04-03
 ### Changed
 - Updated the core library to `v4.2.1` (#202)
