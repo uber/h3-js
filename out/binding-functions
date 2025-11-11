@@ -20,9 +20,12 @@ getRes0Cells
 getPentagons
 getResolution
 getBaseCellNumber
+getIndexDigit
+constructCell
 stringToH3
 h3ToString
 isValidCell
+isValidIndex
 cellToParent
 cellToChildren
 cellToCenterChild
