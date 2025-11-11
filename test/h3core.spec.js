@@ -180,6 +180,29 @@ test('isValidIndex', assert => {
     assert.end();
 });
 
+test('isValidIndex directedEdge', assert => {
+    const origin = '891ea6d6533ffff';
+    const destination = '891ea6d65afffff';
+
+    assert.equal(h3.isValidIndex('1591ea6d6533ffff'), true, 'Edge index is valid');
+    assert.equal(
+        h3.isValidIndex(h3.cellsToDirectedEdge(origin, destination)),
+        true,
+        'Output of getH3UnidirectionalEdge is valid'
+    );
+
+    ['lolwut', undefined, null, {}, 42].forEach(badInput => {
+        assert.equal(h3.isValidIndex(badInput), false, `${badInput} is not valid`);
+    });
+
+    assert.end();
+});
+
+test('isValidIndex vertex', assert => {
+    assert.equal(h3.isValidIndex('2222597fffffffff'), true, 'vertex index is an index');
+    assert.end();
+});
+
 test('isValidCell split long', assert => {
     assert.ok(h3.isValidCell([0x3fffffff, 0x8528347]), 'Integer H3 index is considered an index');
     assert.ok(
@@ -2049,24 +2072,6 @@ test('isValidDirectedEdge', assert => {
 
     ['lolwut', undefined, null, {}, 42].forEach(badInput => {
         assert.equal(h3.isValidDirectedEdge(badInput), false, `${badInput} is not valid`);
-    });
-
-    assert.end();
-});
-
-test('isValidIndex directedEdge', assert => {
-    const origin = '891ea6d6533ffff';
-    const destination = '891ea6d65afffff';
-
-    assert.equal(h3.isValidIndex('1591ea6d6533ffff'), true, 'Edge index is valid');
-    assert.equal(
-        h3.isValidIndex(h3.cellsToDirectedEdge(origin, destination)),
-        true,
-        'Output of getH3UnidirectionalEdge is valid'
-    );
-
-    ['lolwut', undefined, null, {}, 42].forEach(badInput => {
-        assert.equal(h3.isValidIndex(badInput), false, `${badInput} is not valid`);
     });
 
     assert.end();
