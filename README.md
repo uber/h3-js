@@ -248,6 +248,9 @@ Whether a given string represents a valid H3 cell index
 
 ### h3.isValidIndex(h3Index) ⇒ <code>boolean</code>
 Whether a given string represents a valid H3 index
+(e.g. it may be a cell, directed edge, vertex.)
+Use <code>isValidCell</code> to check for a valid
+hexagon (or pentagon) cell ID.
 
 **Returns**: <code>boolean</code> - Whether the index is valid  
 
