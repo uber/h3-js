@@ -1609,7 +1609,7 @@ test('getIndexDigit', assert => {
 test('constructCell', assert => {
     assert.throws(
         () =>
-            h3.constructCell(0, 0, [
+            h3.constructCell(0, [
                 0,
                 1,
                 2,
@@ -1629,23 +1629,31 @@ test('constructCell', assert => {
                 16,
                 17,
                 18
-            ]),
+            ], 0),
         {code: E_DIGIT_DOMAIN},
         'invalid (bad digit array)'
     );
     assert.throws(
-        () => h3.constructCell(2, 0, []),
+        () => h3.constructCell(0, [], 2),
         {code: E_DIGIT_DOMAIN},
         'invalid (bad digit length)'
     );
     assert.throws(
-        () => h3.constructCell(1, 4, [1]),
+        () => h3.constructCell(4, [1]),
         {code: E_DELETED_DIGIT},
         'invalid (deleted digit)'
     );
-    assert.equals(h3.constructCell(0, 0, []), '8001fffffffffff', 'construct cell res 0');
-    assert.equals(h3.constructCell(1, 4, [0]), '81083ffffffffff', 'construct cell pentagon');
-    assert.equals(h3.constructCell(2, 28, [1, 2]), '823857fffffffff', 'construct cell hexagon');
+    assert.throws(
+        () => h3.constructCell(4, [1], 1),
+        {code: E_DELETED_DIGIT},
+        'invalid (deleted digit)'
+    );
+    assert.equals(h3.constructCell(0, []), '8001fffffffffff', 'construct cell res 0');
+    assert.equals(h3.constructCell(4, [0]), '81083ffffffffff', 'construct cell pentagon');
+    assert.equals(h3.constructCell(28, [1, 2]), '823857fffffffff', 'construct cell hexagon');
+    assert.equals(h3.constructCell(0, [], 0), '8001fffffffffff', 'construct cell res 0');
+    assert.equals(h3.constructCell(4, [0], 1), '81083ffffffffff', 'construct cell pentagon');
+    assert.equals(h3.constructCell(28, [1, 2], 2), '823857fffffffff', 'construct cell hexagon');
 
     assert.end();
 });

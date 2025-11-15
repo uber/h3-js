@@ -110,7 +110,7 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
     * [.getIndexDigit(h3Index, digit)](#module_h3.getIndexDigit) ⇒ <code>number</code>
     * [.getIcosahedronFaces(h3Index)](#module_h3.getIcosahedronFaces) ⇒ <code>Array.&lt;number&gt;</code>
     * [.getResolution(h3Index)](#module_h3.getResolution) ⇒ <code>number</code>
-    * [.constructCell(res, baseCellNumber, digits)](#module_h3.constructCell) ⇒ <code>H3Index</code>
+    * [.constructCell(baseCellNumber, digits, res)](#module_h3.constructCell) ⇒ <code>H3Index</code>
     * [.latLngToCell(lat, lng, res)](#module_h3.latLngToCell) ⇒ <code>H3Index</code>
     * [.cellToLatLng(h3Index)](#module_h3.cellToLatLng) ⇒ <code>CoordPair</code>
     * [.cellToBoundary(h3Index, [formatAsGeoJson])](#module_h3.cellToBoundary) ⇒ <code>Array.&lt;CoordPair&gt;</code>
@@ -354,7 +354,7 @@ Returns the resolution of an H3 index
 
 <a name="module_h3.constructCell"></a>
 
-### h3.constructCell(res, baseCellNumber, digits) ⇒ <code>H3Index</code>
+### h3.constructCell(baseCellNumber, digits, res) ⇒ <code>H3Index</code>
 Creates a cell from its components (resolution, base cell number, and indexing digits).
 This is the inverse operation of `getResolution`, `getBaseCellNumber`, and `getIndexDigit`.
 Only allows creating valid cells.
@@ -367,9 +367,9 @@ Only allows creating valid cells.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| res | <code>number</code> | Resolution of cell to return |
 | baseCellNumber | <code>number</code> | Base cell number of cell to return |
 | digits | <code>Array.&lt;number&gt;</code> | Indexing digits of cell to return |
+| res | <code>number</code> | Resolution of cell to return. Optional, if not specified, will be inferred from digits. |
 
 
 * * *
