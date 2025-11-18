@@ -8,7 +8,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/uber/h3-js/badge.svg?branch=master)](https://coveralls.io/github/uber/h3-js?branch=master)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![npm version](https://badge.fury.io/js/h3-js.svg)](https://badge.fury.io/js/h3-js)
-[![H3 Version](https://img.shields.io/static/v1?label=h3%20api&message=v4.1.0&color=blue)](https://github.com/uber/h3/releases/tag/v4.1.0)
+[![H3 Version](https://img.shields.io/static/v1?label=h3%20api&message=v4.4.1&color=blue)](https://github.com/uber/h3/releases/tag/v4.4.1)
 
 The `h3-js` library provides a pure-JavaScript version of the [H3 Core Library](https://github.com/uber/h3), a hexagon-based geographic grid system. It can be used either in Node >= 6 or in the browser. The core library is transpiled from C using [emscripten](http://kripken.github.io/emscripten-site), offering full parity with the C API and highly efficient operations.
 
@@ -103,11 +103,14 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
     * [.h3IndexToSplitLong(h3Index)](#module_h3.h3IndexToSplitLong) ⇒ <code>SplitLong</code>
     * [.splitLongToH3Index(lower, upper)](#module_h3.splitLongToH3Index) ⇒ <code>H3Index</code>
     * [.isValidCell(h3Index)](#module_h3.isValidCell) ⇒ <code>boolean</code>
+    * [.isValidIndex(h3Index)](#module_h3.isValidIndex) ⇒ <code>boolean</code>
     * [.isPentagon(h3Index)](#module_h3.isPentagon) ⇒ <code>boolean</code>
     * [.isResClassIII(h3Index)](#module_h3.isResClassIII) ⇒ <code>boolean</code>
     * [.getBaseCellNumber(h3Index)](#module_h3.getBaseCellNumber) ⇒ <code>number</code>
+    * [.getIndexDigit(h3Index, digit)](#module_h3.getIndexDigit) ⇒ <code>number</code>
     * [.getIcosahedronFaces(h3Index)](#module_h3.getIcosahedronFaces) ⇒ <code>Array.&lt;number&gt;</code>
     * [.getResolution(h3Index)](#module_h3.getResolution) ⇒ <code>number</code>
+    * [.constructCell(baseCellNumber, digits, res)](#module_h3.constructCell) ⇒ <code>H3Index</code>
     * [.latLngToCell(lat, lng, res)](#module_h3.latLngToCell) ⇒ <code>H3Index</code>
     * [.cellToLatLng(h3Index)](#module_h3.cellToLatLng) ⇒ <code>CoordPair</code>
     * [.cellToBoundary(h3Index, [formatAsGeoJson])](#module_h3.cellToBoundary) ⇒ <code>Array.&lt;CoordPair&gt;</code>
@@ -230,7 +233,24 @@ Get a H3 index string from a split long (pair of 32-bit ints)
 <a name="module_h3.isValidCell"></a>
 
 ### h3.isValidCell(h3Index) ⇒ <code>boolean</code>
+Whether a given string represents a valid H3 cell index
+
+**Returns**: <code>boolean</code> - Whether the cell index is valid  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| h3Index | <code>H3IndexInput</code> | H3 index to check |
+
+
+* * *
+
+<a name="module_h3.isValidIndex"></a>
+
+### h3.isValidIndex(h3Index) ⇒ <code>boolean</code>
 Whether a given string represents a valid H3 index
+(e.g. it may be a cell, directed edge, vertex.)
+Use <code>isValidCell</code> to check for a valid
+hexagon (or pentagon) cell ID.
 
 **Returns**: <code>boolean</code> - Whether the index is valid  
 
@@ -285,6 +305,21 @@ Get the number of the base cell for a given H3 index
 
 * * *
 
+<a name="module_h3.getIndexDigit"></a>
+
+### h3.getIndexDigit(h3Index, digit) ⇒ <code>number</code>
+Get the number of the indexing digit for an H3 index
+
+**Returns**: <code>number</code> - Digit (0-7)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| h3Index | <code>H3IndexInput</code> | H3 index to get the digit for |
+| digit | <code>number</code> | Indexing digit to get the valeu of |
+
+
+* * *
+
 <a name="module_h3.getIcosahedronFaces"></a>
 
 ### h3.getIcosahedronFaces(h3Index) ⇒ <code>Array.&lt;number&gt;</code>
@@ -317,10 +352,32 @@ Returns the resolution of an H3 index
 
 * * *
 
+<a name="module_h3.constructCell"></a>
+
+### h3.constructCell(baseCellNumber, digits, res) ⇒ <code>H3Index</code>
+Creates a cell from its components (resolution, base cell number, and indexing digits).
+This is the inverse operation of `getResolution`, `getBaseCellNumber`, and `getIndexDigit`.
+Only allows creating valid cells.
+
+**Returns**: <code>H3Index</code> - H3 index  
+**Throws**:
+
+- <code>H3Error</code> If input is invalid
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| baseCellNumber | <code>number</code> | Base cell number of cell to return |
+| digits | <code>Array.&lt;number&gt;</code> | Indexing digits of cell to return |
+| res | <code>number</code> | Resolution of cell to return. Optional, if not specified, will be inferred from digits. |
+
+
+* * *
+
 <a name="module_h3.latLngToCell"></a>
 
 ### h3.latLngToCell(lat, lng, res) ⇒ <code>H3Index</code>
-Get the hexagon containing a lat,lon point
+Get the hexagon (or pentagon) containing a lat,lon point
 
 **Returns**: <code>H3Index</code> - H3 index  
 **Throws**:
@@ -332,7 +389,7 @@ Get the hexagon containing a lat,lon point
 | --- | --- | --- |
 | lat | <code>number</code> | Latitude of point |
 | lng | <code>number</code> | Longtitude of point |
-| res | <code>number</code> | Resolution of hexagons to return |
+| res | <code>number</code> | Resolution of cell to return |
 
 
 * * *
@@ -340,7 +397,7 @@ Get the hexagon containing a lat,lon point
 <a name="module_h3.cellToLatLng"></a>
 
 ### h3.cellToLatLng(h3Index) ⇒ <code>CoordPair</code>
-Get the lat,lon center of a given hexagon
+Get the lat,lon center of a given hexagon (or pentagon)
 
 **Returns**: <code>CoordPair</code> - Point as a [lat, lng] pair  
 **Throws**:

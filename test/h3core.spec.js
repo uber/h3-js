@@ -29,7 +29,9 @@ import {
     E_RES_MISMATCH,
     E_UNKNOWN_UNIT,
     E_ARRAY_LENGTH,
-    E_OPTION_INVALID
+    E_OPTION_INVALID,
+    E_DELETED_DIGIT,
+    E_DIGIT_DOMAIN
 } from '../lib/errors';
 
 const GEO_PRECISION = 12;
@@ -134,6 +136,73 @@ test('isValidCell', assert => {
     assert.end();
 });
 
+test('isValidIndex', assert => {
+    assert.ok(h3.isValidIndex('85283473fffffff'), 'H3 index is considered an index');
+    assert.ok(h3.isValidIndex('821C37FFFFFFFFF'), 'H3 index in upper case is considered an index');
+    assert.ok(
+        h3.isValidIndex('085283473fffffff'),
+        'H3 index with leading zero is considered an index'
+    );
+    assert.ok(
+        !h3.isValidIndex('ff283473fffffff'),
+        'Hexidecimal string with incorrect bits is not valid'
+    );
+    assert.ok(
+        !h3.isValidIndex('85283q73fffffff'),
+        'String with non-hexidecimal chars is not valid'
+    );
+    assert.ok(
+        !h3.isValidIndex('85283473fffffff112233'),
+        'String with additional parsed chars is not valid'
+    );
+    assert.ok(
+        !h3.isValidIndex('85283473fffffff_lolwut'),
+        'String with additional unparsed chars is not valid'
+    );
+    assert.ok(
+        !h3.isValidIndex('8a283081f1f1f1f1f1f5505ffff'),
+        'String with extraneous parsable characters in the middle is not valid'
+    );
+    assert.ok(
+        !h3.isValidIndex('8a28308_hello_world_5505ffff'),
+        'String with extraneous unparsable characters in the middle is not valid'
+    );
+    assert.ok(!h3.isValidIndex('lolwut'), 'Random string is not considered an index');
+    assert.ok(!h3.isValidIndex(null), 'Null is not considered an index');
+    assert.ok(!h3.isValidIndex(), 'Undefined is not considered an index');
+    assert.ok(!h3.isValidIndex({}), 'Object is not considered an index');
+    for (let res = 0; res < 16; res++) {
+        assert.ok(
+            h3.isValidIndex(h3.latLngToCell(37, -122, res)),
+            'H3 index is considered an index'
+        );
+    }
+    assert.end();
+});
+
+test('isValidIndex directedEdge', assert => {
+    const origin = '891ea6d6533ffff';
+    const destination = '891ea6d65afffff';
+
+    assert.equal(h3.isValidIndex('1591ea6d6533ffff'), true, 'Edge index is valid');
+    assert.equal(
+        h3.isValidIndex(h3.cellsToDirectedEdge(origin, destination)),
+        true,
+        'Output of getH3UnidirectionalEdge is valid'
+    );
+
+    ['lolwut', undefined, null, {}, 42].forEach(badInput => {
+        assert.equal(h3.isValidIndex(badInput), false, `${badInput} is not valid`);
+    });
+
+    assert.end();
+});
+
+test('isValidIndex vertex', assert => {
+    assert.equal(h3.isValidIndex('2222597fffffffff'), true, 'vertex index is an index');
+    assert.end();
+});
+
 test('isValidCell split long', assert => {
     assert.ok(h3.isValidCell([0x3fffffff, 0x8528347]), 'Integer H3 index is considered an index');
     assert.ok(
@@ -144,6 +213,21 @@ test('isValidCell split long', assert => {
     assert.ok(!h3.isValidCell([1]), 'Array with a single element is not valid');
     assert.ok(
         !h3.isValidCell([0x3fffffff, 0x8528347, 0]),
+        'Array with an additional element is not valid'
+    );
+    assert.end();
+});
+
+test('isValidIndex split long', assert => {
+    assert.ok(h3.isValidIndex([0x3fffffff, 0x8528347]), 'Integer H3 index is considered an index');
+    assert.ok(
+        !h3.isValidIndex([0x73fffffff, 0xff2834]),
+        'Integer with incorrect bits is not considered an index'
+    );
+    assert.ok(!h3.isValidIndex([]), 'Empty array is not valid');
+    assert.ok(!h3.isValidIndex([1]), 'Array with a single element is not valid');
+    assert.ok(
+        !h3.isValidIndex([0x3fffffff, 0x8528347, 0]),
         'Array with an additional element is not valid'
     );
     assert.end();
@@ -1493,6 +1577,67 @@ test('isPentagon', assert => {
     assert.equals(h3.isPentagon('8928308280fffff'), false, 'False for hexagon');
     assert.equals(h3.isPentagon('821c07fffffffff'), true, 'True for pentagon');
     assert.equals(h3.isPentagon('foo'), false, 'False for invalid (bad string)');
+
+    assert.end();
+});
+
+test('getIndexDigit', assert => {
+    assert.throws(
+        () => h3.getIndexDigit('8928308280fffff', 0),
+        {code: E_RES_DOMAIN},
+        'invalid (bad digit)'
+    );
+    assert.throws(
+        () => h3.getIndexDigit('8928308280fffff', 16),
+        {code: E_RES_DOMAIN},
+        'invalid (bad digit 16)'
+    );
+    assert.equals(h3.getIndexDigit('8928308280fffff', 1), 0, 'digit 1');
+    assert.equals(h3.getIndexDigit('8928308280fffff', 2), 6, 'digit 2');
+    assert.equals(h3.getIndexDigit('8928308280fffff', 3), 0, 'digit 3');
+    assert.equals(h3.getIndexDigit('8928308280fffff', 4), 4, 'digit 4');
+    assert.equals(h3.getIndexDigit('8928308280fffff', 5), 0, 'digit 5');
+    assert.equals(h3.getIndexDigit('8928308280fffff', 6), 5, 'digit 6');
+    assert.equals(h3.getIndexDigit('8928308280fffff', 7), 0, 'digit 7');
+    assert.equals(h3.getIndexDigit('8928308280fffff', 8), 0, 'digit 8');
+    assert.equals(h3.getIndexDigit('8928308280fffff', 9), 3, 'digit 9');
+    assert.equals(h3.getIndexDigit('8928308280fffff', 10), 7, 'digit 10');
+
+    assert.end();
+});
+
+test('constructCell', assert => {
+    assert.throws(
+        () =>
+            h3.constructCell(
+                0,
+                [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+                0
+            ),
+        {code: E_DIGIT_DOMAIN},
+        'invalid (bad digit array)'
+    );
+    assert.throws(
+        () => h3.constructCell(0, [], 2),
+        {code: E_DIGIT_DOMAIN},
+        'invalid (bad digit length)'
+    );
+    assert.throws(
+        () => h3.constructCell(4, [1]),
+        {code: E_DELETED_DIGIT},
+        'invalid (deleted digit)'
+    );
+    assert.throws(
+        () => h3.constructCell(4, [1], 1),
+        {code: E_DELETED_DIGIT},
+        'invalid (deleted digit)'
+    );
+    assert.equals(h3.constructCell(0, []), '8001fffffffffff', 'construct cell res 0');
+    assert.equals(h3.constructCell(4, [0]), '81083ffffffffff', 'construct cell pentagon');
+    assert.equals(h3.constructCell(28, [1, 2]), '823857fffffffff', 'construct cell hexagon');
+    assert.equals(h3.constructCell(0, [], 0), '8001fffffffffff', 'construct cell res 0');
+    assert.equals(h3.constructCell(4, [0], 1), '81083ffffffffff', 'construct cell pentagon');
+    assert.equals(h3.constructCell(28, [1, 2], 2), '823857fffffffff', 'construct cell hexagon');
 
     assert.end();
 });
