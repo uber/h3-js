@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. This library adheres to a versioning policy described in [the README](./README.md#versioning). The public API of this library consists of the functions exported in [h3core.js](./lib/h3core.js).
 
+## Unreleased
+### Fixed
+- Prevent oversized `gridDisk` and `gridDiskDistances` calls from corrupting subsequent calls.
+
 ## [4.4.0] - 2025-08-21
 ### Changed
 - Updated the core library to `v4.4.1` (#213)
