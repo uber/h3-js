@@ -558,7 +558,7 @@ Get all hexagons in a k-ring around a given center. The order of the hexagons is
 **Returns**: <code>Array.&lt;H3Index&gt;</code> - H3 indexes for all hexagons in ring  
 **Throws**:
 
-- <code>H3Error</code> If input is invalid or output is too large for JS
+- <code>H3Error</code> If input is invalid or output is too large to allocate
 
 
 | Param | Type | Description |
@@ -578,7 +578,7 @@ ordered by distance from the origin. The order of the hexagons within each ring 
 **Returns**: <code>Array.&lt;Array.&lt;H3Index&gt;&gt;</code> - Array of arrays with H3 indexes for all hexagons each ring  
 **Throws**:
 
-- <code>H3Error</code> If input is invalid or output is too large for JS
+- <code>H3Error</code> If input is invalid or output is too large to allocate
 
 
 | Param | Type | Description |
