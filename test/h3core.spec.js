@@ -29,6 +29,7 @@ import {
     E_RES_MISMATCH,
     E_UNKNOWN_UNIT,
     E_ARRAY_LENGTH,
+    E_MEMORY_ALLOC,
     E_OPTION_INVALID,
     E_DELETED_DIGIT,
     E_DIGIT_DOMAIN
@@ -440,6 +441,19 @@ test('gridDisk - out of bounds', assert => {
     assert.end();
 });
 
+test('gridDisk - oversize allocation does not corrupt subsequent calls', assert => {
+    const cell = h3.latLngToCell(45, 45, 15);
+    assert.equal(h3.gridDisk(cell, 2).length, 19, 'got the expected number of hexagons');
+    assert.throws(
+        () => h3.gridDisk(cell, 1e4),
+        {code: E_MEMORY_ALLOC},
+        'throws if the output cannot be allocated'
+    );
+    assert.equal(h3.gridDisk(cell, 2).length, 19, 'subsequent calls still work');
+
+    assert.end();
+});
+
 test('gridDisk - Pentagon', assert => {
     const hexagons = h3.gridDisk('821c07fffffffff', 1);
     assert.equal(
@@ -563,6 +577,27 @@ test('gridDiskDistances - out of bounds', assert => {
         () => h3.gridDiskDistances(['8928308280fffff'], 1e6),
         {code: E_ARRAY_LENGTH},
         'throws if the output is too large'
+    );
+
+    assert.end();
+});
+
+test('gridDiskDistances - oversize allocation does not corrupt subsequent calls', assert => {
+    const cell = h3.latLngToCell(45, 45, 15);
+    assert.deepEqual(
+        h3.gridDiskDistances(cell, 2).map(ring => ring.length),
+        [1, 6, 12],
+        'got the expected number of cells in each ring'
+    );
+    assert.throws(
+        () => h3.gridDiskDistances(cell, 1e4),
+        {code: E_MEMORY_ALLOC},
+        'throws if the output cannot be allocated'
+    );
+    assert.deepEqual(
+        h3.gridDiskDistances(cell, 2).map(ring => ring.length),
+        [1, 6, 12],
+        'subsequent calls still work'
     );
 
     assert.end();
@@ -1623,6 +1658,11 @@ test('constructCell', assert => {
         'invalid (bad digit length)'
     );
     assert.throws(
+        () => h3.constructCell(0, new Array(16).fill(0), 16),
+        {code: E_DIGIT_DOMAIN},
+        'invalid (too many digits)'
+    );
+    assert.throws(
         () => h3.constructCell(4, [1]),
         {code: E_DELETED_DIGIT},
         'invalid (deleted digit)'
@@ -1823,6 +1863,7 @@ test('cellToChildPos - error', assert => {
 test('childPosToCell', assert => {
     const h3Index = '88283080ddfffff';
     assert.equal(h3.childPosToCell(0, h3Index, 8), h3Index, 'Got expected value for same res');
+    assert.equal(h3.childPosToCell('0', h3Index, 8), h3Index, 'Got expected value for same res');
     assert.equal(
         h3.childPosToCell(6, h3.cellToParent(h3Index, 7), 8),
         h3Index,
