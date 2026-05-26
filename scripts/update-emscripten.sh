@@ -59,8 +59,11 @@ emcc -O3 -I ../include *.c -DH3_HAVE_VLA --memory-init-file 0 \
 for file in *.js ; do
   # Patch libh3 bundle to contain a fix to allow h3-js to be imported in a web worker and react-native
   # See #117 and #163 for more details.
+  # Also patch __dirname for ESM environments (Cloudflare Workers, Node ESM, Deno, Bun)
+  # See #216 for more details.
   cat ../../../../build/pre.js "$file" \
   | sed 's/if(document.currentScript)/if(typeof document!=="undefined" \&\& document.currentScript)/g' \
+  | sed 's/scriptDirectory=__dirname+"\/"/scriptDirectory=typeof __dirname!=="undefined"?__dirname+"\/":""/g' \
   > ../../../../out/"$file"
 done
 
