@@ -2215,6 +2215,37 @@ test('directedEdgeToBoundary - 10-vertex pentagon', assert => {
     assert.end();
 });
 
+test('reverseDirectedEdge', assert => {
+    const origin = '85283473fffffff';
+    const edges = h3.originToDirectedEdges(origin);
+
+    edges.forEach((edge, i) => {
+        const reversed = h3.reverseDirectedEdge(edge);
+        const destination = h3.getDirectedEdgeDestination(reversed);
+        assert.equals(destination, origin, 'Destination is as expecetd');
+    });
+
+    assert.end();
+});
+
+test('reverseDirectedEdge', assert => {
+    assert.throws(
+        () => {
+            h3.reverseDirectedEdge('-1');
+        },
+        {code: E_DIR_EDGE_INVALID},
+        'Invalid input'
+    );
+    assert.throws(
+        () => {
+            h3.reverseDirectedEdge('q');
+        },
+        {code: E_DIR_EDGE_INVALID},
+        'Invalid input (2)'
+    );
+    assert.end();
+});
+
 test('gridDistance', assert => {
     const origin = h3.latLngToCell(37.5, -122, 9);
     for (let radius = 0; radius < 4; radius++) {
