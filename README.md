@@ -8,7 +8,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/uber/h3-js/badge.svg?branch=master)](https://coveralls.io/github/uber/h3-js?branch=master)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![npm version](https://badge.fury.io/js/h3-js.svg)](https://badge.fury.io/js/h3-js)
-[![H3 Version](https://img.shields.io/static/v1?label=h3%20api&message=v4.4.1&color=blue)](https://github.com/uber/h3/releases/tag/v4.4.1)
+[![H3 Version](https://img.shields.io/static/v1?label=h3%20api&message=v4.5.0&color=blue)](https://github.com/uber/h3/releases/tag/v4.5.0)
 
 The `h3-js` library provides a pure-JavaScript version of the [H3 Core Library](https://github.com/uber/h3), a hexagon-based geographic grid system. It can be used either in Node >= 6 or in the browser. The core library is transpiled from C using [emscripten](http://kripken.github.io/emscripten-site), offering full parity with the C API and highly efficient operations.
 
@@ -137,6 +137,7 @@ const coordinates = h3.cellsToMultiPolygon(hexagons, true);
     * [.directedEdgeToCells(edgeIndex)](#module_h3.directedEdgeToCells) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.originToDirectedEdges(h3Index)](#module_h3.originToDirectedEdges) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.directedEdgeToBoundary(edgeIndex, [formatAsGeoJson])](#module_h3.directedEdgeToBoundary) ⇒ <code>Array.&lt;CoordPair&gt;</code>
+    * [.reverseDirectedEdge(edgeIndex)](#module_h3.reverseDirectedEdge) ⇒ <code>H3Index</code>
     * [.gridDistance(origin, destination)](#module_h3.gridDistance) ⇒ <code>number</code>
     * [.gridPathCells(origin, destination)](#module_h3.gridPathCells) ⇒ <code>Array.&lt;H3Index&gt;</code>
     * [.cellToLocalIj(origin, destination)](#module_h3.cellToLocalIj) ⇒ <code>CoordIJ</code>
@@ -885,6 +886,24 @@ cross the edge of an icosahedron face, this may return 3 coordinates.
 | --- | --- | --- |
 | edgeIndex | <code>H3IndexInput</code> | H3 index of the edge |
 | [formatAsGeoJson] | <code>boolean</code> | Whether to provide GeoJSON output: [lng, lat] |
+
+
+* * *
+
+<a name="module_h3.reverseDirectedEdge"></a>
+
+### h3.reverseDirectedEdge(edgeIndex) ⇒ <code>H3Index</code>
+Returns the directed edge with origin and destination cells reversed
+
+**Returns**: <code>H3Index</code> - Directed edge, reversed  
+**Throws**:
+
+- <code>H3Error</code> If input is invalid
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| edgeIndex | <code>H3IndexInput</code> | Directed edge index |
 
 
 * * *
