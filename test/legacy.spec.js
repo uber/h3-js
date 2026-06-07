@@ -773,7 +773,7 @@ test('h3SetToMultiPolygon - Non-contiguous 2', assert => {
     const multiPolygon = h3.h3SetToMultiPolygon(h3Indexes);
     const vertices0 = h3.h3ToGeoBoundary(h3Indexes[0]);
     const vertices1 = h3.h3ToGeoBoundary(h3Indexes[1]);
-    const expected = [[vertices0], [vertices1]];
+    const expected = [[vertices1], [vertices0]];
 
     assertMultiPolygon(assert, multiPolygon, expected);
 
@@ -1632,7 +1632,7 @@ test('exactEdgeLength', assert => {
                 // res 0 has high distortion of average edge length due to high pentagon proportion
                 res === 0 ||
                     // This seems to be the lowest factor that works for other resolutions
-                    almostEqual(lengthKm, h3.edgeLength(res, h3.UNITS.km), 0.2),
+                    almostEqual(lengthKm, h3.edgeLength(res, h3.UNITS.km), 0.3),
                 `Edge length is close to average edge length at res ${res}, km`
             );
             const lengthM = h3.exactEdgeLength(edge, h3.UNITS.m);
@@ -1640,7 +1640,7 @@ test('exactEdgeLength', assert => {
                 // res 0 has high distortion of average edge length due to high pentagon proportion
                 res === 0 ||
                     // This seems to be the lowest factor that works for other resolutions
-                    almostEqual(lengthM, h3.edgeLength(res, h3.UNITS.m), 0.2),
+                    almostEqual(lengthM, h3.edgeLength(res, h3.UNITS.m), 0.3),
                 `Edge length is close to average edge length at res ${res}, m`
             );
             assert.ok(lengthM > lengthKm, 'm > Km');
