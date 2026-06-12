@@ -2222,7 +2222,7 @@ test('reverseDirectedEdge', assert => {
     edges.forEach((edge, i) => {
         const reversed = h3.reverseDirectedEdge(edge);
         const destination = h3.getDirectedEdgeDestination(reversed);
-        assert.equals(destination, origin, 'Destination is as expecetd');
+        assert.equals(destination, origin, 'Destination is as expected');
     });
 
     assert.end();
