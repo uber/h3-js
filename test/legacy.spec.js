@@ -773,7 +773,7 @@ test('h3SetToMultiPolygon - Non-contiguous 2', assert => {
     const multiPolygon = h3.h3SetToMultiPolygon(h3Indexes);
     const vertices0 = h3.h3ToGeoBoundary(h3Indexes[0]);
     const vertices1 = h3.h3ToGeoBoundary(h3Indexes[1]);
-    const expected = [[vertices0], [vertices1]];
+    const expected = [[vertices1], [vertices0]];
 
     assertMultiPolygon(assert, multiPolygon, expected);
 

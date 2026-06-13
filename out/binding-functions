@@ -44,6 +44,7 @@ getDirectedEdgeDestination
 directedEdgeToCells
 originToDirectedEdges
 directedEdgeToBoundary
+reverseDirectedEdge
 cellToVertex
 cellToVertexes
 vertexToLatLng
