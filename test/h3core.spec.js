@@ -294,6 +294,13 @@ test('getResolution - integers', assert => {
     assert.end();
 });
 
+test('getResolution - directed edge and vertex', assert => {
+    const edge = '1591ea6d6533ffff';
+    assert.equal(h3.getResolution(edge), 9, 'Got resolution for a directed edge index');
+    assert.equal(h3.getResolution('2222597fffffffff'), 2, 'Got resolution for a vertex index');
+    assert.end();
+});
+
 test('cellToLatLng', assert => {
     const latlng = h3.cellToLatLng('85283473fffffff');
     assert.deepEqual(
