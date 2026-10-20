@@ -694,6 +694,19 @@ test('gridRing - pentagon', assert => {
     assert.end();
 });
 
+test('gridRing - oversize allocation does not corrupt subsequent calls', assert => {
+    const cell = '8928308280fffff';
+    assert.equal(h3.gridRing(cell, 1).length, 6, 'got the expected number of hexagons');
+    assert.throws(
+        () => h3.gridRing(cell, 1e8),
+        {code: E_MEMORY_ALLOC},
+        'throws if the output cannot be allocated'
+    );
+    assert.equal(h3.gridRing(cell, 1).length, 6, 'subsequent calls still work');
+
+    assert.end();
+});
+
 test('gridRingUnsafe', assert => {
     const hexagons = h3.gridRingUnsafe('8928308280fffff', 1);
     assert.equal(6, hexagons.length, 'got the expected number of hexagons for ring 1');
@@ -1615,6 +1628,19 @@ test('uncompactCells - out of bounds', assert => {
     assert.end();
 });
 
+test('uncompactCells - oversize allocation does not corrupt subsequent calls', assert => {
+    const cells = ['8029fffffffffff'];
+    assert.equal(h3.uncompactCells(cells, 2).length, 49, 'got the expected number of cells');
+    assert.throws(
+        () => h3.uncompactCells(cells, 11),
+        {code: E_MEMORY_ALLOC},
+        'throws if the output cannot be allocated'
+    );
+    assert.equal(h3.uncompactCells(cells, 2).length, 49, 'subsequent calls still work');
+
+    assert.end();
+});
+
 test('isPentagon', assert => {
     assert.equals(h3.isPentagon('8928308280fffff'), false, 'False for hexagon');
     assert.equals(h3.isPentagon('821c07fffffffff'), true, 'True for pentagon');
@@ -1802,6 +1828,19 @@ test('cellToChildren - out of bounds', assert => {
         {code: E_ARRAY_LENGTH},
         'throws if the output is too large'
     );
+
+    assert.end();
+});
+
+test('cellToChildren - oversize allocation does not corrupt subsequent calls', assert => {
+    const cell = '8029fffffffffff';
+    assert.equal(h3.cellToChildren(cell, 2).length, 49, 'got the expected number of children');
+    assert.throws(
+        () => h3.cellToChildren(cell, 11),
+        {code: E_MEMORY_ALLOC},
+        'throws if the output cannot be allocated'
+    );
+    assert.equal(h3.cellToChildren(cell, 2).length, 49, 'subsequent calls still work');
 
     assert.end();
 });
