@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file. This librar
 
 ## Unreleased
 ### Fixed
-- Prevent oversized `cellToChildren` and `uncompactCells` calls from corrupting subsequent calls.
+- Prevent oversized `cellToChildren`, `uncompactCells`, `gridRing`, `gridRingUnsafe`, `gridPathCells`, `polygonToCells` and `polygonToCellsExperimental` calls from corrupting subsequent calls.
 
 ## [4.5.0] - 2026-07-01
 ### Added

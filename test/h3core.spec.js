@@ -694,6 +694,19 @@ test('gridRing - pentagon', assert => {
     assert.end();
 });
 
+test('gridRing - oversize allocation does not corrupt subsequent calls', assert => {
+    const cell = '8928308280fffff';
+    assert.equal(h3.gridRing(cell, 1).length, 6, 'got the expected number of hexagons');
+    assert.throws(
+        () => h3.gridRing(cell, 1e8),
+        {code: E_MEMORY_ALLOC},
+        'throws if the output cannot be allocated'
+    );
+    assert.equal(h3.gridRing(cell, 1).length, 6, 'subsequent calls still work');
+
+    assert.end();
+});
+
 test('gridRingUnsafe', assert => {
     const hexagons = h3.gridRingUnsafe('8928308280fffff', 1);
     assert.equal(6, hexagons.length, 'got the expected number of hexagons for ring 1');
