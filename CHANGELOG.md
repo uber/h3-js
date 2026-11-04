@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file. This librar
 
 ## Unreleased
 ### Fixed
+- Reject H3 index strings whose value does not fit in 64 bits instead of silently truncating them.
 - Prevent oversized `cellToChildren`, `uncompactCells`, `gridRing`, `gridRingUnsafe`, `gridPathCells`, `polygonToCells` and `polygonToCellsExperimental` calls from corrupting subsequent calls.
 
 ## [4.5.0] - 2026-07-01
