@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. This library adheres to a versioning policy described in [the README](./README.md#versioning). The public API of this library consists of the functions exported in [h3core.js](./lib/h3core.js).
 
+## Unreleased
+### Fixed
+- Prevent oversized `cellToChildren`, `uncompactCells`, `gridRing`, `gridRingUnsafe`, `gridPathCells`, `polygonToCells` and `polygonToCellsExperimental` calls from corrupting subsequent calls.
+
 ## [4.5.0] - 2026-07-01
 ### Added
 - Added `reverseDirectedEdge` function
