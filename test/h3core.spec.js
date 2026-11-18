@@ -1949,6 +1949,23 @@ test('childPosToCell - error', assert => {
         {code: E_DOMAIN},
         'Child pos out of range throws'
     );
+    // A res 0 cell has more than 2^32 res 15 children, so negative positions
+    // must not be read as large unsigned positions
+    assert.throws(
+        () => h3.childPosToCell(-1, '80bffffffffffff', 15),
+        {code: E_DOMAIN},
+        'Child pos -1 throws for a parent with more than 2^32 children'
+    );
+    assert.throws(
+        () => h3.childPosToCell(-42, '80bffffffffffff', 15),
+        {code: E_DOMAIN},
+        'Child pos -42 throws for a parent with more than 2^32 children'
+    );
+    assert.throws(
+        () => h3.childPosToCell(-4294967295, h3Index, 9),
+        {code: E_DOMAIN},
+        'Child pos -(2^32 - 1) throws for a parent with few children'
+    );
     assert.end();
 });
 
